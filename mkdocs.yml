@@ -1,0 +1,30 @@
+site_name: Search for dark matter 
+site_description: Search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV
+site_url: https://cms-epn.github.io/search-for-dark-matter-docs
+repo_url: https://github.com/CMS-EPN/search-for-dark-matter-docs
+repo_name: search-for-dark-matter-docs
+theme:
+  name: material
+  font:
+    text: Merriweather Sans
+    code: Red Hat Mono
+  icon:
+    logo: material/atom
+  features:
+    - navigation.footer
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: red
+      accent: blue grey
+
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      accent: deep orange
+
