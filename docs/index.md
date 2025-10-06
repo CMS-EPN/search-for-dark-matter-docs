@@ -1,17 +1,8 @@
-# Welcome to MkDocs
+# EPN CMS collaboration 
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+## Advances of the Project
 
-## Commands
+### Reproducible Analysis:
+Reproducible Analysis of CMS Open Data: Search for Dark Matter in Association with Top Quarks
+(Based on the CMS publication: “Search for dark matter produced in association with a single top quark or a top quark pair in proton–proton collisions at ($\sqrt s = 13 \TeV$”).
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
