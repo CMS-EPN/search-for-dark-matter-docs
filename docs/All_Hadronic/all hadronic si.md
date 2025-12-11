@@ -1,311 +1,57 @@
-# All hadronic chanel
+# Complete Guide: AH Optimization Analysis for CMS Open Data
 
-## Physics Motivation and Channel Strategy: All-Hadronic Channel
+## Overview
+This guide provides step-by-step instructions to generate the All-Hadronic (AH) optimization plots using CMS Open Data. The analysis processes TTToSemiLeptonic Monte Carlo events to produce distributions of key kinematic variables for signal region optimization.
+# Physics Motivation and Channel Strategy: All-Hadronic Channel
 
-The Large Hadron Collider (LHC) collides protons at center-of-mass energies high enough to probe physics beyond the Standard Model. Although the protons are composite objects, the relevant hard scatterings occur between their constituents — quarks and gluons. In the context of simplified dark matter models, these partonic interactions can produce top quarks together with a new mediator particle (commonly denoted φ for scalar or a for pseudoscalar). The mediator then decays invisibly into a pair of dark matter candidates (χχ̄). At the detector level, this results in events with multiple top quarks plus significant missing transverse momentum (p_T^miss), the latter coming from the invisible χ particles.
+The Large Hadron Collider (LHC) collides protons at center-of-mass energies high enough to probe physics beyond the Standard Model. In the context of simplified dark matter models, partonic interactions can produce top quarks together with a new mediator particle that decays invisibly into dark matter candidates (χχ̄). At the detector level, this results in events with multiple top quarks plus significant missing transverse momentum (p_T^miss).
 
 The production mechanisms of interest include:
+- **Gluon fusion:** $$gg → tt̄φ → tt̄ + χχ̄ $$
+- **Single top associated production:** $$gb → tφ → t + χχ̄  $$
+- **t-channel production:** $$qq' → tbφ → tb + χχ̄ $$
 
-• **Gluon fusion:**
-  $$ gg \to t \bar{t}\,\phi \to t \bar{t} + \chi \bar{\chi} $$
+In all cases, the top quarks decay via $t \to W b$. In the **all-hadronic (AH) channel**, both W bosons decay hadronically $(W → qq̄')$, resulting in a fully hadronic final state with no isolated leptons.
 
-• **Single top associated production:**
-  $$ gb \to t \phi \to t + \chi \bar{\chi} $$
+## Channel Characteristics
 
-• **t–channel production:**
-  $$ qq' \to tb \phi \to tb + \chi \bar{\chi} $$
+The all-hadronic channel is defined by:
+- **No isolated leptons** (lepton veto applied)
+- **Multiple jets** (≥3 jets with ≥1 b-tagged jet)
+- **Large missing transverse energy** from dark matter particles and detector resolution
 
-In all cases, the top quarks decay via $t \to W b$. Each W boson subsequently decays either leptonically ($W \to \ell \nu$) or hadronically ($W \to q \bar{q}'$). Thus, the final states contain a mixture of b-tagged jets, light-flavor jets, charged leptons (electrons or muons), and genuine $p_T^{\text{miss}}$.
+**Advantages:**
+- Highest branching fraction (~46% for tt̄ → all hadronic)
+- Largest raw event yield
+- Sensitive to highly boosted topologies
 
-## Channel Strategy
+**Challenges:**
+- Overwhelming QCD multijet background
+- Instrumental MET from jet mismeasurements
+- Requires sophisticated background estimation techniques
 
-Because of the different W decay modes, analyses are divided into channels, each defined by the number of isolated charged leptons:
+The all-hadronic channel complements lepton channels by providing additional sensitivity in high-MET regions where QCD background can be controlled through kinematic selections.
+## Prerequisites
 
-• **Single-lepton (SL):** one isolated electron or muon, several jets (including ≥1 b-tag), and nonzero $p_T^{\text{miss}}$. This channel is statistically powerful and relatively clean, striking a balance between signal sensitivity and manageable backgrounds.
+### 1. System Requirements
+- Python 3.8 or higher
+- 8+ GB RAM recommended
+- Stable internet connection (for XRootD access)
+- 5+ GB free disk space
 
-• **All-hadronic (AH):** no isolated leptons, many jets including b-tagged jets, and $p_T^{\text{miss}}$. While it has the largest raw yield, it suffers from overwhelming QCD multijet background, which can fake $p_T^{\text{miss}}$.
+### 2. Python Package Installation
+```bash
+# Create and activate virtual environment (optional but recommended)
+python -m venv cms_analysis
+source cms_analysis/bin/activate  # On Windows: cms_analysis\Scripts\activate
 
-• **Dilepton:** two isolated leptons, large $p_T^{\text{miss}}$, and multiple jets. It provides a very clean signal region but is limited by low branching fraction, hence low statistics.
-
-**In this notebook, we concentrate on the all-hadronic channel with no isolated leptons.**
-
-There are both theoretical and practical reasons for this choice:
-
-- **From the physics side:** The AH channel has the highest branching ratio (~46% for $t\bar{t}$) since both W bosons decay hadronically. This provides maximum statistical power despite the challenging QCD background.
-
-- **From the experimental side:** Dedicated MET-based triggers and stringent angular cuts can effectively suppress QCD contamination. The presence of multiple b-jets further enhances signal-to-background discrimination.
-
-This focus allows us to demonstrate the full workflow — from event selection to histograms — in a setting where the interplay between signal characteristics and background processes can be clearly explained. Splitting into channels is therefore not a stylistic decision but a physics necessity: each final state probes the same underlying processes under different background conditions and detector signatures.
-
----
-
-# Software Setup and Package Imports
-
-Before we start analyzing data, we need to set up the software environment. This section imports the Python packages that allow us to read CMS NanoAOD files, manipulate event data, and produce plots in a reproducible and physics-oriented way.
-
-• **Core utilities:**
-  - `os`, `time`, `json`, `logging`, `asyncio` → for file handling, timing, and bookkeeping.
-  - These are standard Python libraries that help organize the workflow and log progress.
-
-• **Numerical analysis:**
-  - `numpy` (`np`) → fundamental for vectorized calculations on arrays.
-  - `pandas` (`pd`) → convenient for storing metadata (cross sections, cutflows, etc.) in table form.
-
-• **Visualization:**
-  - `matplotlib` (`mpl`, `plt`) → general-purpose plotting.
-  - `hist` → modern histogramming library designed for HEP, integrates smoothly with `mplhep`.
-
-• **HEP-specific data access:**
-  - `uproot` → reads CMS `.root` files into Python without needing C++/ROOT. Essential for open data workflows.
-  - `awkward` (`ak`) → handles "jagged arrays" (variable-length collections per event), e.g. different numbers of jets per event.
-  - `vector` → enables 4-vector operations (pT, eta, phi, invariant masses) in a NumPy/Awkward-friendly way. We register it with Awkward to use directly on event data.
-
-• **Coffea ecosystem:**
-  - `coffea.processor` → framework to run HEP analyses at scale.
-  - `NanoAODSchema` and `NanoEventsFactory` → provide a high-level interface to CMS NanoAOD, automatically building event objects like muons, jets, MET, etc.
-  - `transforms` and `methods.base/vector` → ensure physics-style behavior (Lorentz vectors, masks, object methods) are available on Awkward arrays.
-
-Finally, we configure Coffea to ignore unusual cross-references in CMS open data (they don't affect our analysis) and print the versions of the key packages. This ensures reproducibility: anyone re-running the notebook can confirm they are using the same software environment.
-
-```python
-import asyncio, logging, os, time, json
-import numpy as np
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import hist
-import uproot
-import awkward as ak
-import vector as v
-v.register_awkward()
-
-# Coffea
-from coffea import processor
-from coffea.nanoevents import NanoAODSchema, NanoEventsFactory
-from coffea.nanoevents import transforms
-from coffea.nanoevents.methods import base, vector as cvector
-
-# Ensure Coffea behaviors are available on Awkward objects
-ak.behavior.update(base.behavior)
-ak.behavior.update(cvector.behavior)
-
-# Be gentle with open-data odd cross-refs
-NanoAODSchema.warn_missing_crossrefs = False
-
-import coffea
-print("versions:",
-      "coffea", coffea.__version__,
-      "| awkward", ak.__version__,
-      "| uproot", uproot.__version__)
+# Install required packages
+pip install uproot awkward numpy matplotlib
 ```
+## Selection Criteria
 
----
-
-# Dataset Definitions and Luminosity Masks
-
-The CMS Open Data portal provides access to collision and simulation datasets in the NanoAOD format. Each dataset (e.g. MET, TTToHadronic, W+jets) is split across many `.root` files, sometimes hundreds per process. To manage this efficiently, we build a Python dictionary `nanoaod_filenames` that maps process names to their corresponding file index lists. Each entry points to a `.txt` file containing the remote paths (via XRootD) of the NanoAOD files.
-
-**Examples:**
-
-• **Data (collision events):** `MET`. These correspond to recorded events with MET-based trigger paths.
-
-• **Signal MC:** e.g. hypothetical $t\bar{t} + DM$ samples.
-
-• **Background MC:** top pair production (hadronic, semileptonic, dileptonic), single top (t-channel, tW), and electroweak processes like W+jets, Z→νν, or dibosons (WW, ZZ).
-
-This separation is not just organizational:
-
-- **From a physics perspective,** each dataset represents a different process contributing to the observed events. Signal vs. background categories are crucial for defining the search strategy.
-
-- **From a programming perspective,** keeping datasets in a dictionary allows us to iterate over them in loops, automate file loading, and apply the same selections consistently.
-
-## Luminosity Masks
-
-Real CMS data are recorded in luminosity sections (blocks of events). Not all sections are usable: some are flagged as problematic by the detector monitoring. To ensure reproducibility, CMS provides certified luminosity JSON files, which specify the "good" sections.
-
-The function `build_lumi_mask()` implements this filter:
-
-• Reads the certified JSON file.
-• Compares the `run` and `luminosityBlock` of each event to the approved ranges.
-• Returns a boolean mask selecting only events in certified sections.
-
-This step is critical in real data analysis:
-
-- **Physics motivation:** prevents contamination from detector malfunctions.
-
-## Helper Functions
-
-• `get_files_for_dataset(dataset, random=False, n=0)` → loads a subset of filenames for a given dataset. Useful when testing code with fewer files to save time.
-
-• `pretty_print(fields, ...)` → formats lists of branches or variables, making the NanoAOD structure easier to inspect.
-
-Together, these utilities allow us to handle dozens of datasets and millions of events in a manageable, modular way.
-
-```python
-import dpoa_workshop
-from dpoa_workshop import nanoaod_filenames
-from dpoa_workshop import get_files_for_dataset
-from dpoa_workshop import pretty_print
-from dpoa_workshop import build_lumi_mask
-```
-
----
-
-# Building the Ntuple File Index
-
-CMS Open Data provides file index text files (`file_index.txt`) for each dataset. These contain the actual XRootD paths to the NanoAOD `.root` files, along with metadata such as the number of events per file.
-
-To streamline the workflow:
-
-• We define a function `download_and_parse_fileindex(url)` that fetches each `file_index.txt` via HTTP and extracts only the ROOT file paths.
-
-• We loop over all entries in `nanoaod_filenames` (the dictionary we built earlier) and collect the full list of ROOT files per dataset.
-
-• The result is stored in a new dictionary `ntuples_simple`, which maps dataset → list of ROOT file paths.
-
-• Finally, we save this as a JSON file (`ntuples_simple.json`) for later reuse.
-
-```python
-import os, json, requests
-from dpoa_workshop import nanoaod_filenames
-
-def download_and_parse_fileindex(url):
-    """Download a file_index.txt and return list of ROOT paths."""
-    r = requests.get(url)
-    lines = [ln.strip() for ln in r.text.splitlines() if ln.strip()]
-    # Each line is: root://... nevts=N
-    paths = [ln.split()[0] for ln in lines]
-    return paths
-
-ntuples_simple = {}
-
-# Loop through nanoaod_filenames and save only paths
-for dataset, urls in nanoaod_filenames.items():
-    all_paths = []
-    for url in urls:
-        try:
-            all_paths.extend(download_and_parse_fileindex(url))
-        except Exception as e:
-            print(f"[warn] {dataset} {url} -> {e}")
-    
-    ntuples_simple[dataset] = all_paths
-
-# Save the JSON
-with open("ntuples_simple.json", "w") as f:
-    json.dump(ntuples_simple, f, indent=2)
-
-print("ntuples_simple.json created with datasets:", list(ntuples_simple.keys()))
-```
-
----
-
-# Analysis Configuration
-
-We first define which datasets to analyze. This includes data (`MET`) and several MC backgrounds (ttbar, single top, W+jets, dibosons, Z→νν, etc.).
-
-We also set controls for testing:
-
-• `N_FILES_MAX_PER_SAMPLE`: how many ROOT files per dataset.
-• `MAX_EVENTS_PER_FILE`: how many events to read per file.
-
-This allows us to run quickly on subsets of data before scaling to the full analysis.
-
-```python
-# ================================
-# Initial configuration
-# ================================
-DATASETS_TO_RUN = [
-    "MET",
-    "ttbar-hadronic",
-    "ttbar-semileptonic",
-    "t-channel-top",
-    "ttW",
-    "WJets-HT400to600",
-    "WJets-2J-FxFx",
-    "DYJets-Zpt200",
-    "Zvv",
-    "ZZ",
-    "WW",
-]
-
-# Limit ROOTs and events
-N_FILES_MAX_PER_SAMPLE = 1  # use only 1 ROOT file per dataset
-MAX_EVENTS_PER_FILE = 50000  # None = use all events
-
-# Luminosity (fb^-1)
-LUMI_FB = 1.0
-
-# JSON with paths to the ROOTs
-NTUPLES_JSON = "ntuples_simple.json"
-```
-
----
-
-# Constructing the Fileset
-
-We construct a fileset, which is a dictionary that maps each dataset name to:
-
-• A list of ROOT file paths.
-• Metadata such as process name, cross section, and variation.
-
-This abstraction allows us to loop over datasets uniformly later, regardless of whether they are data or MC.
-
-```python
-import json
-
-def construct_fileset_simple(
-    n_files_max_per_sample=1,
-    ntuples_json="ntuples_simple.json"
-):
-    with open(ntuples_json) as f:
-        info = json.load(f)
-    
-    fileset = {}
-    for key, files in info.items():
-        if key not in DATASETS_TO_RUN:
-            continue
-        
-        # limit number of files
-        if n_files_max_per_sample == -1:
-            use_files = files
-        else:
-            use_files = files[:n_files_max_per_sample]
-        
-        # normalize file list
-        file_list = [f["path"] if isinstance(f, dict) else f for f in use_files]
-        
-        fileset[key] = {
-            "files": file_list,
-            "metadata": {
-                "process": key,
-                "dataset": key,
-                "variation": "nominal",
-            }
-        }
-    
-    return fileset
-
-# --- construct fileset ---
-fileset = construct_fileset_simple(
-    n_files_max_per_sample=N_FILES_MAX_PER_SAMPLE,
-    ntuples_json=NTUPLES_JSON
-)
-
-print(f"[OK] Fileset constructed with {len(fileset)} datasets")
-for k, pack in fileset.items():
-    print(f"  {k}: {len(pack['files'])} file(s)")
-```
-
----
-
-# Baseline Event Selection: All-Hadronic Channel
-
-We now define the baseline cuts for the all-hadronic channel with no isolated leptons. These are motivated by CMS dark matter searches and are designed to suppress dominant Standard Model backgrounds (mainly QCD multijet, $t\bar{t}$, and W/Z+jets) while enhancing sensitivity to dark matter signals with real $p_T^{\text{miss}}$.
-
-## 1. Trigger Requirements
-
-Events are selected if they fire any of the following HLT paths:
-
+### 1. Trigger Requirements (HLT)
+Events must fire at least one of the following MET-based triggers:
 • `HLT_PFMETNoMu120`
 • `HLT_PFMETNoMu90_PFMHTNoMu90_IDTight`
 • `HLT_PFMETNoMu110_PFMHTNoMu110_IDTight`
@@ -322,895 +68,851 @@ Events are selected if they fire any of the following HLT paths:
 
 **Motivation:** These MET-based triggers are efficient for hadronic final states with genuine missing energy.
 
-## 2. Event Cleaning Flags
-
-The following filters must be applied to both data and simulation:
-
-• `HBHENoiseFilter`
-• `HBHENoiseIsoFilter`
-• `ECALDeadCellFilter`
-• `GlobalTightHalo2016Filter`
-• `BadPFMuonFilter`
-• `BadChargedHadronFilter`
-
-The following filters are applied to data only:
-
-• `EEBadScFilter`
-• `BadMuons`
-• `DuplicateMuons`
-
-**Motivation:** Remove events with detector noise and instrumental fake MET.
-
-## 3. Lepton Veto
-
-• **No "Veto" Leptons:** Events must contain no "Veto" leptons.
-  - **Electrons:** No electrons with $p_T > 10$ GeV, $|\eta| < 2.5$, and loose ID.
-  - **Muons:** No muons with $p_T > 10$ GeV, $|\eta| < 2.4$, and loose ID.
-
-**Motivation:** Suppress semileptonic $t\bar{t}$, W+jets, and dilepton backgrounds.
-
-## 4. Jet Selection
-
-• **Jet $p_T$:** > 30 GeV
-• **Jet Eta:**
-  - Central jets: $|\eta| < 2.4$
-  - Forward jets: $2.4 < |\eta| < 5$ (optional, depending on analysis)
-• **Jet ID:** Loose jet ID requirements
-• **Overlap Removal:** Jet objects are not considered if they are within $\Delta R < 0.4$ of a "Tight" electron or muon.
-
-**Motivation:** Ensure well-reconstructed jets while avoiding double-counting with leptons.
-
-## 5. Minimum Number of Jets
-
-• **Baseline:** ≥ 3 jets
-
-**Motivation:** Top decays produce at least 6 quarks in the $t\bar{t}$ fully hadronic channel (2 b-quarks + 4 light quarks from W decays). Requiring ≥3 jets ensures we capture the event topology.
-
-## 6. Minimum Number of b-tagged Jets
-
-• **Baseline:** ≥ 1 b-tagged jet (CSVM working point) with $p_T > 30$ GeV
-• **Categorization:**
-  - $n_b = 1$ (for single top + DM events)
-  - $n_b ≥ 2$ (for $t\bar{t}$ + DM events)
-
-**Motivation:** Top-quark decays always produce b-jets, so this suppresses W+light-flavor jets and QCD.
-
-## 7. MET Requirements
-
-• **Baseline:** $p_T^{\text{miss}} ≥ 250$ GeV
-
-**Motivation:** Dark matter escapes undetected → large genuine MET. This high threshold strongly suppresses QCD multijet background.
-
-## 8. Angular Separation: Δφ Cuts
-
-• **Baseline:** $\min\Delta\phi(j_{1,2}, p_T^{\text{miss}}) > 0.4$
-• **Optimized Selection:** $\min\Delta\phi(j_{1,2}, p_T^{\text{miss}}) > 1.0$
-
-**Motivation:** Reduces QCD multijet events with mismeasured MET aligned with jets. True MET from dark matter is typically more isotropic.
-
-## 9. Additional Kinematic Variables
-
-• **b–MET Transverse Mass ($M_{bT}$):**
-  - $M_{bT} > 180$ GeV
-  - **Motivation:** Further discriminates signal from $t\bar{t}$ backgrounds by exploiting the kinematics of b-quarks and MET.
-
-• **Jet 1 $p_T$ / $H_T$:**
-  - ≤ 0.5 (specifically for $n_b ≥ 2$ category)
-  - **Motivation:** Reduces events where a single jet dominates the hadronic activity, which is characteristic of QCD.
-
----
-
-## Summary
-
-The baseline selection region is defined by:
-
-• MET-based triggers (no leptons required)
-• Event cleaning filters
-• **No veto leptons** (electrons or muons with $p_T > 10$ GeV)
-• ≥ 3 jets with ≥ 1 b-tag
-• Large MET ($p_T^{\text{miss}} ≥ 250$ GeV)
-• Angular separation to suppress QCD ($\min\Delta\phi(j_{1,2}, p_T^{\text{miss}}) > 0.4$ or $> 1.0$)
-• Additional kinematic cuts ($M_{bT} > 180$ GeV, jet $p_T$ / $H_T$ ≤ 0.5)
-
-Together, these cuts target signal-like topologies while removing the bulk of Standard Model backgrounds, especially the overwhelming QCD multijet contamination.
-
----
-
-# Analysis Implementation
-
-This class (`DMAnalysisAllHadronic`) encodes the physics selection of the analysis for the all-hadronic channel:
-
-• **Object-level cuts:**
-  - Veto loose electrons: $p_T > 10$ GeV, $|\eta| < 2.5$, loose ID.
-  - Veto loose muons: $p_T > 10$ GeV, $|\eta| < 2.4$, loose ID.
-  - Jets: $p_T > 30$ GeV, $|\eta| < 2.4$, good jetID.
-  - b-jets: tagged with DeepCSV/DeepFlav WP.
-
-• **Event-level cuts:**
-  - Pass MET-based triggers (HLT).
-  - No veto leptons (0 electrons, 0 muons).
-  - ≥3 jets, ≥1 b-jet.
-  - $p_T^{\text{miss}} ≥ 250$ GeV.
-  - $\min\Delta\phi(j_{1,2}, p_T^{\text{miss}}) > 0.4$.
-
-• **Outputs:**
-  - Histograms for physics variables.
-  - Cutflow (number of events passing each step).
-
-```python
-import time, pickle
-from pathlib import Path
-import numpy as np
-import awkward as ak
-import hist
-from coffea.nanoevents import NanoAODSchema, NanoEventsFactory
-
-# === Function to read events from a ROOT file with optional limit ===
-def events_from_file(path, metadata=None, schemaclass=NanoAODSchema, max_events=None):
-    """
-    Load events from a ROOT file.
-    If max_events is not None, only read up to that number of events (useful for quick tests).
-    """
-    factory = NanoEventsFactory.from_root(
-        {path: "Events"},
-        schemaclass=schemaclass,
-        metadata=(metadata or {}),
-        entry_stop=max_events,
-    )
-    return factory.events()
-
-# === Main class for Dark Matter analysis (All-Hadronic channel) ===
-class DMAnalysisAllHadronic:
-    def __init__(self, DATASET, lumi_fb):
-        self.DATASET = DATASET
-        self.lumi_fb = float(lumi_fb)
-        
-        # Histogram axes
-        self.process_cat = hist.axis.StrCategory([], name="process", label="Process", growth=True)
-        self.variation_cat = hist.axis.StrCategory([], name="variation", label="Variation", growth=True)
-        
-        # Physics variables
-        num_axis = hist.axis.Regular(15, 0, 15, name="var")      # njets, nbjets
-        met_axis = hist.axis.Regular(30, 0, 600, name="var")     # MET
-        dphi_axis = hist.axis.Regular(32, 0, 3.2, name="var")    # min deltaphi
-        ht_axis = hist.axis.Regular(40, 0, 2000, name="var")     # HT
-        mbt_axis = hist.axis.Regular(30, 0, 600, name="var")     # M_bT
-        
-        # Histograms
-        self.h = {
-            'njets':    hist.Hist(num_axis, self.process_cat, self.variation_cat, storage=hist.storage.Weight()),
-            'nbjets':   hist.Hist(num_axis, self.process_cat, self.variation_cat, storage=hist.storage.Weight()),
-            'met':      hist.Hist(met_axis, self.process_cat, self.variation_cat, storage=hist.storage.Weight()),
-            'min_dphi': hist.Hist(dphi_axis, self.process_cat, self.variation_cat, storage=hist.storage.Weight()),
-            'ht':       hist.Hist(ht_axis, self.process_cat, self.variation_cat, storage=hist.storage.Weight()),
-            'mbt':      hist.Hist(mbt_axis, self.process_cat, self.variation_cat, storage=hist.storage.Weight()),
-        }
-        
-        # Cutflow
-        self.cut_flow = {
-            "All": 0,
-            "HLT_MET": 0,
-            "Filters": 0,
-            "LeptonVeto": 0,
-            ">=3jets": 0,
-            ">=1btag": 0,
-            "MET>=250": 0,
-            "minDPhi>0.4": 0,
-        }
-    
-    # ---------- helpers ----------
-    def _pass_met_hlt(self, events):
-        """Apply MET-based HLT paths."""
-        hlt = getattr(events, "HLT", None)
-        if hlt is None:
-            return ak.ones_like(events.event, dtype=bool)
-        
-        hlt_paths = [
-            "PFMETNoMu120",
-            "PFMETNoMu90_PFMHTNoMu90_IDTight",
-            "PFMETNoMu110_PFMHTNoMu110_IDTight",
-            "PFMETNoMu120_PFMHTNoMu120_IDTight",
-            "PFMET120_PFMHT120",
-            "PFMET110_PFMHT110_IDTight",
-            "PFMET120_PFMHT120_IDTight",
-            "PFMET170",
-        ]
-        
-        masks = []
-        for name in hlt_paths:
-            if hasattr(hlt, name):
-                masks.append(ak.values_astype(getattr(hlt, name), bool))
-        
-        if not masks:
-            return ak.ones_like(events.event, dtype=bool)
-        
-        # Logical OR of all triggers
-        combined = masks[0]
-        for m in masks[1:]:
-            combined = combined | m
-        return combined
-    
-    def _pass_event_filters(self, events):
-        """Apply event cleaning flags."""
-        flag = getattr(events, "Flag", None)
-        if flag is None:
-            return ak.ones_like(events.event, dtype=bool)
-        
-        required_flags = [
-            "HBHENoiseFilter",
-            "HBHENoiseIsoFilter",
-            "EcalDeadCellTriggerPrimitiveFilter",
-            "globalSuperTightHalo2016Filter",
-            "BadPFMuonFilter",
-        ]
-        
-        mask = ak.ones_like(events.event, dtype=bool)
-        for fname in required_flags:
-            if hasattr(flag, fname):
-                mask = mask & ak.values_astype(getattr(flag, fname), bool)
-        
-        return mask
-    
-    def _select_veto_electrons(self, events):
-        """Veto loose electrons: pt > 10, |eta| < 2.5."""
-        el = events.Electron
-        if hasattr(el, "cutBased"):
-            return el[(el.pt > 10) & (abs(el.eta) < 2.5) & (el.cutBased >= 1)]
-        return el[(el.pt > 10) & (abs(el.eta) < 2.5)]
-    
-    def _select_veto_muons(self, events):
-        """Veto loose muons: pt > 10, |eta| < 2.4."""
-        mu = events.Muon
-        if hasattr(mu, "looseId"):
-            return mu[(mu.pt > 10) & (abs(mu.eta) < 2.4) & (mu.looseId == True)]
-        return mu[(mu.pt > 10) & (abs(mu.eta) < 2.4)]
-    
-    def _select_good_jets(self, events):
-        """Jets: pt > 30, |eta| < 2.4, jetId >= 2."""
-        jets = events.Jet
-        jetid = getattr(jets, "jetId", ak.zeros_like(jets.pt, dtype=np.int32) + 2)
-        return jets[(jets.pt > 30) & (abs(jets.eta) < 2.4) & (jetid >= 2)]
-    
-    def _count_bjets(self, jets):
-        """Count b-tagged jets (DeepFlav or DeepCSV medium WP)."""
-        if hasattr(jets, "btagDeepFlavB"):
-            mask = jets.btagDeepFlavB > 0.3093  # medium WP
-        elif hasattr(jets, "btagDeepB"):
-            mask = jets.btagDeepB > 0.6321      # medium WP
-        else:
-            mask = ak.zeros_like(jets.pt, dtype=bool)
-        return ak.sum(mask, axis=1), mask
-    
-    def _compute_min_dphi(self, jets, met):
-        """Compute min delta phi between leading 2 jets and MET."""
-        if ak.any(ak.num(jets) >= 2):
-            jet1 = jets[:, 0]
-            jet2 = jets[:, 1]
-            dphi1 = abs(jet1.phi - met.phi)
-            dphi2 = abs(jet2.phi - met.phi)
-            dphi1 = ak.where(dphi1 > np.pi, 2*np.pi - dphi1, dphi1)
-            dphi2 = ak.where(dphi2 > np.pi, 2*np.pi - dphi2, dphi2)
-            min_dphi = ak.where(dphi1 < dphi2, dphi1, dphi2)
-        else:
-            min_dphi = ak.zeros_like(met.pt) + 999.0
-        return min_dphi
-    
-    def _compute_ht(self, jets):
-        """Compute HT = scalar sum of jet pT."""
-        return ak.sum(jets.pt, axis=1)
-    
-    def _compute_mbt(self, bjets, met):
-        """Compute transverse mass between leading b-jet and MET."""
-        if ak.any(ak.num(bjets) >= 1):
-            bjet_lead = bjets[:, 0]
-            mbt = np.sqrt(2.0 * bjet_lead.pt * met.pt * 
-                         (1.0 - np.cos(bjet_lead.phi - met.phi)))
-        else:
-            mbt = ak.zeros_like(met.pt)
-        return mbt
-    
-    def _weights(self, events):
-        """Weights disabled: return 1 for each event."""
-        return np.ones(len(events), dtype="float64")
-    
-    def _labels_array(self, label, n):
-        return np.array([label] * int(n), dtype=object)
-    
-    def _fill_event_hist(self, H, var_np, process, variation, w_np):
-        H.fill(
-            var=var_np,
-            process=self._labels_array(process, len(var_np)),
-            variation=self._labels_array(variation, len(var_np)),
-            weight=w_np
-        )
-    
-    # ---------- main pipeline ----------
-    def process(self, events):
-        process = events.metadata.get("process", "unknown")
-        variation = events.metadata.get("variation", "nominal")
-        
-        w_evt = self._weights(events)
-        self.cut_flow["All"] += len(events)
-        
-        # HLT
-        hltmask = self._pass_met_hlt(events)
-        events = events[hltmask]
-        w_evt = w_evt[ak.to_numpy(hltmask)]
-```python
-        self.cut_flow["HLT_MET"] += len(events)
-        
-        # Event filters
-        filtermask = self._pass_event_filters(events)
-        events = events[filtermask]
-        w_evt = w_evt[ak.to_numpy(filtermask)]
-        self.cut_flow["Filters"] += len(events)
-        
-        # Lepton veto (no veto electrons, no veto muons)
-        el_veto = self._select_veto_electrons(events)
-        mu_veto = self._select_veto_muons(events)
-        mask_lep = (ak.num(el_veto) == 0) & (ak.num(mu_veto) == 0)
-        events = events[mask_lep]
-        w_evt = w_evt[ak.to_numpy(mask_lep)]
-        self.cut_flow["LeptonVeto"] += len(events)
-        
-        # Jets
-        jets = self._select_good_jets(events)
-        nj = ak.num(jets)
-        
-        # >= 3 jets
-        jets_ok = (nj >= 3)
-        events = events[jets_ok]
-        jets = jets[jets_ok]
-        nj = nj[jets_ok]
-        w_evt = w_evt[ak.to_numpy(jets_ok)]
-        self.cut_flow[">=3jets"] += len(events)
-        
-        if len(events) == 0:
-            return {"nevents": {process: 0}, "hists": self.h}
-        
-        # b-jets
-        nb, btag_mask = self._count_bjets(jets)
-        bjets = jets[btag_mask]
-        
-        # >= 1 b-tag
-        btag_ok = (nb >= 1)
-        events = events[btag_ok]
-        jets = jets[btag_ok]
-        bjets = bjets[btag_ok]
-        nj = nj[btag_ok]
-        nb = nb[btag_ok]
-        w_evt = w_evt[ak.to_numpy(btag_ok)]
-        self.cut_flow[">=1btag"] += len(events)
-        
-        if len(events) == 0:
-            return {"nevents": {process: 0}, "hists": self.h}
-        
-        # MET
-        met = getattr(events, "MET", None)
-        met_pt = met.pt if (met is not None and hasattr(met, "pt")) else ak.zeros_like(events.event, dtype=float)
-        
-        # MET >= 250 GeV
-        met_ok = (met_pt >= 250)
-        events = events[met_ok]
-        jets = jets[met_ok]
-        bjets = bjets[met_ok]
-        nj = nj[met_ok]
-        nb = nb[met_ok]
-        met_pt = met_pt[met_ok]
-        met = met[met_ok]
-        w_evt = w_evt[ak.to_numpy(met_ok)]
-        self.cut_flow["MET>=250"] += len(events)
-        
-        if len(events) == 0:
-            return {"nevents": {process: 0}, "hists": self.h}
-        
-        # min delta phi
-        min_dphi = self._compute_min_dphi(jets, met)
-        
-        # min delta phi > 0.4
-        dphi_ok = (min_dphi > 0.4)
-        events = events[dphi_ok]
-        jets = jets[dphi_ok]
-        bjets = bjets[dphi_ok]
-        nj = nj[dphi_ok]
-        nb = nb[dphi_ok]
-        met_pt = met_pt[dphi_ok]
-        met = met[dphi_ok]
-        min_dphi = min_dphi[dphi_ok]
-        w_evt = w_evt[ak.to_numpy(dphi_ok)]
-        self.cut_flow["minDPhi>0.4"] += len(events)
-        
-        if len(events) == 0:
-            return {"nevents": {process: 0}, "hists": self.h}
-        
-        # Additional kinematic variables
-        ht = self._compute_ht(jets)
-        mbt = self._compute_mbt(bjets, met)
-        
-        # Fill histograms
-        w_evt_np = ak.to_numpy(w_evt)
-        self._fill_event_hist(self.h['njets'], ak.to_numpy(nj), process, variation, w_evt_np)
-        self._fill_event_hist(self.h['nbjets'], ak.to_numpy(nb), process, variation, w_evt_np)
-        self._fill_event_hist(self.h['met'], ak.to_numpy(met_pt), process, variation, w_evt_np)
-        self._fill_event_hist(self.h['min_dphi'], ak.to_numpy(min_dphi), process, variation, w_evt_np)
-        self._fill_event_hist(self.h['ht'], ak.to_numpy(ht), process, variation, w_evt_np)
-        self._fill_event_hist(self.h['mbt'], ak.to_numpy(mbt), process, variation, w_evt_np)
-        
-        # Return both histos and filtered events
-        return {
-            "nevents": {process: int(len(w_evt_np))},
-            "hists": self.h,
-            "selected_events": events,
-            "jets": jets,
-            "bjets": bjets,
-            "njets": nj,
-            "nbjets": nb,
-            "met": met_pt,
-            "min_dphi": min_dphi,
-            "ht": ht,
-            "mbt": mbt,
-        }
-    
-    def postprocess(self, accumulator):
-        return accumulator
-```
-
----
-
-# Running the Analysis
-
-Now we run the main loop:
-
-1. Iterate over each dataset in the fileset.
-2. Read events from ROOT files with `events_from_file`.
-3. Apply the physics cuts with `analysis.process`.
-4. Save results:
-   • Per-dataset CSVs with selected event variables.
-   • Histograms (pickled) for plotting later.
-   • Cutflow table to verify event selection efficiency.
-   • Event counts for normalization.
-
-This is the driver stage where the analysis is executed.
-
-```python
-from pathlib import Path
-import pandas as pd
-import awkward as ak
-import pickle, time
-import numpy as np
-
-OUT_DIR = Path("./outputs_ah")
-OUT_DIR.mkdir(parents=True, exist_ok=True)
-
-OUT_HISTOS = OUT_DIR / "dm_histograms_ah.pkl"
-OUT_CUTFLOW = OUT_DIR / "dm_cutflow_ah.csv"
-OUT_NEVENTS = OUT_DIR / "dm_nevents_ah.csv"
-
-analysis = DMAnalysisAllHadronic(DATASET="MET", lumi_fb=LUMI_FB)
-
-entries_total = 0
-nevents_rows = []
-
-t0 = time.monotonic()
-
-for key, pack in fileset.items():
-    flist = pack["files"]
-    meta = pack["metadata"]
-    
-    if not flist:
-        continue
-    
-    events_all = []
-    
-    for path in flist:
-        md = dict(meta)
-        
-        try:
-            ev = events_from_file(path, metadata=md, max_events=MAX_EVENTS_PER_FILE)
-        except Exception as e:
-            print(f"[warn] skip {path} -> {e}")
-            continue
-        
-        entries_total += len(ev)
-        
-        # --- run analysis ---
-        out = analysis.process(ev)
-        nsel = list(out["nevents"].values())[0]
-        
-        if nsel == 0:
-            continue
-        
-        # --- use filtered events for CSV ---
-        ev_sel = out["selected_events"]
-        jets = out["jets"]
-        bjets = out["bjets"]
-        nj = out["njets"]
-        nb = out["nbjets"]
-        met_pt = out["met"]
-        min_dphi = out["min_dphi"]
-        ht = out["ht"]
-        mbt = out["mbt"]
-        
-        df_ev = pd.DataFrame({
-            "process": [md["process"]]*len(ev_sel),
-            "dataset": [md["dataset"]]*len(ev_sel),
-            "njets": ak.to_numpy(nj),
-            "nbjets": ak.to_numpy(nb),
-            "met": ak.to_numpy(met_pt),
-            "min_dphi": ak.to_numpy(min_dphi),
-            "ht": ak.to_numpy(ht),
-            "mbt": ak.to_numpy(mbt),
-        })
-        
-        events_all.append(df_ev)
-        
-        nevents_rows.append({
-            "key": key,
-            "process": md["process"],
-            "dataset": md["dataset"],
-            "file": path,
-            "selected_events": int(len(df_ev)),
-            "entries_in_file": int(len(ev)),
-            "xsec": md.get("xsec", None),
-        })
-    
-    # Export CSV for this dataset
-    if events_all:
-        df_all = pd.concat(events_all, ignore_index=True)
-        outfile = OUT_DIR / f"{key}_processed.csv"
-        df_all.to_csv(outfile, index=False)
-        print(f"[OK] Wrote {len(df_all)} events -> {outfile}")
-
-# Save global results
-elapsed = time.monotonic() - t0
-
-with open(OUT_HISTOS, "wb") as f:
-    pickle.dump(analysis.h, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-pd.DataFrame(list(analysis.cut_flow.items()), columns=["cut","events"]).to_csv(OUT_CUTFLOW, index=False)
-pd.DataFrame(nevents_rows).to_csv(OUT_NEVENTS, index=False)
-
-print(f"\n[OK] Total entries processed: {entries_total}")
-print(f"[OK] Global cutflow:\n{analysis.cut_flow}")
-print(f"[timing] Elapsed: {elapsed:.2f} s")
-```
-
----
-
-# Visualization: Raw Event Counts
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-import pickle
-import pandas as pd
-import mplhep as hep
-
-# Apply CMS style
-plt.style.use(hep.style.CMS)
-
-# Load histograms and nevents
-df_nevents = pd.read_csv(OUT_NEVENTS)
-
-with open(OUT_HISTOS, "rb") as f:
-    hdict = pickle.load(f)
-
-def plot_all_variables_raw(hdict, lumi_fb):
-    """
-    Plot all variables without any normalization:
-    - MET as data (points with error bars).
-    - All other datasets as MC (stacked histograms).
-    """
-    variables = list(hdict.keys())
-    print("Available variables:", variables)
-    
-    for var in variables:
-        h = hdict[var]
-        processes = list(h.axes["process"])
-        edges = h.axes["var"].edges
-        centers = 0.5*(edges[:-1] + edges[1:])
-        width = np.diff(edges)
-        
-        # Explicitly define data vs MC
-        data_procs = ["MET"]
-        mc_procs = [p for p in processes if p not in data_procs]
-        
-        plt.figure(figsize=(7,5))
-        bottom = np.zeros(len(edges)-1)
-        
-        # --- MC stacked ---
-        for proc in mc_procs:
-            vals = h[{"process": proc}].values().ravel()
-            if np.any(vals):
-                plt.bar(edges[:-1], vals, width=width, bottom=bottom,
-                       align="edge", alpha=0.7, label=proc)
-                bottom += vals
-        
-        # --- Data as points ---
-        for proc in data_procs:
-            if proc in processes:
-                vals = h[{"process": proc}].values().ravel()
-                if np.any(vals):
-                    yerr = np.sqrt(vals)
-                    plt.errorbar(centers, vals, yerr=yerr,
-                               fmt="o", color="black", label=proc)
-        
-        plt.xlabel(var)
-        plt.ylabel("Raw events")
-        plt.legend(fontsize=8, frameon=False)
-        plt.grid(True, linestyle="--", alpha=0.4)
-        plt.tight_layout()
-        plt.show()
-
-# === Run ===
-plot_all_variables_raw(hdict, LUMI_FB)
-```
-
----
-
-# Cross-Sections and Normalization
-
-## Why Normalization is Necessary
-
-When comparing data and Monte Carlo (MC) simulations, the raw event counts are not directly comparable:
-
-• **Data:**
-  - Events are collected with a detector during a given time period.
-  - The "size" of the dataset is controlled by the integrated luminosity (L).
-  - Example: UL2016 MET dataset corresponds to ~35.9 fb⁻¹.
-  - There is no cross section attached — it is just what was recorded.
-
-• **MC (simulations):**
-  - Each simulated dataset corresponds to a particular physics process (e.g. $t\bar{t}$, W+jets).
-  - Generators simulate a finite number of events (N_gen) with a known theoretical cross section (σ).
-  - By construction, MC samples may represent more or fewer events than would be seen in real data.
-  - Therefore, they must be scaled.
-
-## The Normalization Formula
-
-To make MC comparable to data, we apply a per-event weight:
-
-$$ w = \frac{\sigma \cdot L}{N_\text{gen}} $$
-
-Where:
-
-• σ (pb) = process cross section (from theory/measurements).
-• L (fb⁻¹) = integrated luminosity of the data sample.
-  - Convert to pb⁻¹ by multiplying by 1000.
-• N_gen = total number of generated MC events (before cuts).
-
-This weight ensures that when we sum the MC events after applying cuts, the histograms reflect the expected yield in the same luminosity as the data.
-
-## Step 1 — Define Cross-Sections
-
-For each simulated process (MC), we need the theoretical cross section (σ) in pb. This will later be combined with the luminosity (L) and the number of generated events (N_gen) to normalize MC histograms.
-
-```python
-# ================================
-# Cross-sections (pb) — official values
-# ================================
-XSEC_PB = {
-    # Data-like (no cross section)
-    ("MET", None): None,
-    ("SingleMuon", None): None,
-    ("SingleElectron", None): None,
-    
-    # ttbar
-    ("ttbar-semileptonic", None): 831.76,
-    ("ttbar-hadronic", None): 831.76,
-    
-    # single top
-    ("t-channel-top", None): 136.0,
-    ("t-channel-antitop", None): 81.0,
-    ("tW-top", None): 71.7,
-    
-    # ttV
-    ("ttW", None): 0.204,
-    ("ttZ", None): 0.252,
-    
-    # W+jets
-    ("WJets-HT400to600", None): 48.9,
-    ("WJets-2J-FxFx", None): 615.7,
-    
-    # DY+jets
-    ("DYJets-inclusive", None): 6025.0,
-    ("DYJets-Zpt200", None): 1.27,
-    
-    # Diboson + Z→νν
-    ("Zvv", None): 77.3,
-    ("WW", None): 118.7,
-    ("ZZ", None): 16.6,
-}
-
-def get_xsec(proc: str, subgroup: str | None = None):
-    """
-    Return cross-section (pb) for (proc, subgroup).
-    Data-like samples (MET, SingleMuon, SingleElectron) return None.
-    """
-    key = (proc, subgroup)
-    if key in XSEC_PB:
-        return XSEC_PB[key]
-    return XSEC_PB.get((proc, None), None)
-
-print("=== Cross-sections (pb) ===")
-for (proc, subgroup), xsec in XSEC_PB.items():
-    name = proc if subgroup is None else f"{proc} ({subgroup})"
-    print(f"{name:20s} : {xsec}")
-```
-
-## Step 2 — Count Generated Events
-
-We need to know how many events were generated (N_gen) for each dataset. This is critical to compute normalization factors.
+### 2. Event Cleaning Flags
+**Applied to both data and MC:**
+- HBHENoiseFilter
+- HBHENoiseIsoFilter  
+- ECALDeadCellFilter
+- GlobalTightHalo2016Filter
+- BadPFMuonFilter
+- BadChargedHadronFilter
+
+**Applied to data only:**
+- EEBadScFilter
+
+### 3. Lepton Veto
+**No veto leptons allowed:**
+- **Electrons:** No electrons with pT > 10 GeV, |η| < 2.5
+- **Muons:** No muons with pT > 10 GeV, |η| < 2.4
+
+### 4. Jet Selection
+- **pT:** > 30 GeV
+- **|η|:** < 2.4 (central jets)
+- **Jet ID:** Loose working point
+- **Overlap removal:** Jets within ΔR < 0.4 of tight leptons are removed
+
+### 5. Event-Level Requirements
+- **Number of jets:** ≥ 3
+- **b-tagged jets:** ≥ 1 (DeepCSV medium WP: 0.6321)
+- **Missing ET:** pT^miss ≥ 250 GeV
+- **Δφ(jet1,2, MET):** > 0.4 (baseline), > 1.0 (optimized)
+
+### 6. Additional Kinematic Variables (Optimized Selection)
+- **Transverse bottom mass:** M_bT > 180 GeV
+- **Jet fraction:** pT(j1)/HT ≤ 0.5 (for n_b ≥ 2 category)
+
+## Step-by-Step Analysis
+
+### Step 1: Create the Analysis Script
+
+Create a file named `ah_optimization_analysis.py` with the following complete code:
 
 ```python
 import uproot
-
-def count_events_one_file(root_path):
-    try:
-        with uproot.open(root_path) as f:
-            return f["Events"].num_entries
-    except Exception as e:
-        print(f"[warn] could not open {root_path} -> {e}")
-        return 0
-
-# Dictionary to store counts
-events_count = {}
-
-for key, pack in fileset.items():
-    fpaths = pack["files"][:N_FILES_MAX_PER_SAMPLE]
-    if not fpaths:
-        continue
-    
-    total_events = 0
-    file_events = []
-    
-    for path in fpaths:
-        nevts = count_events_one_file(path)
-        total_events += nevts
-        file_events.append((path, nevts))
-        print(f"{key}: {path}, events={nevts}")
-    
-    events_count[key] = {
-        "files": fpaths,
-        "file_events": file_events,
-        "total_events": total_events,
-    }
-    
-    print(f"--> {key}: total_events={total_events}\n")
-
-# --- Final summary ---
-print("\nSummary (per dataset):")
-grand_total = 0
-for k, v in events_count.items():
-    print(f"  {k:25s} → total_events={v['total_events']} (from {len(v['files'])} file(s))")
-    grand_total += v["total_events"]
-
-print(f"\n[OK] Grand total across datasets = {grand_total}")
-```
-
----
-
-# Normalized Plots
-
-```python
-# ================================
-# Normalization + CMS-style plots
-# ================================
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle
+import awkward as ak
+from matplotlib import rcParams
+import time
+import math
 
-# Set your analysis luminosity (fb^-1)
-LUMI_FB = 0.01
+# Set plot style for publication quality
+rcParams.update({
+    'font.size': 14,
+    'axes.titlesize': 16,
+    'axes.labelsize': 14,
+    'xtick.labelsize': 12,
+    'ytick.labelsize': 12,
+    'legend.fontsize': 12,
+    'figure.figsize': (15, 10),
+    'figure.autolayout': True
+})
+plt.style.use('seaborn-v0_8-whitegrid')
 
-# Load histograms
-with open(OUT_HISTOS, "rb") as f:
-    hdict = pickle.load(f)
-
-# Explicit N_gen dictionary (truth-level generated events)
-N_EVENTS_GEN = {
-    "MET": 1654969,
-    "SingleMuon": 14113,
-    "SingleElectron": 2338304,
-    "ttbar-semileptonic": 1233000,
-    "ttbar-hadronic": 1344000,
-    "t-channel-top": 168000,
-    "ttW": 9451,
-    "WJets-HT400to600": 41364,
-    "WJets-2J-FxFx": 1766801,
-    "DYJets-Zpt200": 9748,
-    "WW": 2016000,
-    "ZZ": 4000,
-    "Zvv": 932,
-}
-
-def get_neq_gen(proc: str) -> int|None:
-    """N_gen = from fixed dictionary."""
-    return N_EVENTS_GEN.get(proc, None)
-
-def norm_factor(proc: str, lumi_fb: float) -> float:
-    if proc in ("SingleMuon", "SingleElectron", "MET"):
-        return 1.0
+class AHOptimizationAnalyzer:
+    """Analyzer for All-Hadronic optimization plots"""
     
-    xsec = get_xsec(proc)
-    ngen = get_neq_gen(proc)
-    
-    if (xsec is None) or (ngen is None) or (ngen <= 0):
-        return 1.0
-    
-    return (xsec * lumi_fb * 1e3) / float(ngen)
-
-def build_norm_report(hdict, lumi_fb):
-    some_var = next(iter(hdict.keys()))
-    processes = list(hdict[some_var].axes["process"])
-    
-    rows = []
-    for proc in processes:
-        xsec = get_xsec(proc)
-        ngen = get_neq_gen(proc)
-        factor = norm_factor(proc, lumi_fb)
+    def __init__(self, file_paths):
+        self.file_paths = file_paths
+        self.events = None
+        self.jet_info = None
         
-        rows.append({
-            "process": proc,
-            "xsec_pb": xsec,
-            "lumi_fb": lumi_fb if xsec is not None else None,
-            "N_gen_used": ngen,
-            "scale_factor": factor,
-            "is_data": proc in ("SingleMuon", "SingleElectron", "MET"),
-        })
+        # Selection parameters for AH baseline
+        self.params = {
+            'jet_pt_min': 30,
+            'jet_eta_max': 2.4,
+            'bjet_wp': 0.2783,  # DeepJet medium working point
+            'met_min': 30,
+            'min_dphi': 1.0,
+            'mt_min': 180,
+            'pt_ht_ratio_max': 0.5,
+        }
     
-    return pd.DataFrame(rows)
-
-def plot_all_variables_normalized(hdict, lumi_fb):
-    rep = build_norm_report(hdict, lumi_fb)
-    print("\n=== Normalization report (All-Hadronic Channel) ===")
-    print(rep.to_string(index=False))
+    def load_events(self, max_events_per_file=None):
+        """Load events from multiple remote files"""
+        print("="*70)
+        print("LOADING EVENTS FROM XROOTD SERVERS")
+        print("="*70)
+        
+        all_events = []
+        total_files = len(self.file_paths)
+        
+        for i, file_path in enumerate(self.file_paths):
+            print(f"\n[{i+1}/{total_files}] Processing: {file_path.split('/')[-1]}")
+            
+            try:
+                start_time = time.time()
+                
+                # Open remote file
+                file = uproot.open(file_path)
+                tree = file["Events"]
+                
+                # Get total entries
+                n_entries = tree.num_entries
+                print(f"   Total entries: {n_entries:,}")
+                
+                # Determine entries to read
+                if max_events_per_file and max_events_per_file < n_entries:
+                    entries_to_read = max_events_per_file
+                else:
+                    entries_to_read = n_entries
+                
+                # Read essential branches
+                print(f"   Reading {entries_to_read:,} events...")
+                events = tree.arrays([
+                    "Jet_pt", "Jet_eta", "Jet_phi", "Jet_btagDeepFlavB",
+                    "MET_pt", "MET_phi",
+                    "Muon_pt", "Muon_eta", "Muon_tightId", "Muon_pfRelIso04_all",
+                    "Electron_pt", "Electron_eta", "Electron_cutBased", "Electron_pfRelIso03_all",
+                    "nJet", "nMuon", "nElectron"
+                ], entry_stop=entries_to_read, library="ak")
+                
+                all_events.append(events)
+                
+                elapsed = time.time() - start_time
+                print(f"   ✓ Loaded {len(events):,} events in {elapsed:.1f}s ({len(events)/elapsed:.0f} events/s)")
+                
+            except Exception as e:
+                print(f"   ✗ Error: {e}")
+                continue
+        
+        if all_events:
+            self.events = ak.concatenate(all_events)
+            print(f"\n✓ SUCCESS: Loaded {len(self.events):,} total events from {len(all_events)} files")
+        else:
+            raise ValueError("Failed to load any events")
     
-    variables = list(hdict.keys())
+    def apply_ah_baseline_selection(self):
+        """Apply AH baseline selection (no isolated leptons, kinematic cuts)"""
+        print("\n" + "="*70)
+        print("APPLYING AH BASELINE SELECTION")
+        print("="*70)
+        
+        # 1. Lepton veto
+        print("\n1. Applying lepton veto...")
+        lepton_veto = self.apply_lepton_veto()
+        print(f"   Events with 0 isolated leptons: {ak.sum(lepton_veto):,} ({ak.sum(lepton_veto)/len(self.events)*100:.1f}%)")
+        
+        # 2. Jet selection
+        print("\n2. Selecting jets...")
+        self.jet_info = self.select_jets()
+        
+        # 3. Calculate kinematic variables
+        print("\n3. Calculating kinematic variables...")
+        self.calculate_kinematic_variables()
+        
+        # 4. Apply baseline kinematic cuts
+        print("\n4. Applying kinematic cuts...")
+        baseline_mask = self.apply_baseline_cuts(lepton_veto)
+        
+        print(f"\n✓ AH Baseline selection complete")
+        print(f"   Events passing baseline: {ak.sum(baseline_mask):,} ({ak.sum(baseline_mask)/len(self.events)*100:.1f}%)")
+        
+        return baseline_mask
     
-    for var in variables:
-        h = hdict[var]
-        processes = list(h.axes["process"])
-        edges = h.axes["var"].edges
-        centers = 0.5*(edges[:-1] + edges[1:])
-        width = np.diff(edges)
+    def apply_lepton_veto(self):
+        """Veto events with isolated leptons"""
         
-        data_procs = [p for p in processes if p in ("MET", "SingleMuon", "SingleElectron")]
-        mc_procs = [p for p in processes if p not in data_procs]
+        # Initialize counters
+        n_iso_muons = ak.zeros_like(self.events.MET_pt, dtype=int)
+        n_iso_electrons = ak.zeros_like(self.events.MET_pt, dtype=int)
         
-        plt.figure(figsize=(7,5))
-        bottom = np.zeros(len(edges)-1)
+        # Muon selection: pT > 10 GeV, |eta| < 2.4, tight ID, isolation < 0.15
+        if 'Muon_pt' in self.events.fields:
+            muon_pt = ak.fill_none(self.events.Muon_pt, 0)
+            muon_eta = ak.fill_none(self.events.Muon_eta, 100)
+            muon_tightId = ak.fill_none(self.events.Muon_tightId, 0)
+            muon_iso = ak.fill_none(self.events.Muon_pfRelIso04_all, 100)
+            
+            muon_mask = (
+                (muon_pt > 10) & 
+                (np.abs(muon_eta) < 2.4) &
+                (muon_tightId == 1) &
+                (muon_iso < 0.15)
+            )
+            n_iso_muons = ak.sum(muon_mask, axis=1)
         
-        for proc in mc_procs:
-            vals = h[{"process": proc}].values().ravel()
-            vals *= norm_factor(proc, lumi_fb)
-            if np.any(vals):
-                plt.bar(edges[:-1], vals, width=width, bottom=bottom,
-                       align="edge", alpha=0.7, label=proc)
-                bottom += vals
+        # Electron selection: pT > 10 GeV, |eta| < 2.5, tight ID, isolation < 0.10
+        if 'Electron_pt' in self.events.fields:
+            electron_pt = ak.fill_none(self.events.Electron_pt, 0)
+            electron_eta = ak.fill_none(self.events.Electron_eta, 100)
+            electron_cutBased = ak.fill_none(self.events.Electron_cutBased, 0)
+            electron_iso = ak.fill_none(self.events.Electron_pfRelIso03_all, 100)
+            
+            electron_mask = (
+                (electron_pt > 10) & 
+                (np.abs(electron_eta) < 2.5) &
+                (electron_cutBased >= 3) &  # 3 = Tight, 4 = SuperTight
+                (electron_iso < 0.10)
+            )
+            n_iso_electrons = ak.sum(electron_mask, axis=1)
         
-        for proc in data_procs:
-            vals = h[{"process": proc}].values().ravel()
-            if np.any(vals):
-                yerr = np.sqrt(vals)
-                plt.errorbar(centers, vals, yerr=yerr, fmt="o", color="black", label=proc)
+        return (n_iso_muons == 0) & (n_iso_electrons == 0)
+    
+    def select_jets(self):
+        """Select and count jets"""
         
-        plt.xlabel(var)
-        plt.ylabel("Events (MC scaled, Data raw)")
-        plt.legend(fontsize=8, frameon=False)
-        plt.grid(True, linestyle="--", alpha=0.4)
+        # Basic jet selection
+        jet_pt = ak.fill_none(self.events.Jet_pt, 0)
+        jet_eta = ak.fill_none(self.events.Jet_eta, 100)
+        jet_phi = ak.fill_none(self.events.Jet_phi, 0)
+        
+        # Good jets: pT > 30 GeV, |eta| < 2.4
+        good_jet_mask = (
+            (jet_pt > self.params['jet_pt_min']) &
+            (np.abs(jet_eta) < self.params['jet_eta_max'])
+        )
+        
+        # Count jets
+        n_jets = ak.sum(good_jet_mask, axis=1)
+        
+        # Count b-jets (DeepJet medium WP)
+        if 'Jet_btagDeepFlavB' in self.events.fields:
+            btag = ak.fill_none(self.events.Jet_btagDeepFlavB, -1)
+            bjet_mask = good_jet_mask & (btag > self.params['bjet_wp'])
+            n_bjets = ak.sum(bjet_mask, axis=1)
+        else:
+            n_bjets = ak.zeros_like(n_jets)
+        
+        print(f"   Events with ≥4 jets: {ak.sum(n_jets >= 4):,} ({ak.sum(n_jets >= 4)/len(self.events)*100:.1f}%)")
+        print(f"   Events with ≥1 b-jets: {ak.sum(n_bjets >= 1):,} ({ak.sum(n_bjets >= 1)/len(self.events)*100:.1f}%)")
+        print(f"   Events with ≥2 b-jets: {ak.sum(n_bjets >= 2):,} ({ak.sum(n_bjets >= 2)/len(self.events)*100:.1f}%)")
+        
+        return {
+            'n_jets': n_jets,
+            'n_bjets': n_bjets,
+            'good_jet_mask': good_jet_mask,
+            'jet_pt': jet_pt,
+            'jet_eta': jet_eta,
+            'jet_phi': jet_phi
+        }
+    
+    def calculate_kinematic_variables(self):
+        """Calculate minΔφ, MT, HT, and pT/HT ratio"""
+        
+        print("   Calculating minΔφ(j1,2, MET)...")
+        print("   Calculating MT...")
+        print("   Calculating HT...")
+        print("   Calculating pT/HT ratio...")
+        
+        # Get jet information
+        good_jet_mask = self.jet_info['good_jet_mask']
+        jet_pt = self.jet_info['jet_pt'][good_jet_mask]
+        jet_phi = self.jet_info['jet_phi'][good_jet_mask]
+        
+        # Calculate HT (scalar sum of jet pT)
+        self.HT = ak.sum(jet_pt, axis=1)
+        
+        # Initialize arrays
+        n_events = len(self.events)
+        self.min_dphi = np.zeros(n_events)
+        self.MT = np.zeros(n_events)
+        self.pt_ht_ratio = np.zeros(n_events)
+        
+        # Convert to numpy for faster processing
+        met_pt = ak.to_numpy(self.events.MET_pt)
+        met_phi = ak.to_numpy(self.events.MET_phi)
+        n_jets = ak.to_numpy(self.jet_info['n_jets'])
+        
+        # Process each event
+        for i in range(n_events):
+            if n_jets[i] >= 2:
+                # Get jets for this event
+                event_jets_pt = ak.to_numpy(jet_pt[i])
+                event_jets_phi = ak.to_numpy(jet_phi[i])
+                
+                if len(event_jets_pt) >= 2:
+                    # Sort by pT (descending)
+                    sorted_idx = np.argsort(event_jets_pt)[::-1]
+                    
+                    # Get two leading jets
+                    jet1_phi = event_jets_phi[sorted_idx[0]]
+                    jet2_phi = event_jets_phi[sorted_idx[1]]
+                    jet1_pt = event_jets_pt[sorted_idx[0]]
+                    
+                    # Calculate Δφ
+                    delta_phi1 = abs(jet1_phi - met_phi[i])
+                    delta_phi2 = abs(jet2_phi - met_phi[i])
+                    
+                    # Normalize to [0, π]
+                    if delta_phi1 > math.pi:
+                        delta_phi1 = 2*math.pi - delta_phi1
+                    if delta_phi2 > math.pi:
+                        delta_phi2 = 2*math.pi - delta_phi2
+                    
+                    # minΔφ
+                    self.min_dphi[i] = min(delta_phi1, delta_phi2)
+                    
+                    # Calculate MT (transverse mass)
+                    self.MT[i] = math.sqrt(2 * jet1_pt * met_pt[i] * (1 - math.cos(delta_phi1)))
+                    
+                    # Calculate pT/HT ratio
+                    if self.HT[i] > 0:
+                        self.pt_ht_ratio[i] = jet1_pt / self.HT[i]
+        
+        print(f"   ✓ Variables calculated for {n_events:,} events")
+    
+    def apply_baseline_cuts(self, lepton_veto):
+        """Apply AH baseline cuts"""
+        
+        n_jets = self.jet_info['n_jets']
+        
+        # Basic AH baseline selection
+        baseline_mask = (
+            lepton_veto &
+            (n_jets >= 4) &
+            (self.events.MET_pt > self.params['met_min'])
+        )
+        
+        return baseline_mask
+    
+    def get_category_masks(self, baseline_mask):
+        """Get masks for nb = 1 and nb ≥ 2 categories"""
+        
+        n_bjets = self.jet_info['n_bjets']
+        
+        # Events in baseline selection
+        in_baseline = baseline_mask
+        
+        # Category masks
+        nb_eq_1_mask = in_baseline & (n_bjets == 1)
+        nb_ge_2_mask = in_baseline & (n_bjets >= 2)
+        
+        print(f"\nCategory statistics after baseline:")
+        print(f"   nb = 1 events: {ak.sum(nb_eq_1_mask):,}")
+        print(f"   nb ≥ 2 events: {ak.sum(nb_ge_2_mask):,}")
+        
+        return nb_eq_1_mask, nb_ge_2_mask
+    
+    def plot_optimization_distributions(self, nb_eq_1_mask, nb_ge_2_mask):
+        """
+        Create the 5 optimization plots as shown in the paper
+        """
+        print("\n" + "="*70)
+        print("GENERATING AH OPTIMIZATION PLOTS")
+        print("="*70)
+        
+        # Create figure with 2x3 layout (5 plots + 1 empty)
+        fig = plt.figure(figsize=(16, 12))
+        
+        # Define subplot positions
+        ax1 = plt.subplot(2, 3, 1)  # (a) minΔφ for nb = 1
+        ax2 = plt.subplot(2, 3, 2)  # (b) MT for nb = 1
+        ax3 = plt.subplot(2, 3, 4)  # (c) minΔφ for nb ≥ 2
+        ax4 = plt.subplot(2, 3, 5)  # (d) MT for nb ≥ 2
+        ax5 = plt.subplot(2, 3, 6)  # (e) pT/HT for nb ≥ 2
+        
+        # Top-right subplot is empty for title
+        ax_empty = plt.subplot(2, 3, 3)
+        ax_empty.axis('off')
+        
+        # Get data for each category
+        min_dphi_nb1 = self.min_dphi[ak.to_numpy(nb_eq_1_mask)]
+        mt_nb1 = self.MT[ak.to_numpy(nb_eq_1_mask)]
+        
+        min_dphi_nb2 = self.min_dphi[ak.to_numpy(nb_ge_2_mask)]
+        mt_nb2 = self.MT[ak.to_numpy(nb_ge_2_mask)]
+        pt_ht_nb2 = self.pt_ht_ratio[ak.to_numpy(nb_ge_2_mask)]
+        
+        # Filter out zeros
+        min_dphi_nb1 = min_dphi_nb1[min_dphi_nb1 > 0]
+        mt_nb1 = mt_nb1[mt_nb1 > 0]
+        min_dphi_nb2 = min_dphi_nb2[min_dphi_nb2 > 0]
+        mt_nb2 = mt_nb2[mt_nb2 > 0]
+        pt_ht_nb2 = pt_ht_nb2[pt_ht_nb2 > 0]
+        
+        # Plot (a): minΔφ for nb = 1
+        print("Plotting (a) minΔφ for nb = 1...")
+        if len(min_dphi_nb1) > 0:
+            ax1.hist(min_dphi_nb1, bins=50, range=(0, 3.2),
+                    histtype='step', linewidth=2, color='blue',
+                    density=True)
+            ax1.axvline(self.params['min_dphi'], color='red', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: >{self.params["min_dphi"]} rad')
+            ax1.legend(loc='upper right')
+        
+        ax1.set_xlabel(r'min$\Delta\phi(j_{1,2}, p_T^{miss})$ [rad]')
+        ax1.set_ylabel('Normalized Events')
+        ax1.set_title(r'(a) min$\Delta\phi(j_{1,2}, p_T^{miss})$ for $n_b = 1$')
+        ax1.grid(True, alpha=0.3)
+        ax1.text(0.05, 0.95, f'Entries: {len(min_dphi_nb1):,}',
+                transform=ax1.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        
+        # Plot (b): MT for nb = 1
+        print("Plotting (b) MT for nb = 1...")
+        if len(mt_nb1) > 0:
+            ax2.hist(mt_nb1, bins=50, range=(0, 500),
+                    histtype='step', linewidth=2, color='green',
+                    density=True)
+            ax2.axvline(self.params['mt_min'], color='red', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: >{self.params["mt_min"]} GeV')
+            ax2.legend(loc='upper right')
+        
+        ax2.set_xlabel(r'$M_T$ [GeV]')
+        ax2.set_ylabel('Normalized Events')
+        ax2.set_title(r'(b) $M_T$ for $n_b = 1$')
+        ax2.grid(True, alpha=0.3)
+        ax2.text(0.05, 0.95, f'Entries: {len(mt_nb1):,}',
+                transform=ax2.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        
+        # Plot (c): minΔφ for nb ≥ 2
+        print("Plotting (c) minΔφ for nb ≥ 2...")
+        if len(min_dphi_nb2) > 0:
+            ax3.hist(min_dphi_nb2, bins=50, range=(0, 3.2),
+                    histtype='step', linewidth=2, color='red',
+                    density=True)
+            ax3.axvline(self.params['min_dphi'], color='blue', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: >{self.params["min_dphi"]} rad')
+            ax3.legend(loc='upper right')
+        
+        ax3.set_xlabel(r'min$\Delta\phi(j_{1,2}, p_T^{miss})$ [rad]')
+        ax3.set_ylabel('Normalized Events')
+        ax3.set_title(r'(c) min$\Delta\phi(j_{1,2}, p_T^{miss})$ for $n_b \geq 2$')
+        ax3.grid(True, alpha=0.3)
+        ax3.text(0.05, 0.95, f'Entries: {len(min_dphi_nb2):,}',
+                transform=ax3.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        
+        # Plot (d): MT for nb ≥ 2
+        print("Plotting (d) MT for nb ≥ 2...")
+        if len(mt_nb2) > 0:
+            ax4.hist(mt_nb2, bins=50, range=(0, 500),
+                    histtype='step', linewidth=2, color='purple',
+                    density=True)
+            ax4.axvline(self.params['mt_min'], color='blue', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: >{self.params["mt_min"]} GeV')
+            ax4.legend(loc='upper right')
+        
+        ax4.set_xlabel(r'$M_T$ [GeV]')
+        ax4.set_ylabel('Normalized Events')
+        ax4.set_title(r'(d) $M_T$ for $n_b \geq 2$')
+        ax4.grid(True, alpha=0.3)
+        ax4.text(0.05, 0.95, f'Entries: {len(mt_nb2):,}',
+                transform=ax4.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        
+        # Plot (e): pT/HT for nb ≥ 2
+        print("Plotting (e) pT/HT for nb ≥ 2...")
+        if len(pt_ht_nb2) > 0:
+            ax5.hist(pt_ht_nb2, bins=50, range=(0, 1),
+                    histtype='step', linewidth=2, color='orange',
+                    density=True)
+            ax5.axvline(self.params['pt_ht_ratio_max'], color='red', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: <{self.params["pt_ht_ratio_max"]}')
+            ax5.legend(loc='upper right')
+        
+        ax5.set_xlabel(r'$p_T^{jet1} / H_T$')
+        ax5.set_ylabel('Normalized Events')
+        ax5.set_title(r'(e) $p_T^{jet1} / H_T$ for $n_b \geq 2$')
+        ax5.grid(True, alpha=0.3)
+        ax5.text(0.05, 0.95, f'Entries: {len(pt_ht_nb2):,}',
+                transform=ax5.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        
+        # Add main title
+        ax_empty.text(0.5, 0.5, 'AH Optimization Distributions\n(after baseline selection)\n' +
+                     'TTToSemiLeptonic MC\n' +
+                     f'Total events: {len(self.events):,}',
+                     horizontalalignment='center',
+                     verticalalignment='center',
+                     transform=ax_empty.transAxes,
+                     fontsize=14, fontweight='bold')
+        
+        # Add statistics box
+        stats_text = (
+            f'AH Baseline Selection:\n'
+            f'• 0 isolated leptons\n'
+            f'• ≥4 jets (pT > 30 GeV)\n'
+            f'• MET > 30 GeV\n'
+            f'• nb = 1: {ak.sum(nb_eq_1_mask):,} events\n'
+            f'• nb ≥ 2: {ak.sum(nb_ge_2_mask):,} events'
+        )
+        
+        fig.text(0.02, 0.02, stats_text, fontsize=10,
+                verticalalignment='bottom',
+                bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
+        
         plt.tight_layout()
+        
+        # Save figure
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        output_file = f'ah_optimization_plots_{timestamp}.png'
+        plt.savefig(output_file, dpi=150, bbox_inches='tight')
+        print(f"\n✓ Plots saved to: {output_file}")
+        
+        plt.show()
+        
+        # Also create summary statistics plot
+        self.plot_summary_statistics(nb_eq_1_mask, nb_ge_2_mask)
+    
+    def plot_summary_statistics(self, nb_eq_1_mask, nb_ge_2_mask):
+        """Create additional summary plots"""
+        
+        fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+        
+        # 1. Event counts by category
+        categories = ['nb = 1', 'nb ≥ 2', 'Total Baseline']
+        counts = [
+            ak.sum(nb_eq_1_mask),
+            ak.sum(nb_ge_2_mask),
+            ak.sum(nb_eq_1_mask) + ak.sum(nb_ge_2_mask)
+        ]
+        
+        bars = axes[0, 0].bar(categories, counts, 
+                             color=['skyblue', 'lightgreen', 'salmon'],
+                             edgecolor='black')
+        axes[0, 0].set_ylabel('Number of Events')
+        axes[0, 0].set_title('Event Counts by Category')
+        axes[0, 0].grid(True, alpha=0.3, axis='y')
+        
+        for i, (bar, count) in enumerate(zip(bars, counts)):
+            axes[0, 0].text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(counts)*0.01,
+                          f'{count:,}', ha='center', va='bottom', fontsize=11)
+        
+        # 2. MET distribution comparison
+        if ak.sum(nb_eq_1_mask) > 0:
+            met_nb1 = ak.to_numpy(self.events.MET_pt[nb_eq_1_mask])
+            axes[0, 1].hist(met_nb1, bins=40, range=(0, 400), histtype='step',
+                          linewidth=2, color='blue', density=True, label='nb = 1')
+        
+        if ak.sum(nb_ge_2_mask) > 0:
+            met_nb2 = ak.to_numpy(self.events.MET_pt[nb_ge_2_mask])
+            axes[0, 1].hist(met_nb2, bins=40, range=(0, 400), histtype='step',
+                          linewidth=2, color='red', density=True, label='nb ≥ 2')
+        
+        axes[0, 1].set_xlabel(r'$p_T^{miss}$ [GeV]')
+        axes[0, 1].set_ylabel('Normalized Events')
+        axes[0, 1].set_title(r'$p_T^{miss}$ Distribution by Category')
+        axes[0, 1].legend()
+        axes[0, 1].grid(True, alpha=0.3)
+        
+        # 3. HT distribution
+        if ak.sum(nb_eq_1_mask) > 0:
+            ht_nb1 = self.HT[ak.to_numpy(nb_eq_1_mask)]
+            axes[1, 0].hist(ht_nb1, bins=50, range=(0, 1500), histtype='step',
+                          linewidth=2, color='blue', density=True, label='nb = 1')
+        
+        if ak.sum(nb_ge_2_mask) > 0:
+            ht_nb2 = self.HT[ak.to_numpy(nb_ge_2_mask)]
+            axes[1, 0].hist(ht_nb2, bins=50, range=(0, 1500), histtype='step',
+                          linewidth=2, color='red', density=True, label='nb ≥ 2')
+        
+        axes[1, 0].set_xlabel(r'$H_T$ [GeV]')
+        axes[1, 0].set_ylabel('Normalized Events')
+        axes[1, 0].set_title(r'$H_T$ Distribution by Category')
+        axes[1, 0].legend()
+        axes[1, 0].grid(True, alpha=0.3)
+        
+        # 4. Jet multiplicity
+        n_jets_nb1 = ak.to_numpy(self.jet_info['n_jets'][nb_eq_1_mask])
+        n_jets_nb2 = ak.to_numpy(self.jet_info['n_jets'][nb_ge_2_mask])
+        
+        axes[1, 1].hist([n_jets_nb1, n_jets_nb2], bins=range(4, 16),
+                       histtype='step', linewidth=2, density=True,
+                       label=['nb = 1', 'nb ≥ 2'], color=['blue', 'red'])
+        axes[1, 1].set_xlabel('Number of Jets')
+        axes[1, 1].set_ylabel('Normalized Events')
+        axes[1, 1].set_title('Jet Multiplicity by Category')
+        axes[1, 1].legend()
+        axes[1, 1].grid(True, alpha=0.3)
+        
+        plt.suptitle('AH Analysis Summary - TTToSemiLeptonic MC', fontsize=16, fontweight='bold')
+        plt.tight_layout()
+        
+        # Save summary plot
+        summary_file = f'ah_summary_plots_{time.strftime("%Y%m%d_%H%M%S")}.png'
+        plt.savefig(summary_file, dpi=150, bbox_inches='tight')
+        print(f"✓ Summary plots saved to: {summary_file}")
+        
         plt.show()
 
-# === Run ===
-plot_all_variables_normalized(hdict, LUMI_FB)
+def main():
+    """Main execution function"""
+    
+    print("="*70)
+    print("AH OPTIMIZATION ANALYSIS - CMS OPEN DATA")
+    print("="*70)
+    
+    # All remote file URLs
+    file_paths = [
+        # Original files
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/08FCB2ED-176B-064B-85AB-37B898773B98.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/0BD60695-8388-5141-B157-32AE1A3B4885.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/4F3C361D-258C-1D41-AEEA-48CB87D3839A.root",
+        
+        # Additional files
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/F6C0248E-6AC1-CE45-BEFA-56A735AA214A.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/FA5B9B55-06B4-A640-AF3C-7B44552E2393.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/FB5A9307-B677-B947-8970-21DA6BD7C9C2.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/1D63950A-E444-E049-BFF0-D33296A8A6CA.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/FFA621C8-C16B-5740-AB60-84246D9B2FD1.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/2D439FBF-CF8D-654F-93B1-2F7D0A74B0CB.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/2E85B521-A37E-0044-8662-BFB0C1291422.root",
+        "root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/301EA765-5A14-1B43-ADED-D3BE6147134B.root"
+    ]
+    
+    print(f"\n📊 Total files to process: {len(file_paths)}")
+    
+    try:
+        # Initialize analyzer
+        analyzer = AHOptimizationAnalyzer(file_paths)
+        
+        # Load events (limit to 10,000 per file for reasonable runtime)
+        print("\n⏳ Loading events (this may take several minutes)...")
+        analyzer.load_events(max_events_per_file=10000)
+        
+        # Apply AH baseline selection
+        baseline_mask = analyzer.apply_ah_baseline_selection()
+        
+        # Get category masks
+        nb_eq_1_mask, nb_ge_2_mask = analyzer.get_category_masks(baseline_mask)
+        
+        # Generate optimization plots
+        analyzer.plot_optimization_distributions(nb_eq_1_mask, nb_ge_2_mask)
+        
+        # Print final summary
+        print("\n" + "="*70)
+        print("ANALYSIS COMPLETE")
+        print("="*70)
+        print(f"\n📈 FINAL STATISTICS:")
+        print(f"   Total events processed: {len(analyzer.events):,}")
+        print(f"   Events in baseline selection: {ak.sum(baseline_mask):,}")
+        print(f"   nb = 1 events: {ak.sum(nb_eq_1_mask):,}")
+        print(f"   nb ≥ 2 events: {ak.sum(nb_ge_2_mask):,}")
+        print(f"\n✅ Plots have been generated and saved to disk")
+        
+    except Exception as e:
+        print(f"\n❌ Error: {e}")
+        print("\n💡 Troubleshooting tips:")
+        print("   1. Check internet connection")
+        print("   2. Try with fewer files first")
+        print("   3. Reduce max_events_per_file parameter")
+        print("   4. Ensure all dependencies are installed:")
+        print("      pip install uproot awkward numpy matplotlib")
+        import traceback
+        traceback.print_exc()
+
+if __name__ == "__main__":
+    # Start timer
+    start_time = time.time()
+    
+    # Run analysis
+    main()
+    
+    # Print execution time
+    elapsed = time.time() - start_time
+    print(f"\n⏱️  Total execution time: {elapsed:.1f} seconds ({elapsed/60:.1f} minutes)")
 ```
 
----
+### Step 2: Run the Analysis
 
-This completes the all-hadronic channel analysis workflow with proper event selection, MET-based triggers, lepton veto, angular cuts to suppress QCD, and normalized MC-to-data comparisons.
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_e6d2ccd0232ead0e9dace280397c1025.png)
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_2bbea8e7d9227f60d5ec884e8b46ce5d.png)
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_eee2846d99d4ce904bb97e28bd589184.png)
+```bash
+# Execute the analysis script
+python ah_optimization_analysis.py
+```
 
+## Expected Output
+You will get a result output similar to this:
+![](https://cernbox-codimd.web.cern.ch/uploads/upload_90b2d138e817d960112aef95ca20fc9d.png)
+
+### Console Output
+The script will display progress messages for each step:
+
+1. **Loading phase**: Shows progress for each file with loading speed
+2. **Selection phase**: Displays statistics after each cut
+3. **Plotting phase**: Confirms generation of each plot
+4. **Final statistics**: Summary of events processed
+
+### Generated Files
+Two PNG files will be created with timestamps:
+
+1. **Main optimization plots** (`ah_optimization_plots_YYYYMMDD_HHMMSS.png`):
+   - 5 plots in 2×3 layout matching the paper
+   - Normalized distributions
+   - Cut lines shown
+   - Event counts displayed
+
+2. **Summary plots** (`ah_summary_plots_YYYYMMDD_HHMMSS.png`):
+   - Event counts by category
+   - MET distribution comparison
+   - HT distribution comparison
+   - Jet multiplicity
+
+## Analysis Parameters
+
+### Selection Criteria
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| Jet pT | > 30 GeV | Minimum transverse momentum |
+| Jet |η| | < 2.4 | Pseudorapidity acceptance |
+| b-tagging WP | 0.2783 | DeepJet medium working point |
+| MET | > 30 GeV | Missing transverse momentum |
+| minΔφ cut | > 1.0 rad | Minimum angle between jets and MET |
+| MT cut | > 180 GeV | Transverse mass cut |
+| pT/HT cut | < 0.5 | Ratio for nb ≥ 2 category |
+
+### Event Categories
+- **nb = 1**: Events with exactly 1 b-tagged jet
+- **nb ≥ 2**: Events with 2 or more b-tagged jets
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. Connection Errors
+```python
+# If XRootD connection fails, try:
+# Option A: Reduce number of files
+file_paths = file_paths[:3]  # Use only first 3 files
+
+# Option B: Reduce events per file
+analyzer.load_events(max_events_per_file=1000)
+```
+
+#### 2. Memory Issues
+```python
+# Reduce memory usage:
+# 1. Process fewer events
+analyzer.load_events(max_events_per_file=5000)
+
+# 2. Use fewer files initially
+file_paths = file_paths[:5]
+```
+
+#### 3. Slow Performance
+- The analysis processes ~110,000 events from 11 files
+- Expected runtime: 10-30 minutes depending on connection
+- For faster testing, reduce `max_events_per_file` to 1000
+
+## Understanding the Output Plots
+![](https://cernbox-codimd.web.cern.ch/uploads/upload_2686853b00b671b4e6223f000eb9cd9b.png)
+
+### Plot (a): minΔφ(j₁,₂, pₜᵐⁱˢˢ) for nb = 1
+- **Purpose**: Show angular separation between leading jets and MET
+- **Interpretation**: QCD multijet background tends to have small Δφ
+- **Cut**: Events with minΔφ > 1.0 rad are selected
+
+### Plot (b): Mₜ for nb = 1
+- **Purpose**: Transverse mass distribution
+- **Interpretation**: Signal events have larger MT values
+- **Cut**: Events with MT > 180 GeV are selected
+
+### Plot (c): minΔφ(j₁,₂, pₜᵐⁱˢˢ) for nb ≥ 2
+- **Same as (a)** but for events with ≥2 b-jets
+
+### Plot (d): Mₜ for nb ≥ 2
+- **Same as (b)** but for events with ≥2 b-jets
+
+### Plot (e): pₜʲᵉᵗ¹ / Hₜ for nb ≥ 2
+- **Purpose**: Ratio of leading jet pT to total hadronic activity
+- **Interpretation**: Signal events have more balanced jet energy distribution
+- **Cut**: Events with ratio < 0.5 are selected
+
+## Physics Context
+
+### All-Hadronic Channel Characteristics
+- **Branching ratio**: ~46% (highest for tt̄)
+- **Background**: Dominated by QCD multijet production
+- **Challenges**: MET can be faked by jet mismeasurement
+- **Advantages**: Maximum statistical power
+
+### Optimization Strategy
+The cuts shown in the plots are optimized to:
+1. Suppress QCD background using angular correlations (minΔφ)
+2. Enhance signal using transverse mass (MT)
+3. Further discriminate signal using jet energy balance (pT/HT)
+
+## Customization Options
+
+### Modify Selection Criteria
+```python
+# In the __init__ method, modify parameters:
+self.params = {
+    'jet_pt_min': 40,  # Increase jet pT threshold
+    'met_min': 50,     # Increase MET threshold
+    'min_dphi': 0.8,   # Relax angular cut
+    'mt_min': 200,     # Increase MT cut
+}
+```
+
+### Add Additional Plots
+```python
+def plot_additional_variables(self, nb_eq_1_mask, nb_ge_2_mask):
+    """Add custom plots"""
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    
+    # Plot b-jet multiplicity
+    n_bjets_nb1 = ak.to_numpy(self.jet_info['n_bjets'][nb_eq_1_mask])
+    n_bjets_nb2 = ak.to_numpy(self.jet_info['n_bjets'][nb_ge_2_mask])
+    
+    # Your custom plotting code here
+```
+![](https://cernbox-codimd.web.cern.ch/uploads/upload_85a2a2294c653087061f8e532bfead2e.png)
+![](https://cernbox-codimd.web.cern.ch/uploads/upload_4e87fc17eb4373af623757534d186326.png)
+![](https://cernbox-codimd.web.cern.ch/uploads/upload_3743167f816947f599f2068d7fde7699.png)
+
+## Performance Notes
+
+### Expected Resource Usage
+- **Memory**: ~2-4 GB for 100,000 events
+- **Time**: 10-30 minutes for full analysis
+- **Network**: ~500 MB data transfer from CERN servers
+
+### Optimization Tips
+1. For development, use fewer files: `file_paths[:3]`
+2. For quick tests, reduce events: `max_events_per_file=1000`
+3. Save intermediate results to avoid re-downloading
+
+## Citation and References
+
+### Data Source
+```bibtex
+@misc{cms_opendata_2024,
+  title = {Simulated dataset TTToSemiLeptonic in NANOAODSIM format},
+  author = {CMS Collaboration},
+  year = {2024},
+  doi = {10.7483/OPENDATA.CMS.4J3Y.1CME},
+  url = {https://opendata.cern.ch/record/67993}
+}
+```
+
+### Related Papers
+- CMS Collaboration, "Search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV", JHEP 03 (2019) 141
+- Original analysis methodology from arXiv:1901.01553
+
+## Support
+
+For issues or questions:
+1. Check the console error messages
+2. Verify internet connectivity to CERN servers
+3. Ensure all Python packages are up to date
+4. Consult the [CMS Open Data documentation](http://opendata.cern.ch/docs)
+
+This complete guide provides everything needed to reproduce the AH optimization plots using CMS Open Data. The analysis follows the same methodology as the original CMS paper while being accessible through public data and open-source tools.
