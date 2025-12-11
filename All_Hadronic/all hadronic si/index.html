@@ -1,0 +1,1591 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV">
+      
+      
+      
+        <link rel="canonical" href="https://cms-epn.github.io/search-for-dark-matter-docs/All_Hadronic/all%20hadronic%20si/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../../Single_Lepton/Analisis_muon_final_version/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Complete Guide: AH Optimization Analysis for CMS Open Data - Search for dark matter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i%7CRed+Hat+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Merriweather Sans";--md-code-font:"Red Hat Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="blue-grey">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#complete-guide-ah-optimization-analysis-for-cms-open-data" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Search for dark matter" class="md-header__button md-logo" aria-label="Search for dark matter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 11a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1M4.22 4.22C5.65 2.79 8.75 3.43 12 5.56c3.25-2.13 6.35-2.77 7.78-1.34s.79 4.53-1.34 7.78c2.13 3.25 2.77 6.35 1.34 7.78s-4.53.79-7.78-1.34c-3.25 2.13-6.35 2.77-7.78 1.34S3.43 15.25 5.56 12C3.43 8.75 2.79 5.65 4.22 4.22m11.32 4.24c.61.62 1.17 1.25 1.69 1.88 1.38-2.13 1.88-3.96 1.13-4.7-.74-.75-2.57-.25-4.7 1.13.63.52 1.26 1.08 1.88 1.69m-7.08 7.08c-.61-.62-1.17-1.25-1.69-1.88-1.38 2.13-1.88 3.96-1.13 4.7.74.75 2.57.25 4.7-1.13-.63-.52-1.26-1.08-1.88-1.69m-2.82-9.9c-.75.74-.25 2.57 1.13 4.7.52-.63 1.08-1.26 1.69-1.88.62-.61 1.25-1.17 1.88-1.69-2.13-1.38-3.96-1.88-4.7-1.13m4.24 8.48c.7.7 1.42 1.34 2.12 1.91.7-.57 1.42-1.21 2.12-1.91s1.34-1.42 1.91-2.12c-.57-.7-1.21-1.42-1.91-2.12S12.7 8.54 12 7.97c-.7.57-1.42 1.21-2.12 1.91S8.54 11.3 7.97 12c.57.7 1.21 1.42 1.91 2.12m8.48 4.24c.75-.74.25-2.57-1.13-4.7-.52.63-1.08 1.26-1.69 1.88-.62.61-1.25 1.17-1.88 1.69 2.13 1.38 3.96 1.88 4.7 1.13"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Search for dark matter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Complete Guide: AH Optimization Analysis for CMS Open Data
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="blue-grey"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/CMS-EPN/search-for-dark-matter-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    search-for-dark-matter-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Search for dark matter" class="md-nav__button md-logo" aria-label="Search for dark matter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 11a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1M4.22 4.22C5.65 2.79 8.75 3.43 12 5.56c3.25-2.13 6.35-2.77 7.78-1.34s.79 4.53-1.34 7.78c2.13 3.25 2.77 6.35 1.34 7.78s-4.53.79-7.78-1.34c-3.25 2.13-6.35 2.77-7.78 1.34S3.43 15.25 5.56 12C3.43 8.75 2.79 5.65 4.22 4.22m11.32 4.24c.61.62 1.17 1.25 1.69 1.88 1.38-2.13 1.88-3.96 1.13-4.7-.74-.75-2.57-.25-4.7 1.13.63.52 1.26 1.08 1.88 1.69m-7.08 7.08c-.61-.62-1.17-1.25-1.69-1.88-1.38 2.13-1.88 3.96-1.13 4.7.74.75 2.57.25 4.7-1.13-.63-.52-1.26-1.08-1.88-1.69m-2.82-9.9c-.75.74-.25 2.57 1.13 4.7.52-.63 1.08-1.26 1.69-1.88.62-.61 1.25-1.17 1.88-1.69-2.13-1.38-3.96-1.88-4.7-1.13m4.24 8.48c.7.7 1.42 1.34 2.12 1.91.7-.57 1.42-1.21 2.12-1.91s1.34-1.42 1.91-2.12c-.57-.7-1.21-1.42-1.91-2.12S12.7 8.54 12 7.97c-.7.57-1.42 1.21-2.12 1.91S8.54 11.3 7.97 12c.57.7 1.21 1.42 1.91 2.12m8.48 4.24c.75-.74.25-2.57-1.13-4.7-.52.63-1.08 1.26-1.69 1.88-.62.61-1.25 1.17-1.88 1.69 2.13 1.38 3.96 1.88 4.7 1.13"/></svg>
+
+    </a>
+    Search for dark matter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/CMS-EPN/search-for-dark-matter-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    search-for-dark-matter-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EPN CMS collaboration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Hadronic
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Hadronic
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Complete Guide: AH Optimization Analysis for CMS Open Data
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Complete Guide: AH Optimization Analysis for CMS Open Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Single Lepton
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Single Lepton
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Single_Lepton/Analisis_muon_final_version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advances of the Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="complete-guide-ah-optimization-analysis-for-cms-open-data">Complete Guide: AH Optimization Analysis for CMS Open Data</h1>
+<h2 id="overview">Overview</h2>
+<p>This guide provides step-by-step instructions to generate the All-Hadronic (AH) optimization plots using CMS Open Data. The analysis processes TTToSemiLeptonic Monte Carlo events to produce distributions of key kinematic variables for signal region optimization.</p>
+<h1 id="physics-motivation-and-channel-strategy-all-hadronic-channel">Physics Motivation and Channel Strategy: All-Hadronic Channel</h1>
+<p>The Large Hadron Collider (LHC) collides protons at center-of-mass energies high enough to probe physics beyond the Standard Model. In the context of simplified dark matter models, partonic interactions can produce top quarks together with a new mediator particle that decays invisibly into dark matter candidates (χχ̄). At the detector level, this results in events with multiple top quarks plus significant missing transverse momentum (p_T^miss).</p>
+<p>The production mechanisms of interest include:
+- <strong>Gluon fusion:</strong> $$gg → tt̄φ → tt̄ + χχ̄ $$
+- <strong>Single top associated production:</strong> $$gb → tφ → t + χχ̄  $$
+- <strong>t-channel production:</strong> $$qq' → tbφ → tb + χχ̄ $$</p>
+<p>In all cases, the top quarks decay via <span class="arithmatex">\(t \to W b\)</span>. In the <strong>all-hadronic (AH) channel</strong>, both W bosons decay hadronically <span class="arithmatex">\((W → qq̄')\)</span>, resulting in a fully hadronic final state with no isolated leptons.</p>
+<h2 id="channel-characteristics">Channel Characteristics</h2>
+<p>The all-hadronic channel is defined by:
+- <strong>No isolated leptons</strong> (lepton veto applied)
+- <strong>Multiple jets</strong> (≥3 jets with ≥1 b-tagged jet)
+- <strong>Large missing transverse energy</strong> from dark matter particles and detector resolution</p>
+<p><strong>Advantages:</strong>
+- Highest branching fraction (~46% for tt̄ → all hadronic)
+- Largest raw event yield
+- Sensitive to highly boosted topologies</p>
+<p><strong>Challenges:</strong>
+- Overwhelming QCD multijet background
+- Instrumental MET from jet mismeasurements
+- Requires sophisticated background estimation techniques</p>
+<p>The all-hadronic channel complements lepton channels by providing additional sensitivity in high-MET regions where QCD background can be controlled through kinematic selections.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="1-system-requirements">1. System Requirements</h3>
+<ul>
+<li>Python 3.8 or higher</li>
+<li>8+ GB RAM recommended</li>
+<li>Stable internet connection (for XRootD access)</li>
+<li>5+ GB free disk space</li>
+</ul>
+<h3 id="2-python-package-installation">2. Python Package Installation</h3>
+<pre><code class="language-bash"># Create and activate virtual environment (optional but recommended)
+python -m venv cms_analysis
+source cms_analysis/bin/activate  # On Windows: cms_analysis\Scripts\activate
+
+# Install required packages
+pip install uproot awkward numpy matplotlib
+</code></pre>
+<h2 id="selection-criteria">Selection Criteria</h2>
+<h3 id="1-trigger-requirements-hlt">1. Trigger Requirements (HLT)</h3>
+<p>Events must fire at least one of the following MET-based triggers:
+• <code>HLT_PFMETNoMu120</code>
+• <code>HLT_PFMETNoMu90_PFMHTNoMu90_IDTight</code>
+• <code>HLT_PFMETNoMu110_PFMHTNoMu110_IDTight</code>
+• <code>HLT_PFMETNoMu120_PFMHTNoMu120_IDTight</code>
+• <code>HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight</code>
+• <code>HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight</code>
+• <code>HLT_PFMET120_PFMHT120</code>
+• <code>HLT_PFMET110_PFMHT110_IDTight</code>
+• <code>HLT_PFMET120_PFMHT120_IDTight</code>
+• <code>HLT_PFMET170</code>
+• <code>HLT_PFMET170_NoiseCleaned</code>
+• <code>HLT_PFMET170_HBHECleaned</code>
+• <code>HLT_PFMET170_HBHE_BeamHaloCleaned</code></p>
+<p><strong>Motivation:</strong> These MET-based triggers are efficient for hadronic final states with genuine missing energy.</p>
+<h3 id="2-event-cleaning-flags">2. Event Cleaning Flags</h3>
+<p><strong>Applied to both data and MC:</strong>
+- HBHENoiseFilter
+- HBHENoiseIsoFilter<br />
+- ECALDeadCellFilter
+- GlobalTightHalo2016Filter
+- BadPFMuonFilter
+- BadChargedHadronFilter</p>
+<p><strong>Applied to data only:</strong>
+- EEBadScFilter</p>
+<h3 id="3-lepton-veto">3. Lepton Veto</h3>
+<p><strong>No veto leptons allowed:</strong>
+- <strong>Electrons:</strong> No electrons with pT &gt; 10 GeV, |η| &lt; 2.5
+- <strong>Muons:</strong> No muons with pT &gt; 10 GeV, |η| &lt; 2.4</p>
+<h3 id="4-jet-selection">4. Jet Selection</h3>
+<ul>
+<li><strong>pT:</strong> &gt; 30 GeV</li>
+<li><strong>|η|:</strong> &lt; 2.4 (central jets)</li>
+<li><strong>Jet ID:</strong> Loose working point</li>
+<li><strong>Overlap removal:</strong> Jets within ΔR &lt; 0.4 of tight leptons are removed</li>
+</ul>
+<h3 id="5-event-level-requirements">5. Event-Level Requirements</h3>
+<ul>
+<li><strong>Number of jets:</strong> ≥ 3</li>
+<li><strong>b-tagged jets:</strong> ≥ 1 (DeepCSV medium WP: 0.6321)</li>
+<li><strong>Missing ET:</strong> pT^miss ≥ 250 GeV</li>
+<li><strong>Δφ(jet1,2, MET):</strong> &gt; 0.4 (baseline), &gt; 1.0 (optimized)</li>
+</ul>
+<h3 id="6-additional-kinematic-variables-optimized-selection">6. Additional Kinematic Variables (Optimized Selection)</h3>
+<ul>
+<li><strong>Transverse bottom mass:</strong> M_bT &gt; 180 GeV</li>
+<li><strong>Jet fraction:</strong> pT(j1)/HT ≤ 0.5 (for n_b ≥ 2 category)</li>
+</ul>
+<h2 id="step-by-step-analysis">Step-by-Step Analysis</h2>
+<h3 id="step-1-create-the-analysis-script">Step 1: Create the Analysis Script</h3>
+<p>Create a file named <code>ah_optimization_analysis.py</code> with the following complete code:</p>
+<pre><code class="language-python">import uproot
+import numpy as np
+import matplotlib.pyplot as plt
+import awkward as ak
+from matplotlib import rcParams
+import time
+import math
+
+# Set plot style for publication quality
+rcParams.update({
+    'font.size': 14,
+    'axes.titlesize': 16,
+    'axes.labelsize': 14,
+    'xtick.labelsize': 12,
+    'ytick.labelsize': 12,
+    'legend.fontsize': 12,
+    'figure.figsize': (15, 10),
+    'figure.autolayout': True
+})
+plt.style.use('seaborn-v0_8-whitegrid')
+
+class AHOptimizationAnalyzer:
+    &quot;&quot;&quot;Analyzer for All-Hadronic optimization plots&quot;&quot;&quot;
+
+    def __init__(self, file_paths):
+        self.file_paths = file_paths
+        self.events = None
+        self.jet_info = None
+
+        # Selection parameters for AH baseline
+        self.params = {
+            'jet_pt_min': 30,
+            'jet_eta_max': 2.4,
+            'bjet_wp': 0.2783,  # DeepJet medium working point
+            'met_min': 30,
+            'min_dphi': 1.0,
+            'mt_min': 180,
+            'pt_ht_ratio_max': 0.5,
+        }
+
+    def load_events(self, max_events_per_file=None):
+        &quot;&quot;&quot;Load events from multiple remote files&quot;&quot;&quot;
+        print(&quot;=&quot;*70)
+        print(&quot;LOADING EVENTS FROM XROOTD SERVERS&quot;)
+        print(&quot;=&quot;*70)
+
+        all_events = []
+        total_files = len(self.file_paths)
+
+        for i, file_path in enumerate(self.file_paths):
+            print(f&quot;\n[{i+1}/{total_files}] Processing: {file_path.split('/')[-1]}&quot;)
+
+            try:
+                start_time = time.time()
+
+                # Open remote file
+                file = uproot.open(file_path)
+                tree = file[&quot;Events&quot;]
+
+                # Get total entries
+                n_entries = tree.num_entries
+                print(f&quot;   Total entries: {n_entries:,}&quot;)
+
+                # Determine entries to read
+                if max_events_per_file and max_events_per_file &lt; n_entries:
+                    entries_to_read = max_events_per_file
+                else:
+                    entries_to_read = n_entries
+
+                # Read essential branches
+                print(f&quot;   Reading {entries_to_read:,} events...&quot;)
+                events = tree.arrays([
+                    &quot;Jet_pt&quot;, &quot;Jet_eta&quot;, &quot;Jet_phi&quot;, &quot;Jet_btagDeepFlavB&quot;,
+                    &quot;MET_pt&quot;, &quot;MET_phi&quot;,
+                    &quot;Muon_pt&quot;, &quot;Muon_eta&quot;, &quot;Muon_tightId&quot;, &quot;Muon_pfRelIso04_all&quot;,
+                    &quot;Electron_pt&quot;, &quot;Electron_eta&quot;, &quot;Electron_cutBased&quot;, &quot;Electron_pfRelIso03_all&quot;,
+                    &quot;nJet&quot;, &quot;nMuon&quot;, &quot;nElectron&quot;
+                ], entry_stop=entries_to_read, library=&quot;ak&quot;)
+
+                all_events.append(events)
+
+                elapsed = time.time() - start_time
+                print(f&quot;   ✓ Loaded {len(events):,} events in {elapsed:.1f}s ({len(events)/elapsed:.0f} events/s)&quot;)
+
+            except Exception as e:
+                print(f&quot;   ✗ Error: {e}&quot;)
+                continue
+
+        if all_events:
+            self.events = ak.concatenate(all_events)
+            print(f&quot;\n✓ SUCCESS: Loaded {len(self.events):,} total events from {len(all_events)} files&quot;)
+        else:
+            raise ValueError(&quot;Failed to load any events&quot;)
+
+    def apply_ah_baseline_selection(self):
+        &quot;&quot;&quot;Apply AH baseline selection (no isolated leptons, kinematic cuts)&quot;&quot;&quot;
+        print(&quot;\n&quot; + &quot;=&quot;*70)
+        print(&quot;APPLYING AH BASELINE SELECTION&quot;)
+        print(&quot;=&quot;*70)
+
+        # 1. Lepton veto
+        print(&quot;\n1. Applying lepton veto...&quot;)
+        lepton_veto = self.apply_lepton_veto()
+        print(f&quot;   Events with 0 isolated leptons: {ak.sum(lepton_veto):,} ({ak.sum(lepton_veto)/len(self.events)*100:.1f}%)&quot;)
+
+        # 2. Jet selection
+        print(&quot;\n2. Selecting jets...&quot;)
+        self.jet_info = self.select_jets()
+
+        # 3. Calculate kinematic variables
+        print(&quot;\n3. Calculating kinematic variables...&quot;)
+        self.calculate_kinematic_variables()
+
+        # 4. Apply baseline kinematic cuts
+        print(&quot;\n4. Applying kinematic cuts...&quot;)
+        baseline_mask = self.apply_baseline_cuts(lepton_veto)
+
+        print(f&quot;\n✓ AH Baseline selection complete&quot;)
+        print(f&quot;   Events passing baseline: {ak.sum(baseline_mask):,} ({ak.sum(baseline_mask)/len(self.events)*100:.1f}%)&quot;)
+
+        return baseline_mask
+
+    def apply_lepton_veto(self):
+        &quot;&quot;&quot;Veto events with isolated leptons&quot;&quot;&quot;
+
+        # Initialize counters
+        n_iso_muons = ak.zeros_like(self.events.MET_pt, dtype=int)
+        n_iso_electrons = ak.zeros_like(self.events.MET_pt, dtype=int)
+
+        # Muon selection: pT &gt; 10 GeV, |eta| &lt; 2.4, tight ID, isolation &lt; 0.15
+        if 'Muon_pt' in self.events.fields:
+            muon_pt = ak.fill_none(self.events.Muon_pt, 0)
+            muon_eta = ak.fill_none(self.events.Muon_eta, 100)
+            muon_tightId = ak.fill_none(self.events.Muon_tightId, 0)
+            muon_iso = ak.fill_none(self.events.Muon_pfRelIso04_all, 100)
+
+            muon_mask = (
+                (muon_pt &gt; 10) &amp; 
+                (np.abs(muon_eta) &lt; 2.4) &amp;
+                (muon_tightId == 1) &amp;
+                (muon_iso &lt; 0.15)
+            )
+            n_iso_muons = ak.sum(muon_mask, axis=1)
+
+        # Electron selection: pT &gt; 10 GeV, |eta| &lt; 2.5, tight ID, isolation &lt; 0.10
+        if 'Electron_pt' in self.events.fields:
+            electron_pt = ak.fill_none(self.events.Electron_pt, 0)
+            electron_eta = ak.fill_none(self.events.Electron_eta, 100)
+            electron_cutBased = ak.fill_none(self.events.Electron_cutBased, 0)
+            electron_iso = ak.fill_none(self.events.Electron_pfRelIso03_all, 100)
+
+            electron_mask = (
+                (electron_pt &gt; 10) &amp; 
+                (np.abs(electron_eta) &lt; 2.5) &amp;
+                (electron_cutBased &gt;= 3) &amp;  # 3 = Tight, 4 = SuperTight
+                (electron_iso &lt; 0.10)
+            )
+            n_iso_electrons = ak.sum(electron_mask, axis=1)
+
+        return (n_iso_muons == 0) &amp; (n_iso_electrons == 0)
+
+    def select_jets(self):
+        &quot;&quot;&quot;Select and count jets&quot;&quot;&quot;
+
+        # Basic jet selection
+        jet_pt = ak.fill_none(self.events.Jet_pt, 0)
+        jet_eta = ak.fill_none(self.events.Jet_eta, 100)
+        jet_phi = ak.fill_none(self.events.Jet_phi, 0)
+
+        # Good jets: pT &gt; 30 GeV, |eta| &lt; 2.4
+        good_jet_mask = (
+            (jet_pt &gt; self.params['jet_pt_min']) &amp;
+            (np.abs(jet_eta) &lt; self.params['jet_eta_max'])
+        )
+
+        # Count jets
+        n_jets = ak.sum(good_jet_mask, axis=1)
+
+        # Count b-jets (DeepJet medium WP)
+        if 'Jet_btagDeepFlavB' in self.events.fields:
+            btag = ak.fill_none(self.events.Jet_btagDeepFlavB, -1)
+            bjet_mask = good_jet_mask &amp; (btag &gt; self.params['bjet_wp'])
+            n_bjets = ak.sum(bjet_mask, axis=1)
+        else:
+            n_bjets = ak.zeros_like(n_jets)
+
+        print(f&quot;   Events with ≥4 jets: {ak.sum(n_jets &gt;= 4):,} ({ak.sum(n_jets &gt;= 4)/len(self.events)*100:.1f}%)&quot;)
+        print(f&quot;   Events with ≥1 b-jets: {ak.sum(n_bjets &gt;= 1):,} ({ak.sum(n_bjets &gt;= 1)/len(self.events)*100:.1f}%)&quot;)
+        print(f&quot;   Events with ≥2 b-jets: {ak.sum(n_bjets &gt;= 2):,} ({ak.sum(n_bjets &gt;= 2)/len(self.events)*100:.1f}%)&quot;)
+
+        return {
+            'n_jets': n_jets,
+            'n_bjets': n_bjets,
+            'good_jet_mask': good_jet_mask,
+            'jet_pt': jet_pt,
+            'jet_eta': jet_eta,
+            'jet_phi': jet_phi
+        }
+
+    def calculate_kinematic_variables(self):
+        &quot;&quot;&quot;Calculate minΔφ, MT, HT, and pT/HT ratio&quot;&quot;&quot;
+
+        print(&quot;   Calculating minΔφ(j1,2, MET)...&quot;)
+        print(&quot;   Calculating MT...&quot;)
+        print(&quot;   Calculating HT...&quot;)
+        print(&quot;   Calculating pT/HT ratio...&quot;)
+
+        # Get jet information
+        good_jet_mask = self.jet_info['good_jet_mask']
+        jet_pt = self.jet_info['jet_pt'][good_jet_mask]
+        jet_phi = self.jet_info['jet_phi'][good_jet_mask]
+
+        # Calculate HT (scalar sum of jet pT)
+        self.HT = ak.sum(jet_pt, axis=1)
+
+        # Initialize arrays
+        n_events = len(self.events)
+        self.min_dphi = np.zeros(n_events)
+        self.MT = np.zeros(n_events)
+        self.pt_ht_ratio = np.zeros(n_events)
+
+        # Convert to numpy for faster processing
+        met_pt = ak.to_numpy(self.events.MET_pt)
+        met_phi = ak.to_numpy(self.events.MET_phi)
+        n_jets = ak.to_numpy(self.jet_info['n_jets'])
+
+        # Process each event
+        for i in range(n_events):
+            if n_jets[i] &gt;= 2:
+                # Get jets for this event
+                event_jets_pt = ak.to_numpy(jet_pt[i])
+                event_jets_phi = ak.to_numpy(jet_phi[i])
+
+                if len(event_jets_pt) &gt;= 2:
+                    # Sort by pT (descending)
+                    sorted_idx = np.argsort(event_jets_pt)[::-1]
+
+                    # Get two leading jets
+                    jet1_phi = event_jets_phi[sorted_idx[0]]
+                    jet2_phi = event_jets_phi[sorted_idx[1]]
+                    jet1_pt = event_jets_pt[sorted_idx[0]]
+
+                    # Calculate Δφ
+                    delta_phi1 = abs(jet1_phi - met_phi[i])
+                    delta_phi2 = abs(jet2_phi - met_phi[i])
+
+                    # Normalize to [0, π]
+                    if delta_phi1 &gt; math.pi:
+                        delta_phi1 = 2*math.pi - delta_phi1
+                    if delta_phi2 &gt; math.pi:
+                        delta_phi2 = 2*math.pi - delta_phi2
+
+                    # minΔφ
+                    self.min_dphi[i] = min(delta_phi1, delta_phi2)
+
+                    # Calculate MT (transverse mass)
+                    self.MT[i] = math.sqrt(2 * jet1_pt * met_pt[i] * (1 - math.cos(delta_phi1)))
+
+                    # Calculate pT/HT ratio
+                    if self.HT[i] &gt; 0:
+                        self.pt_ht_ratio[i] = jet1_pt / self.HT[i]
+
+        print(f&quot;   ✓ Variables calculated for {n_events:,} events&quot;)
+
+    def apply_baseline_cuts(self, lepton_veto):
+        &quot;&quot;&quot;Apply AH baseline cuts&quot;&quot;&quot;
+
+        n_jets = self.jet_info['n_jets']
+
+        # Basic AH baseline selection
+        baseline_mask = (
+            lepton_veto &amp;
+            (n_jets &gt;= 4) &amp;
+            (self.events.MET_pt &gt; self.params['met_min'])
+        )
+
+        return baseline_mask
+
+    def get_category_masks(self, baseline_mask):
+        &quot;&quot;&quot;Get masks for nb = 1 and nb ≥ 2 categories&quot;&quot;&quot;
+
+        n_bjets = self.jet_info['n_bjets']
+
+        # Events in baseline selection
+        in_baseline = baseline_mask
+
+        # Category masks
+        nb_eq_1_mask = in_baseline &amp; (n_bjets == 1)
+        nb_ge_2_mask = in_baseline &amp; (n_bjets &gt;= 2)
+
+        print(f&quot;\nCategory statistics after baseline:&quot;)
+        print(f&quot;   nb = 1 events: {ak.sum(nb_eq_1_mask):,}&quot;)
+        print(f&quot;   nb ≥ 2 events: {ak.sum(nb_ge_2_mask):,}&quot;)
+
+        return nb_eq_1_mask, nb_ge_2_mask
+
+    def plot_optimization_distributions(self, nb_eq_1_mask, nb_ge_2_mask):
+        &quot;&quot;&quot;
+        Create the 5 optimization plots as shown in the paper
+        &quot;&quot;&quot;
+        print(&quot;\n&quot; + &quot;=&quot;*70)
+        print(&quot;GENERATING AH OPTIMIZATION PLOTS&quot;)
+        print(&quot;=&quot;*70)
+
+        # Create figure with 2x3 layout (5 plots + 1 empty)
+        fig = plt.figure(figsize=(16, 12))
+
+        # Define subplot positions
+        ax1 = plt.subplot(2, 3, 1)  # (a) minΔφ for nb = 1
+        ax2 = plt.subplot(2, 3, 2)  # (b) MT for nb = 1
+        ax3 = plt.subplot(2, 3, 4)  # (c) minΔφ for nb ≥ 2
+        ax4 = plt.subplot(2, 3, 5)  # (d) MT for nb ≥ 2
+        ax5 = plt.subplot(2, 3, 6)  # (e) pT/HT for nb ≥ 2
+
+        # Top-right subplot is empty for title
+        ax_empty = plt.subplot(2, 3, 3)
+        ax_empty.axis('off')
+
+        # Get data for each category
+        min_dphi_nb1 = self.min_dphi[ak.to_numpy(nb_eq_1_mask)]
+        mt_nb1 = self.MT[ak.to_numpy(nb_eq_1_mask)]
+
+        min_dphi_nb2 = self.min_dphi[ak.to_numpy(nb_ge_2_mask)]
+        mt_nb2 = self.MT[ak.to_numpy(nb_ge_2_mask)]
+        pt_ht_nb2 = self.pt_ht_ratio[ak.to_numpy(nb_ge_2_mask)]
+
+        # Filter out zeros
+        min_dphi_nb1 = min_dphi_nb1[min_dphi_nb1 &gt; 0]
+        mt_nb1 = mt_nb1[mt_nb1 &gt; 0]
+        min_dphi_nb2 = min_dphi_nb2[min_dphi_nb2 &gt; 0]
+        mt_nb2 = mt_nb2[mt_nb2 &gt; 0]
+        pt_ht_nb2 = pt_ht_nb2[pt_ht_nb2 &gt; 0]
+
+        # Plot (a): minΔφ for nb = 1
+        print(&quot;Plotting (a) minΔφ for nb = 1...&quot;)
+        if len(min_dphi_nb1) &gt; 0:
+            ax1.hist(min_dphi_nb1, bins=50, range=(0, 3.2),
+                    histtype='step', linewidth=2, color='blue',
+                    density=True)
+            ax1.axvline(self.params['min_dphi'], color='red', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: &gt;{self.params[&quot;min_dphi&quot;]} rad')
+            ax1.legend(loc='upper right')
+
+        ax1.set_xlabel(r'min$\Delta\phi(j_{1,2}, p_T^{miss})$ [rad]')
+        ax1.set_ylabel('Normalized Events')
+        ax1.set_title(r'(a) min$\Delta\phi(j_{1,2}, p_T^{miss})$ for $n_b = 1$')
+        ax1.grid(True, alpha=0.3)
+        ax1.text(0.05, 0.95, f'Entries: {len(min_dphi_nb1):,}',
+                transform=ax1.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+        # Plot (b): MT for nb = 1
+        print(&quot;Plotting (b) MT for nb = 1...&quot;)
+        if len(mt_nb1) &gt; 0:
+            ax2.hist(mt_nb1, bins=50, range=(0, 500),
+                    histtype='step', linewidth=2, color='green',
+                    density=True)
+            ax2.axvline(self.params['mt_min'], color='red', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: &gt;{self.params[&quot;mt_min&quot;]} GeV')
+            ax2.legend(loc='upper right')
+
+        ax2.set_xlabel(r'$M_T$ [GeV]')
+        ax2.set_ylabel('Normalized Events')
+        ax2.set_title(r'(b) $M_T$ for $n_b = 1$')
+        ax2.grid(True, alpha=0.3)
+        ax2.text(0.05, 0.95, f'Entries: {len(mt_nb1):,}',
+                transform=ax2.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+        # Plot (c): minΔφ for nb ≥ 2
+        print(&quot;Plotting (c) minΔφ for nb ≥ 2...&quot;)
+        if len(min_dphi_nb2) &gt; 0:
+            ax3.hist(min_dphi_nb2, bins=50, range=(0, 3.2),
+                    histtype='step', linewidth=2, color='red',
+                    density=True)
+            ax3.axvline(self.params['min_dphi'], color='blue', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: &gt;{self.params[&quot;min_dphi&quot;]} rad')
+            ax3.legend(loc='upper right')
+
+        ax3.set_xlabel(r'min$\Delta\phi(j_{1,2}, p_T^{miss})$ [rad]')
+        ax3.set_ylabel('Normalized Events')
+        ax3.set_title(r'(c) min$\Delta\phi(j_{1,2}, p_T^{miss})$ for $n_b \geq 2$')
+        ax3.grid(True, alpha=0.3)
+        ax3.text(0.05, 0.95, f'Entries: {len(min_dphi_nb2):,}',
+                transform=ax3.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+        # Plot (d): MT for nb ≥ 2
+        print(&quot;Plotting (d) MT for nb ≥ 2...&quot;)
+        if len(mt_nb2) &gt; 0:
+            ax4.hist(mt_nb2, bins=50, range=(0, 500),
+                    histtype='step', linewidth=2, color='purple',
+                    density=True)
+            ax4.axvline(self.params['mt_min'], color='blue', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: &gt;{self.params[&quot;mt_min&quot;]} GeV')
+            ax4.legend(loc='upper right')
+
+        ax4.set_xlabel(r'$M_T$ [GeV]')
+        ax4.set_ylabel('Normalized Events')
+        ax4.set_title(r'(d) $M_T$ for $n_b \geq 2$')
+        ax4.grid(True, alpha=0.3)
+        ax4.text(0.05, 0.95, f'Entries: {len(mt_nb2):,}',
+                transform=ax4.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+        # Plot (e): pT/HT for nb ≥ 2
+        print(&quot;Plotting (e) pT/HT for nb ≥ 2...&quot;)
+        if len(pt_ht_nb2) &gt; 0:
+            ax5.hist(pt_ht_nb2, bins=50, range=(0, 1),
+                    histtype='step', linewidth=2, color='orange',
+                    density=True)
+            ax5.axvline(self.params['pt_ht_ratio_max'], color='red', linestyle='--',
+                       linewidth=1.5, alpha=0.8, label=f'Cut: &lt;{self.params[&quot;pt_ht_ratio_max&quot;]}')
+            ax5.legend(loc='upper right')
+
+        ax5.set_xlabel(r'$p_T^{jet1} / H_T$')
+        ax5.set_ylabel('Normalized Events')
+        ax5.set_title(r'(e) $p_T^{jet1} / H_T$ for $n_b \geq 2$')
+        ax5.grid(True, alpha=0.3)
+        ax5.text(0.05, 0.95, f'Entries: {len(pt_ht_nb2):,}',
+                transform=ax5.transAxes, fontsize=10,
+                verticalalignment='top',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+        # Add main title
+        ax_empty.text(0.5, 0.5, 'AH Optimization Distributions\n(after baseline selection)\n' +
+                     'TTToSemiLeptonic MC\n' +
+                     f'Total events: {len(self.events):,}',
+                     horizontalalignment='center',
+                     verticalalignment='center',
+                     transform=ax_empty.transAxes,
+                     fontsize=14, fontweight='bold')
+
+        # Add statistics box
+        stats_text = (
+            f'AH Baseline Selection:\n'
+            f'• 0 isolated leptons\n'
+            f'• ≥4 jets (pT &gt; 30 GeV)\n'
+            f'• MET &gt; 30 GeV\n'
+            f'• nb = 1: {ak.sum(nb_eq_1_mask):,} events\n'
+            f'• nb ≥ 2: {ak.sum(nb_ge_2_mask):,} events'
+        )
+
+        fig.text(0.02, 0.02, stats_text, fontsize=10,
+                verticalalignment='bottom',
+                bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
+
+        plt.tight_layout()
+
+        # Save figure
+        timestamp = time.strftime(&quot;%Y%m%d_%H%M%S&quot;)
+        output_file = f'ah_optimization_plots_{timestamp}.png'
+        plt.savefig(output_file, dpi=150, bbox_inches='tight')
+        print(f&quot;\n✓ Plots saved to: {output_file}&quot;)
+
+        plt.show()
+
+        # Also create summary statistics plot
+        self.plot_summary_statistics(nb_eq_1_mask, nb_ge_2_mask)
+
+    def plot_summary_statistics(self, nb_eq_1_mask, nb_ge_2_mask):
+        &quot;&quot;&quot;Create additional summary plots&quot;&quot;&quot;
+
+        fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+
+        # 1. Event counts by category
+        categories = ['nb = 1', 'nb ≥ 2', 'Total Baseline']
+        counts = [
+            ak.sum(nb_eq_1_mask),
+            ak.sum(nb_ge_2_mask),
+            ak.sum(nb_eq_1_mask) + ak.sum(nb_ge_2_mask)
+        ]
+
+        bars = axes[0, 0].bar(categories, counts, 
+                             color=['skyblue', 'lightgreen', 'salmon'],
+                             edgecolor='black')
+        axes[0, 0].set_ylabel('Number of Events')
+        axes[0, 0].set_title('Event Counts by Category')
+        axes[0, 0].grid(True, alpha=0.3, axis='y')
+
+        for i, (bar, count) in enumerate(zip(bars, counts)):
+            axes[0, 0].text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(counts)*0.01,
+                          f'{count:,}', ha='center', va='bottom', fontsize=11)
+
+        # 2. MET distribution comparison
+        if ak.sum(nb_eq_1_mask) &gt; 0:
+            met_nb1 = ak.to_numpy(self.events.MET_pt[nb_eq_1_mask])
+            axes[0, 1].hist(met_nb1, bins=40, range=(0, 400), histtype='step',
+                          linewidth=2, color='blue', density=True, label='nb = 1')
+
+        if ak.sum(nb_ge_2_mask) &gt; 0:
+            met_nb2 = ak.to_numpy(self.events.MET_pt[nb_ge_2_mask])
+            axes[0, 1].hist(met_nb2, bins=40, range=(0, 400), histtype='step',
+                          linewidth=2, color='red', density=True, label='nb ≥ 2')
+
+        axes[0, 1].set_xlabel(r'$p_T^{miss}$ [GeV]')
+        axes[0, 1].set_ylabel('Normalized Events')
+        axes[0, 1].set_title(r'$p_T^{miss}$ Distribution by Category')
+        axes[0, 1].legend()
+        axes[0, 1].grid(True, alpha=0.3)
+
+        # 3. HT distribution
+        if ak.sum(nb_eq_1_mask) &gt; 0:
+            ht_nb1 = self.HT[ak.to_numpy(nb_eq_1_mask)]
+            axes[1, 0].hist(ht_nb1, bins=50, range=(0, 1500), histtype='step',
+                          linewidth=2, color='blue', density=True, label='nb = 1')
+
+        if ak.sum(nb_ge_2_mask) &gt; 0:
+            ht_nb2 = self.HT[ak.to_numpy(nb_ge_2_mask)]
+            axes[1, 0].hist(ht_nb2, bins=50, range=(0, 1500), histtype='step',
+                          linewidth=2, color='red', density=True, label='nb ≥ 2')
+
+        axes[1, 0].set_xlabel(r'$H_T$ [GeV]')
+        axes[1, 0].set_ylabel('Normalized Events')
+        axes[1, 0].set_title(r'$H_T$ Distribution by Category')
+        axes[1, 0].legend()
+        axes[1, 0].grid(True, alpha=0.3)
+
+        # 4. Jet multiplicity
+        n_jets_nb1 = ak.to_numpy(self.jet_info['n_jets'][nb_eq_1_mask])
+        n_jets_nb2 = ak.to_numpy(self.jet_info['n_jets'][nb_ge_2_mask])
+
+        axes[1, 1].hist([n_jets_nb1, n_jets_nb2], bins=range(4, 16),
+                       histtype='step', linewidth=2, density=True,
+                       label=['nb = 1', 'nb ≥ 2'], color=['blue', 'red'])
+        axes[1, 1].set_xlabel('Number of Jets')
+        axes[1, 1].set_ylabel('Normalized Events')
+        axes[1, 1].set_title('Jet Multiplicity by Category')
+        axes[1, 1].legend()
+        axes[1, 1].grid(True, alpha=0.3)
+
+        plt.suptitle('AH Analysis Summary - TTToSemiLeptonic MC', fontsize=16, fontweight='bold')
+        plt.tight_layout()
+
+        # Save summary plot
+        summary_file = f'ah_summary_plots_{time.strftime(&quot;%Y%m%d_%H%M%S&quot;)}.png'
+        plt.savefig(summary_file, dpi=150, bbox_inches='tight')
+        print(f&quot;✓ Summary plots saved to: {summary_file}&quot;)
+
+        plt.show()
+
+def main():
+    &quot;&quot;&quot;Main execution function&quot;&quot;&quot;
+
+    print(&quot;=&quot;*70)
+    print(&quot;AH OPTIMIZATION ANALYSIS - CMS OPEN DATA&quot;)
+    print(&quot;=&quot;*70)
+
+    # All remote file URLs
+    file_paths = [
+        # Original files
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/08FCB2ED-176B-064B-85AB-37B898773B98.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/0BD60695-8388-5141-B157-32AE1A3B4885.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/4F3C361D-258C-1D41-AEEA-48CB87D3839A.root&quot;,
+
+        # Additional files
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/F6C0248E-6AC1-CE45-BEFA-56A735AA214A.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/FA5B9B55-06B4-A640-AF3C-7B44552E2393.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/FB5A9307-B677-B947-8970-21DA6BD7C9C2.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/1D63950A-E444-E049-BFF0-D33296A8A6CA.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/FFA621C8-C16B-5740-AB60-84246D9B2FD1.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/2D439FBF-CF8D-654F-93B1-2F7D0A74B0CB.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/2E85B521-A37E-0044-8662-BFB0C1291422.root&quot;,
+        &quot;root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/301EA765-5A14-1B43-ADED-D3BE6147134B.root&quot;
+    ]
+
+    print(f&quot;\n📊 Total files to process: {len(file_paths)}&quot;)
+
+    try:
+        # Initialize analyzer
+        analyzer = AHOptimizationAnalyzer(file_paths)
+
+        # Load events (limit to 10,000 per file for reasonable runtime)
+        print(&quot;\n⏳ Loading events (this may take several minutes)...&quot;)
+        analyzer.load_events(max_events_per_file=10000)
+
+        # Apply AH baseline selection
+        baseline_mask = analyzer.apply_ah_baseline_selection()
+
+        # Get category masks
+        nb_eq_1_mask, nb_ge_2_mask = analyzer.get_category_masks(baseline_mask)
+
+        # Generate optimization plots
+        analyzer.plot_optimization_distributions(nb_eq_1_mask, nb_ge_2_mask)
+
+        # Print final summary
+        print(&quot;\n&quot; + &quot;=&quot;*70)
+        print(&quot;ANALYSIS COMPLETE&quot;)
+        print(&quot;=&quot;*70)
+        print(f&quot;\n📈 FINAL STATISTICS:&quot;)
+        print(f&quot;   Total events processed: {len(analyzer.events):,}&quot;)
+        print(f&quot;   Events in baseline selection: {ak.sum(baseline_mask):,}&quot;)
+        print(f&quot;   nb = 1 events: {ak.sum(nb_eq_1_mask):,}&quot;)
+        print(f&quot;   nb ≥ 2 events: {ak.sum(nb_ge_2_mask):,}&quot;)
+        print(f&quot;\n✅ Plots have been generated and saved to disk&quot;)
+
+    except Exception as e:
+        print(f&quot;\n❌ Error: {e}&quot;)
+        print(&quot;\n💡 Troubleshooting tips:&quot;)
+        print(&quot;   1. Check internet connection&quot;)
+        print(&quot;   2. Try with fewer files first&quot;)
+        print(&quot;   3. Reduce max_events_per_file parameter&quot;)
+        print(&quot;   4. Ensure all dependencies are installed:&quot;)
+        print(&quot;      pip install uproot awkward numpy matplotlib&quot;)
+        import traceback
+        traceback.print_exc()
+
+if __name__ == &quot;__main__&quot;:
+    # Start timer
+    start_time = time.time()
+
+    # Run analysis
+    main()
+
+    # Print execution time
+    elapsed = time.time() - start_time
+    print(f&quot;\n⏱️  Total execution time: {elapsed:.1f} seconds ({elapsed/60:.1f} minutes)&quot;)
+</code></pre>
+<h3 id="step-2-run-the-analysis">Step 2: Run the Analysis</h3>
+<pre><code class="language-bash"># Execute the analysis script
+python ah_optimization_analysis.py
+</code></pre>
+<h2 id="expected-output">Expected Output</h2>
+<p>You will get a result output similar to this:
+<img alt="" src="https://cernbox-codimd.web.cern.ch/uploads/upload_90b2d138e817d960112aef95ca20fc9d.png" /></p>
+<h3 id="console-output">Console Output</h3>
+<p>The script will display progress messages for each step:</p>
+<ol>
+<li><strong>Loading phase</strong>: Shows progress for each file with loading speed</li>
+<li><strong>Selection phase</strong>: Displays statistics after each cut</li>
+<li><strong>Plotting phase</strong>: Confirms generation of each plot</li>
+<li><strong>Final statistics</strong>: Summary of events processed</li>
+</ol>
+<h3 id="generated-files">Generated Files</h3>
+<p>Two PNG files will be created with timestamps:</p>
+<ol>
+<li><strong>Main optimization plots</strong> (<code>ah_optimization_plots_YYYYMMDD_HHMMSS.png</code>):</li>
+<li>5 plots in 2×3 layout matching the paper</li>
+<li>Normalized distributions</li>
+<li>Cut lines shown</li>
+<li>
+<p>Event counts displayed</p>
+</li>
+<li>
+<p><strong>Summary plots</strong> (<code>ah_summary_plots_YYYYMMDD_HHMMSS.png</code>):</p>
+</li>
+<li>Event counts by category</li>
+<li>MET distribution comparison</li>
+<li>HT distribution comparison</li>
+<li>Jet multiplicity</li>
+</ol>
+<h2 id="analysis-parameters">Analysis Parameters</h2>
+<h3 id="selection-criteria_1">Selection Criteria</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jet pT</td>
+<td>&gt; 30 GeV</td>
+<td>Minimum transverse momentum</td>
+</tr>
+<tr>
+<td>Jet</td>
+<td>η</td>
+<td></td>
+</tr>
+<tr>
+<td>b-tagging WP</td>
+<td>0.2783</td>
+<td>DeepJet medium working point</td>
+</tr>
+<tr>
+<td>MET</td>
+<td>&gt; 30 GeV</td>
+<td>Missing transverse momentum</td>
+</tr>
+<tr>
+<td>minΔφ cut</td>
+<td>&gt; 1.0 rad</td>
+<td>Minimum angle between jets and MET</td>
+</tr>
+<tr>
+<td>MT cut</td>
+<td>&gt; 180 GeV</td>
+<td>Transverse mass cut</td>
+</tr>
+<tr>
+<td>pT/HT cut</td>
+<td>&lt; 0.5</td>
+<td>Ratio for nb ≥ 2 category</td>
+</tr>
+</tbody>
+</table>
+<h3 id="event-categories">Event Categories</h3>
+<ul>
+<li><strong>nb = 1</strong>: Events with exactly 1 b-tagged jet</li>
+<li><strong>nb ≥ 2</strong>: Events with 2 or more b-tagged jets</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
+<h4 id="1-connection-errors">1. Connection Errors</h4>
+<pre><code class="language-python"># If XRootD connection fails, try:
+# Option A: Reduce number of files
+file_paths = file_paths[:3]  # Use only first 3 files
+
+# Option B: Reduce events per file
+analyzer.load_events(max_events_per_file=1000)
+</code></pre>
+<h4 id="2-memory-issues">2. Memory Issues</h4>
+<pre><code class="language-python"># Reduce memory usage:
+# 1. Process fewer events
+analyzer.load_events(max_events_per_file=5000)
+
+# 2. Use fewer files initially
+file_paths = file_paths[:5]
+</code></pre>
+<h4 id="3-slow-performance">3. Slow Performance</h4>
+<ul>
+<li>The analysis processes ~110,000 events from 11 files</li>
+<li>Expected runtime: 10-30 minutes depending on connection</li>
+<li>For faster testing, reduce <code>max_events_per_file</code> to 1000</li>
+</ul>
+<h2 id="understanding-the-output-plots">Understanding the Output Plots</h2>
+<p><img alt="" src="https://cernbox-codimd.web.cern.ch/uploads/upload_2686853b00b671b4e6223f000eb9cd9b.png" /></p>
+<h3 id="plot-a-minj12-ptmiss-for-nb-1">Plot (a): minΔφ(j₁,₂, pₜᵐⁱˢˢ) for nb = 1</h3>
+<ul>
+<li><strong>Purpose</strong>: Show angular separation between leading jets and MET</li>
+<li><strong>Interpretation</strong>: QCD multijet background tends to have small Δφ</li>
+<li><strong>Cut</strong>: Events with minΔφ &gt; 1.0 rad are selected</li>
+</ul>
+<h3 id="plot-b-mt-for-nb-1">Plot (b): Mₜ for nb = 1</h3>
+<ul>
+<li><strong>Purpose</strong>: Transverse mass distribution</li>
+<li><strong>Interpretation</strong>: Signal events have larger MT values</li>
+<li><strong>Cut</strong>: Events with MT &gt; 180 GeV are selected</li>
+</ul>
+<h3 id="plot-c-minj12-ptmiss-for-nb-2">Plot (c): minΔφ(j₁,₂, pₜᵐⁱˢˢ) for nb ≥ 2</h3>
+<ul>
+<li><strong>Same as (a)</strong> but for events with ≥2 b-jets</li>
+</ul>
+<h3 id="plot-d-mt-for-nb-2">Plot (d): Mₜ for nb ≥ 2</h3>
+<ul>
+<li><strong>Same as (b)</strong> but for events with ≥2 b-jets</li>
+</ul>
+<h3 id="plot-e-ptjet1-ht-for-nb-2">Plot (e): pₜʲᵉᵗ¹ / Hₜ for nb ≥ 2</h3>
+<ul>
+<li><strong>Purpose</strong>: Ratio of leading jet pT to total hadronic activity</li>
+<li><strong>Interpretation</strong>: Signal events have more balanced jet energy distribution</li>
+<li><strong>Cut</strong>: Events with ratio &lt; 0.5 are selected</li>
+</ul>
+<h2 id="physics-context">Physics Context</h2>
+<h3 id="all-hadronic-channel-characteristics">All-Hadronic Channel Characteristics</h3>
+<ul>
+<li><strong>Branching ratio</strong>: ~46% (highest for tt̄)</li>
+<li><strong>Background</strong>: Dominated by QCD multijet production</li>
+<li><strong>Challenges</strong>: MET can be faked by jet mismeasurement</li>
+<li><strong>Advantages</strong>: Maximum statistical power</li>
+</ul>
+<h3 id="optimization-strategy">Optimization Strategy</h3>
+<p>The cuts shown in the plots are optimized to:
+1. Suppress QCD background using angular correlations (minΔφ)
+2. Enhance signal using transverse mass (MT)
+3. Further discriminate signal using jet energy balance (pT/HT)</p>
+<h2 id="customization-options">Customization Options</h2>
+<h3 id="modify-selection-criteria">Modify Selection Criteria</h3>
+<pre><code class="language-python"># In the __init__ method, modify parameters:
+self.params = {
+    'jet_pt_min': 40,  # Increase jet pT threshold
+    'met_min': 50,     # Increase MET threshold
+    'min_dphi': 0.8,   # Relax angular cut
+    'mt_min': 200,     # Increase MT cut
+}
+</code></pre>
+<h3 id="add-additional-plots">Add Additional Plots</h3>
+<pre><code class="language-python">def plot_additional_variables(self, nb_eq_1_mask, nb_ge_2_mask):
+    &quot;&quot;&quot;Add custom plots&quot;&quot;&quot;
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Plot b-jet multiplicity
+    n_bjets_nb1 = ak.to_numpy(self.jet_info['n_bjets'][nb_eq_1_mask])
+    n_bjets_nb2 = ak.to_numpy(self.jet_info['n_bjets'][nb_ge_2_mask])
+
+    # Your custom plotting code here
+</code></pre>
+<p><img alt="" src="https://cernbox-codimd.web.cern.ch/uploads/upload_85a2a2294c653087061f8e532bfead2e.png" />
+<img alt="" src="https://cernbox-codimd.web.cern.ch/uploads/upload_4e87fc17eb4373af623757534d186326.png" />
+<img alt="" src="https://cernbox-codimd.web.cern.ch/uploads/upload_3743167f816947f599f2068d7fde7699.png" /></p>
+<h2 id="performance-notes">Performance Notes</h2>
+<h3 id="expected-resource-usage">Expected Resource Usage</h3>
+<ul>
+<li><strong>Memory</strong>: ~2-4 GB for 100,000 events</li>
+<li><strong>Time</strong>: 10-30 minutes for full analysis</li>
+<li><strong>Network</strong>: ~500 MB data transfer from CERN servers</li>
+</ul>
+<h3 id="optimization-tips">Optimization Tips</h3>
+<ol>
+<li>For development, use fewer files: <code>file_paths[:3]</code></li>
+<li>For quick tests, reduce events: <code>max_events_per_file=1000</code></li>
+<li>Save intermediate results to avoid re-downloading</li>
+</ol>
+<h2 id="citation-and-references">Citation and References</h2>
+<h3 id="data-source">Data Source</h3>
+<pre><code class="language-bibtex">@misc{cms_opendata_2024,
+  title = {Simulated dataset TTToSemiLeptonic in NANOAODSIM format},
+  author = {CMS Collaboration},
+  year = {2024},
+  doi = {10.7483/OPENDATA.CMS.4J3Y.1CME},
+  url = {https://opendata.cern.ch/record/67993}
+}
+</code></pre>
+<h3 id="related-papers">Related Papers</h3>
+<ul>
+<li>CMS Collaboration, "Search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV", JHEP 03 (2019) 141</li>
+<li>Original analysis methodology from arXiv:1901.01553</li>
+</ul>
+<h2 id="support">Support</h2>
+<p>For issues or questions:
+1. Check the console error messages
+2. Verify internet connectivity to CERN servers
+3. Ensure all Python packages are up to date
+4. Consult the <a href="http://opendata.cern.ch/docs">CMS Open Data documentation</a></p>
+<p>This complete guide provides everything needed to reproduce the AH optimization plots using CMS Open Data. The analysis follows the same methodology as the original CMS paper while being accessible through public data and open-source tools.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: EPN CMS collaboration">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                EPN CMS collaboration
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../Single_Lepton/Analisis_muon_final_version/" class="md-footer__link md-footer__link--next" aria-label="Next: Advances of the Project">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Advances of the Project
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
