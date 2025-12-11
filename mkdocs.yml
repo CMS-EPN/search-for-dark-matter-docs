@@ -1,8 +1,9 @@
-site_name: Search for dark matter 
+site_name: Search for Dark Matter
 site_description: Search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV
-site_url: https://cms-epn.github.io/search-for-dark-matter-docs
-repo_url: https://github.com/CMS-EPN/search-for-dark-matter-docs
+site_url: https://brianv2002.github.io/search-for-dark-matter-docs
+repo_url: https://github.com/BrianV2002/search-for-dark-matter-docs
 repo_name: search-for-dark-matter-docs
+
 theme:
   name: material
   font:
@@ -13,7 +14,7 @@ theme:
   features:
     - navigation.footer
   palette:
-    # Dark Mode
+    # Dark Mode
     - scheme: slate
       toggle:
         icon: material/weather-sunny
@@ -38,3 +39,9 @@ extra_javascript:
   - javascripts/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# --- Navegación de la página ---
+nav:
+  - Home: index.md
+  - Single Lepton: Single_Lepton/Single_lepton_comment.md
+  - All Hadronic: All_Hadronic/all_hadronic.md
