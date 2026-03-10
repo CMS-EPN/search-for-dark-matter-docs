@@ -2,41 +2,57 @@
 
 ## Title / Objective:
 Reproducible Analysis of CMS Open Data: Search for Dark Matter in Association with Top Quarks
-(Based on the CMS publication: “Search for dark matter produced in association with a single top quark or a top quark pair in proton–proton collisions at ($\sqrt s = 13 \TeV$”).
+(Based on the CMS publication: “Search for dark matter produced in association with a single top quark or a top quark pair in proton–proton collisions at ($\sqrt s = 13 TeV$”).
 
-# Physics Motivation and Channel Strategy
+# Physics Motivation
 
-The Large Hadron Collider (LHC) collides protons at center-of-mass energies high enough to probe physics beyond the Standard Model. Although the protons are composite objects, the relevant hard scatterings occur between their constituents — quarks and gluons. In the context of simplified dark matter models, these partonic interactions can produce **top quarks** together with a new mediator particle (commonly denoted φ for scalar or a for pseudoscalar). The mediator then decays invisibly into a pair of dark matter candidates ($\chi \bar{\chi}$). At the detector level, this results in events with multiple top quarks plus significant **missing transverse momentum** ($p_T^{\text{miss}}$), the latter coming from both neutrinos and the invisible χ particles.
+The Large Hadron Collider (LHC) operates at center-of-mass energies sufficient to probe physics beyond the Standard Model (BSM). A primary goal of the LHC program is to identify the nature of **Dark Matter (DM)**. In many simplified models, DM candidates ($\chi$) interact with Standard Model particles via a new mediator ($\phi$ or $a$). Since these mediators often couple to mass (Yukawa-like coupling), the **top quark**—being the heaviest elementary particle—offers the most sensitive probe for direct DM production.
 
-The production mechanisms of interest include:  
 
-- **Gluon fusion**:  
-  $$ gg \to t \bar{t}\,\phi \to t \bar{t} + \chi \bar{\chi} $$  
+At the parton level, the interaction produces top quarks accompanied by a mediator, which subsequently decays into a pair of invisible DM particles ($\chi\bar{\chi}$). This results in a final state characterized by heavy flavor quarks and significant **Missing Transverse Momentum ($p_T^{\text{miss}}$)** due to the invisible particles.
 
-- **Single top associated production**:  
-  $$ gb \to t \phi \to t + \chi \bar{\chi} $$  
+The dominant production mechanisms considered are:
 
-- **t–channel production**:  
-  $$ qq' \to tb \phi \to tb + \chi \bar{\chi} $$  
+* **Gluon Fusion ($t\bar{t}$+DM):**
+    $$gg \to t \bar{t}\,\phi \to t \bar{t} + \chi \bar{\chi}$$
 
-In all cases, the top quarks decay via $t \to W b$. Each W boson subsequently decays either leptonically ($W \to \ell \nu$) or hadronically ($W \to q \bar{q}'$). Thus, the final states contain a mixture of b-tagged jets, light-flavor jets, charged leptons (electrons or muons), and genuine $p_T^{\text{miss}}$. The specific experimental signature depends strongly on the decay mode of the W bosons.
+* **Single Top Associated Production ($tW$+DM):**
+    $$gb \to t W \phi \to t W + \chi \bar{\chi}$$
 
-Because of this, analyses are divided into **channels**, each defined by the number of isolated charged leptons:
+* **t-channel Production ($tj$+DM):**
+    $$qq' \to t j \phi \to t j + \chi \bar{\chi}$$
 
-- **Single-lepton (SL):** one isolated electron or muon, several jets (including ≥1 b-tag), and nonzero $p_T^{\text{miss}}$. This channel is statistically powerful and relatively clean, striking a balance between signal sensitivity and manageable backgrounds.  
-- **All-hadronic (AH):** no isolated leptons, many jets including b-tagged jets, and $p_T^{\text{miss}}$. While it has the largest raw yield, it suffers from overwhelming QCD multijet background, which can fake $p_T^{\text{miss}}$.  
-- **Dilepton:** two isolated leptons, large $p_T^{\text{miss}}$, and multiple jets. It provides a very clean signal region but is limited by low branching fraction, hence low statistics.
+###  From Partons to Detector Signatures
 
-In this notebook, we concentrate on the **single-lepton channel with exactly one muon**. There are both theoretical and practical reasons for this choice. From the physics side, the SL channel has the right compromise: it suppresses pure QCD while retaining enough events to make meaningful comparisons. From the experimental side, single-muon triggers are robust, well understood in CMS, and ensure efficient data collection. This focus allows us to demonstrate the full workflow — from event selection to histograms — in a setting where the interplay between **signal characteristics** and **background processes** can be clearly explained. Splitting into channels is therefore not a stylistic decision but a physics necessity: each final state probes the same underlying processes under different background conditions and detector signatures.
+The experimental signature is determined by the decay of the top quarks ($t \to W b$). The $W$ boson decays either hadronically ($W \to q\bar{q}'$, BR $\approx 67\%$) or leptonically ($W \to \ell \nu$, BR $\approx 33\%$). Consequently, the analysis is categorized into orthogonal **channels** based on the number of isolated charged leptons ($e, \mu$) in the final state:
 
----
+* **All-Hadronic (AH) Channel (0 leptons):**
+    * *Signature:* Multiple jets, b-tags, and large $p_T^{\text{miss}}$.
+    * *Pros/Cons:* Highest signal yield, but suffers from overwhelming QCD multijet background and difficult trigger thresholds.
 
+* **Single-Lepton (SL) Channel (1 lepton):**
+    * *Signature:* Exactly one isolated lepton, jets, b-tags, and $p_T^{\text{miss}}$.
+    * *Pros/Cons:* The "Golden Channel." It offers an optimal balance, suppressing QCD significantly while retaining higher statistics than the dilepton channel.
+
+* **Dilepton (DL) Channel (2 leptons):**
+    * *Signature:* Two opposite-sign leptons, jets, and $p_T^{\text{miss}}$.
+    * *Pros/Cons:* Cleanest signal region with very low background, but statistically limited by the low branching fraction.
+
+### The Single-Muon Channel
+
+In this workflow, we focus exclusively on the **Single-Muon ($1\mu$) channel**.
+
+This choice is driven by both physics and pedagogical clarity. Experimentally, muons provide a cleaner signature than electrons in the CMS detector, with lower bremsstrahlung rates and robust identification efficiencies. By requiring exactly one high-$p_T$ muon, we can effectively eliminate the QCD background, leaving **$t\bar{t}$+Jets** and **$W$+Jets** as the primary backgrounds to model.
+
+This strategy allows us to demonstrate a complete End-to-End analysis—from object selection to statistical interpretation—in a controlled environment where the interplay between the DM signal (high $p_T^{\text{miss}}$) and Standard Model backgrounds can be clearly studied.
 
 After defining the objective of the project (Reproducible Analysis of CMS Open Data), we discussed in which data format to work — NanoAOD or MiniAOD. We decided to use NanoAOD, because it is lighter and optimized for analysis tasks.
 
 In the most precise version, we work within cernbox/swan, but it can work in any Jupyter environment; the important packages are: uproot and awkward
 
 ## Single Lepton
+
+by B.V
 
 We import all the libraries that we are going to use.
 
@@ -64,9 +80,6 @@ vector.register_awkward()
 
 
 ```
-
-    Matplotlib is building the font cache; this may take a moment.
-
 
 We will use the **dpoa_workshop_utilities** module to help you access the datasets. The functions it contains are:
 
@@ -108,7 +121,7 @@ display(Image(filename="dataset_2016.png"))
 
 
     
-![png](output_9_0.png)
+![png](output_10_0.png)
     
 
 
@@ -121,7 +134,7 @@ display(Image(filename="MC_data.png"))
 
 
     
-![png](output_10_0.png)
+![png](output_11_0.png)
     
 
 
@@ -144,33 +157,110 @@ The objective is to collect file paths from multiple URLs, organize them by data
 
 
 ```python
+#import requests
+#import json
+
 def download_files(url):
     r = requests.get(url)
     lines = [ln.strip() for ln in r.text.splitlines() if ln.strip()]
-
     paths = [ln.split()[0] for ln in lines]
     return paths
 
 ntuples = {}
 
+print(f"{'Dataset':<30} | {'Part':<5} | {'Files'}")
+print("-" * 50)
+
 for dataset, urls in nanoaod_filenames.items():
     all_paths = []
-    for url in urls:
+    for i, url in enumerate(urls):
         try:
-            all_paths.extend(download_files(url))
+            paths = download_files(url)
+            
+            print(f"{dataset[:30]:<30} | {i:<5} | {len(paths)}")
+            
+            all_paths.extend(paths)
         except Exception as e:
             print(f"[warn] {dataset} {url}--{e}")
+            
     ntuples[dataset] = all_paths
 
 with open("ntuples.json", "w") as f:
     json.dump(ntuples, f, indent=2)
 
-print("ntuples.json :", list(ntuples.keys()))
-
+print("-" * 50)
+print("ntuples.json creado. Keys:", list(ntuples.keys()))
 ```
 
-    ntuples.json : ['met', 'SingleMuon', 'SingleElectron', 'ttbar-semileptonic', 'ttbar-hadronic', 't-channel-top', 'ttW', 'WJets-HT400to600', 'DYJets-Zpt200', 'WW', 'ZZ', 'Zvv']
+    Dataset                        | Part  | Files
+    --------------------------------------------------
+    met                            | 0     | 7
+    met                            | 1     | 4
+    met                            | 2     | 21
+    SingleMuon                     | 0     | 1
+    SingleMuon                     | 1     | 1
+    SingleMuon                     | 2     | 40
+    SingleMuon                     | 3     | 8
+    SingleMuon                     | 4     | 32
+    SingleElectron                 | 0     | 6
+    SingleElectron                 | 1     | 20
+    SingleElectron                 | 2     | 11
+    SingleElectron                 | 3     | 43
+    ttbar-semileptonic             | 0     | 41
+    ttbar-semileptonic             | 1     | 26
+    ttbar-semileptonic             | 2     | 23
+    ttbar-semileptonic             | 3     | 21
+    ttbar-semileptonic             | 4     | 27
+    t-channel-top                  | 0     | 4
+    t-channel-top                  | 1     | 4
+    t-channel-top                  | 2     | 5
+    t-channel-top                  | 3     | 11
+    t-channel-top                  | 4     | 1
+    t-channel-antitop              | 0     | 13
+    ttW                            | 0     | 4
+    ttW                            | 1     | 4
+    ttW                            | 2     | 1
+    ttW                            | 3     | 3
+    WJets-HT400to600               | 0     | 3
+    WJets-HT400to600               | 1     | 1
+    WJets-HT400to600               | 2     | 2
+    WJets-HT400to600               | 3     | 2
+    WJets-HT400to600               | 4     | 3
+    WJets-HT100to200               | 0     | 3
+    WJets-HT100to200               | 1     | 5
+    WJets-HT100to200               | 2     | 3
+    WJets-HT100to200               | 3     | 3
+    WJets-HT100to200               | 4     | 6
+    WJets-HT200to400               | 0     | 9
+    WJets-HT200to400               | 1     | 14
+    WJets-HT200to400               | 2     | 20
+    WJets-HT200to400               | 3     | 8
+    WJets-HT200to400               | 4     | 9
+    WJets-HT70to100                | 0     | 4
+    WJets-HT70to100                | 1     | 3
+    WJets-HT70to100                | 2     | 2
+    WJets-HT70to100                | 3     | 3
+    WJets-HT70to100                | 4     | 7
+    DYJets-Zpt200                  | 0     | 10
+    WW                             | 0     | 10
+    WW                             | 1     | 16
+    WW                             | 2     | 12
+    WW                             | 3     | 3
+    ZZ                             | 0     | 3
+    ZZ                             | 1     | 6
+    ZZ                             | 2     | 5
+    ZZ                             | 3     | 3
+    Zvv                            | 0     | 14
+    --------------------------------------------------
+    ntuples.json creado. Keys: ['met', 'SingleMuon', 'SingleElectron', 'ttbar-semileptonic', 't-channel-top', 't-channel-antitop', 'ttW', 'WJets-HT400to600', 'WJets-HT100to200', 'WJets-HT200to400', 'WJets-HT70to100', 'DYJets-Zpt200', 'WW', 'ZZ', 'Zvv']
 
+
+Since `ntuples.json` concatenates all files into a single flat list per dataset, the distinction between source URLs (which often represent different periods like **Run2016G** vs **Run2016H**) is lost in the final file.
+
+**Why counting matters:**
+By logging the number of files in each part (`len(paths)`), we establish a **positional map**:
+1.  It helps us identify which specific period a root file belongs to based on its index in the merged list.
+2.  It ensures we can verify that the total file count matches the sum of the individual periods (sanity check).
 
 And we will download important files like the luminosity file.
 
@@ -197,23 +287,24 @@ Complete dictionary, in case it's possible to add all the events but it hasn't b
 
 
 ```python
-    # --- Cross sections in pb de todo los dataset del paper ---
 
 XSEC2_PB = {
-    # --- TOP QUARK ---
+
+    
+    ##### TOP QUARK #############
     "ttbar-semileptonic": 364.35,  
     "t-channel-top": 136.02,       # ST t-channel top
     "t-channel-antitop": 80.95,    # ST t-channel antitop
     "tW-top": 35.85,               # ST tW top 
     
-    # --- Rare Top ---
+    #### Rare Top 
     "ttW": 0.2043,  #  to TTWJetsToLNu
     "ttZ": 0.2529,  # to TTZToLLNuNu
     
-    # --- WJETS (HT Binned) ---
+    ##### WJETS (HT Binned) 
     
     "WJets-HT70to100":    1372.0,
-    "WJets-HT100to200":   1345.0, # (Revisa este valor, parece alto para ser binned, quizás es LO)
+    "WJets-HT100to200":   1345.0, # (Check this value, it seems high to be binned, maybe it's LO)
     "WJets-HT200to400":   359.7,  
     "WJets-HT400to600":   48.91,  
     "WJets-HT600to800":   12.05,
@@ -221,14 +312,14 @@ XSEC2_PB = {
     "WJets-HT1200to2500": 1.329,  
     "WJets-HT2500toInf":  0.0322,
 
-    # --- DRELL-YAN (DY) ---
+    #######DRELL-YAN (DY)
     "DYJets-HT100to200": 147.40,
     "DYJets-HT200to400": 40.99,
     "DYJets-HT400to600": 5.678,
     
-    # --- DIBOSON ---
-    "WW": 118.7, #   sumados dan aprox esto
-    "ZZ": 16.6,  # 
+    ##### DIBOSON 
+    "WW": 118.7, 
+    "ZZ": 16.6,   
     "WZ": 47.13  
 }
 ```
@@ -237,14 +328,18 @@ until while these datasets are being used
 
 
 ```python
-    XSEC_PB = {
-    # --- Top Quark ---
+XSEC_PB = {
+        
+    ##### Top Quark
     "ttbar-semileptonic": 364.35,   
-    "ttbar-hadronic":     377.96,  
-    "t-channel-top":      136.02,   
+    "t-channel-top":      136.02, 
+    "t-channel-antitop": 80.95,
     "ttW":                0.2043,   
 
-    # --- WJets ---
+    ##### WJets 
+    "WJets-HT70to100":    1372.0,
+    "WJets-HT100to200":   1345.0,    
+    "WJets-HT200to400":  359.7 , ## in data , wrong   
     "WJets-HT400to600":   48.91, 
 
     # --- Electroweak / Bosons ---
@@ -279,29 +374,25 @@ def construct_fileset(ntuples_json="ntuples.json", limit=None, verbose=True):
         dict: A dictionary structured for the processor (Coffea/UpRoot).
     """
     
-    # Load the file manifest
     with open(ntuples_json) as f:
         info = json.load(f)
 
     fileset = {}
     
     if verbose:
-        print(f"\n{'Process Name':30} {'Type':>6} {'N Files':>10} {'XSEC [pb]':>12}")
+        print(f"\n{'Name':30} {'Type':>6} {'N Files':>10} {'XSEC [pb]':>12}")
         print("-" * 65)
 
-    # Iterate over each process found in the JSON
     for process_name, file_list in info.items():
         
-        # --- A. APPLY LIMIT (DEBUG MODE) ---
         # Slicing handles None gracefully, but explicit check is clearer for readers
         if limit is not None:
             files_to_use = file_list[:limit]
         else:
             files_to_use = file_list
 
-        # --- B. IDENTIFY TYPE (DATA vs MC) ---
-        # Logic: If process exists in the Cross-Section table, treat as Simulation (MC).
-        # Otherwise, treat as Real Data.
+        #  IDENTIFY TYPE (DATA vs MC) 
+        
         if process_name in XSEC_PB:
             is_data = False
             xsec_value = XSEC_PB[process_name]
@@ -311,8 +402,10 @@ def construct_fileset(ntuples_json="ntuples.json", limit=None, verbose=True):
             xsec_value = None  # Real data has no theoretical xsec here
             proc_type = "DATA"
 
-        # --- C. BUILD DICTIONARY ---
+        #### BUILD DICTIONARY 
         # Minimal metadata structure to keep it lightweight
+
+        
         fileset[process_name] = {
             "files": files_to_use,
             "metadata": {
@@ -322,14 +415,10 @@ def construct_fileset(ntuples_json="ntuples.json", limit=None, verbose=True):
             }
         }
 
-        # --- D. LOGGING ---
+        #  LOGGING ---
         if verbose:
             xsec_str = f"{xsec_value:.2f}" if xsec_value else "-"
             print(f"{process_name:30} {proc_type:>6} {len(files_to_use):>10} {xsec_str:>12}")
-
-    if verbose: 
-        print("-" * 65)
-        print(f" Fileset construction complete. Loaded {len(fileset)} processes.")
     
     return fileset
 ```
@@ -347,40 +436,30 @@ fileset = construct_fileset(
 ```
 
     
-    Process Name                     Type    N Files    XSEC [pb]
+    Name                             Type    N Files    XSEC [pb]
     -----------------------------------------------------------------
     met                              DATA         32            -
     SingleMuon                       DATA         82            -
     SingleElectron                   DATA         80            -
     ttbar-semileptonic                 MC        138       364.35
-    ttbar-hadronic                     MC        146       377.96
     t-channel-top                      MC         25       136.02
+    t-channel-antitop                  MC         13        80.95
     ttW                                MC         12         0.20
     WJets-HT400to600                   MC         11        48.91
+    WJets-HT100to200                   MC         20      1345.00
+    WJets-HT200to400                   MC         60       359.70
+    WJets-HT70to100                    MC         19      1372.00
     DYJets-Zpt200                      MC         10         1.27
     WW                                 MC         41       118.70
     ZZ                                 MC         17        16.60
     Zvv                                MC         14        77.30
-    -----------------------------------------------------------------
-     Fileset construction complete. Loaded 12 processes.
 
 
-Before running a massive analysis loop (which might take hours), a physicist always opens one single file first. We call this Exploratory Data Analysis (EDA). You need to verify:
-
-1.Are the files actually there?
-
-2.What are the variable names? (Is it Muon_pt or Muon_pT? Case matters!)
-
-3.What Triggers (HLT) are available?
-
-Here is the code organized as a clear "Exploratory Phase" for students.
-
-
-Why do we do this? We are about to treat the data as a "black box" in the processing loop. But we need to verify the inputs first. We use uproot, which is a Python library that allows us to read CERN ROOT files directly, without needing C++.
+We are about to treat the data as a "black box" in the processing loop. But we need to verify the inputs first. We use uproot, which is a Python library that allows us to read CERN ROOT files directly, without needing C++.
 
 
 ```python
-dataset = "SingleMuon"
+dataset = "SingleMuon" ##just for training
 
 for i, fpath in enumerate(fileset[dataset]["files"][:10]):
     print(f"{i+1:2d}. {fpath}")
@@ -397,1130 +476,6 @@ for i, fpath in enumerate(fileset[dataset]["files"][:10]):
      8. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/2045F967-9F0A-7C46-9946-787B27D56E88.root
      9. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/236A04EE-C105-D947-8A2E-F8CC6731644F.root
     10. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/370BE877-DA24-DB41-A875-07A86EAB6852.root
-
-
-
-```python
-#import uproot
-
-f = uproot.open(fileset["SingleMuon"]["files"][0])
-events = f["Events"]
-for name in events.keys():
-    if "Muon" in name or "Electron" in name or "Jet" in name or "MET" in name:
-        print(name)
-
-```
-
-    CaloMET_phi
-    CaloMET_pt
-    CaloMET_sumEt
-    ChsMET_phi
-    ChsMET_pt
-    ChsMET_sumEt
-    nCorrT1METJet
-    CorrT1METJet_area
-    CorrT1METJet_eta
-    CorrT1METJet_muonSubtrFactor
-    CorrT1METJet_phi
-    CorrT1METJet_rawPt
-    DeepMETResolutionTune_phi
-    DeepMETResolutionTune_pt
-    DeepMETResponseTune_phi
-    DeepMETResponseTune_pt
-    nElectron
-    Electron_dEscaleDown
-    Electron_dEscaleUp
-    Electron_dEsigmaDown
-    Electron_dEsigmaUp
-    Electron_deltaEtaSC
-    Electron_dr03EcalRecHitSumEt
-    Electron_dr03HcalDepth1TowerSumEt
-    Electron_dr03TkSumPt
-    Electron_dr03TkSumPtHEEP
-    Electron_dxy
-    Electron_dxyErr
-    Electron_dz
-    Electron_dzErr
-    Electron_eCorr
-    Electron_eInvMinusPInv
-    Electron_energyErr
-    Electron_eta
-    Electron_hoe
-    Electron_ip3d
-    Electron_jetPtRelv2
-    Electron_jetRelIso
-    Electron_mass
-    Electron_miniPFRelIso_all
-    Electron_miniPFRelIso_chg
-    Electron_mvaFall17V2Iso
-    Electron_mvaFall17V2noIso
-    Electron_pfRelIso03_all
-    Electron_pfRelIso03_chg
-    Electron_phi
-    Electron_pt
-    Electron_r9
-    Electron_scEtOverPt
-    Electron_sieie
-    Electron_sip3d
-    Electron_mvaTTH
-    Electron_charge
-    Electron_cutBased
-    Electron_jetIdx
-    Electron_pdgId
-    Electron_photonIdx
-    Electron_tightCharge
-    Electron_vidNestedWPBitmap
-    Electron_vidNestedWPBitmapHEEP
-    Electron_convVeto
-    Electron_cutBased_HEEP
-    Electron_isPFcand
-    Electron_jetNDauCharged
-    Electron_lostHits
-    Electron_mvaFall17V2Iso_WP80
-    Electron_mvaFall17V2Iso_WP90
-    Electron_mvaFall17V2Iso_WPL
-    Electron_mvaFall17V2noIso_WP80
-    Electron_mvaFall17V2noIso_WP90
-    Electron_mvaFall17V2noIso_WPL
-    Electron_seedGain
-    nFatJet
-    FatJet_area
-    FatJet_btagCSVV2
-    FatJet_btagDDBvLV2
-    FatJet_btagDDCvBV2
-    FatJet_btagDDCvLV2
-    FatJet_btagDeepB
-    FatJet_btagHbb
-    FatJet_deepTagMD_H4qvsQCD
-    FatJet_deepTagMD_HbbvsQCD
-    FatJet_deepTagMD_TvsQCD
-    FatJet_deepTagMD_WvsQCD
-    FatJet_deepTagMD_ZHbbvsQCD
-    FatJet_deepTagMD_ZHccvsQCD
-    FatJet_deepTagMD_ZbbvsQCD
-    FatJet_deepTagMD_ZvsQCD
-    FatJet_deepTagMD_bbvsLight
-    FatJet_deepTagMD_ccvsLight
-    FatJet_deepTag_H
-    FatJet_deepTag_QCD
-    FatJet_deepTag_QCDothers
-    FatJet_deepTag_TvsQCD
-    FatJet_deepTag_WvsQCD
-    FatJet_deepTag_ZvsQCD
-    FatJet_eta
-    FatJet_mass
-    FatJet_msoftdrop
-    FatJet_n2b1
-    FatJet_n3b1
-    FatJet_particleNetMD_QCD
-    FatJet_particleNetMD_Xbb
-    FatJet_particleNetMD_Xcc
-    FatJet_particleNetMD_Xqq
-    FatJet_particleNet_H4qvsQCD
-    FatJet_particleNet_HbbvsQCD
-    FatJet_particleNet_HccvsQCD
-    FatJet_particleNet_QCD
-    FatJet_particleNet_TvsQCD
-    FatJet_particleNet_WvsQCD
-    FatJet_particleNet_ZvsQCD
-    FatJet_particleNet_mass
-    FatJet_phi
-    FatJet_pt
-    FatJet_rawFactor
-    FatJet_tau1
-    FatJet_tau2
-    FatJet_tau3
-    FatJet_tau4
-    FatJet_lsf3
-    FatJet_jetId
-    FatJet_subJetIdx1
-    FatJet_subJetIdx2
-    FatJet_electronIdx3SJ
-    FatJet_muonIdx3SJ
-    FatJet_nConstituents
-    nJet
-    Jet_area
-    Jet_btagCSVV2
-    Jet_btagDeepB
-    Jet_btagDeepCvB
-    Jet_btagDeepCvL
-    Jet_btagDeepFlavB
-    Jet_btagDeepFlavCvB
-    Jet_btagDeepFlavCvL
-    Jet_btagDeepFlavQG
-    Jet_chEmEF
-    Jet_chFPV0EF
-    Jet_chHEF
-    Jet_eta
-    Jet_hfsigmaEtaEta
-    Jet_hfsigmaPhiPhi
-    Jet_mass
-    Jet_muEF
-    Jet_muonSubtrFactor
-    Jet_neEmEF
-    Jet_neHEF
-    Jet_phi
-    Jet_pt
-    Jet_puIdDisc
-    Jet_qgl
-    Jet_rawFactor
-    Jet_bRegCorr
-    Jet_bRegRes
-    Jet_cRegCorr
-    Jet_cRegRes
-    Jet_electronIdx1
-    Jet_electronIdx2
-    Jet_hfadjacentEtaStripsSize
-    Jet_hfcentralEtaStripSize
-    Jet_jetId
-    Jet_muonIdx1
-    Jet_muonIdx2
-    Jet_nElectrons
-    Jet_nMuons
-    Jet_puId
-    Jet_nConstituents
-    L1PreFiringWeight_Muon_Nom
-    L1PreFiringWeight_Muon_StatDn
-    L1PreFiringWeight_Muon_StatUp
-    L1PreFiringWeight_Muon_SystDn
-    L1PreFiringWeight_Muon_SystUp
-    nLowPtElectron
-    LowPtElectron_ID
-    LowPtElectron_convVtxRadius
-    LowPtElectron_deltaEtaSC
-    LowPtElectron_dxy
-    LowPtElectron_dxyErr
-    LowPtElectron_dz
-    LowPtElectron_dzErr
-    LowPtElectron_eInvMinusPInv
-    LowPtElectron_embeddedID
-    LowPtElectron_energyErr
-    LowPtElectron_eta
-    LowPtElectron_hoe
-    LowPtElectron_mass
-    LowPtElectron_miniPFRelIso_all
-    LowPtElectron_miniPFRelIso_chg
-    LowPtElectron_phi
-    LowPtElectron_pt
-    LowPtElectron_ptbiased
-    LowPtElectron_r9
-    LowPtElectron_scEtOverPt
-    LowPtElectron_sieie
-    LowPtElectron_unbiased
-    LowPtElectron_charge
-    LowPtElectron_convWP
-    LowPtElectron_pdgId
-    LowPtElectron_convVeto
-    LowPtElectron_lostHits
-    MET_MetUnclustEnUpDeltaX
-    MET_MetUnclustEnUpDeltaY
-    MET_covXX
-    MET_covXY
-    MET_covYY
-    MET_phi
-    MET_pt
-    MET_significance
-    MET_sumEt
-    MET_sumPtUnclustered
-    nMuon
-    Muon_dxy
-    Muon_dxyErr
-    Muon_dxybs
-    Muon_dz
-    Muon_dzErr
-    Muon_eta
-    Muon_ip3d
-    Muon_jetPtRelv2
-    Muon_jetRelIso
-    Muon_mass
-    Muon_miniPFRelIso_all
-    Muon_miniPFRelIso_chg
-    Muon_pfRelIso03_all
-    Muon_pfRelIso03_chg
-    Muon_pfRelIso04_all
-    Muon_phi
-    Muon_pt
-    Muon_ptErr
-    Muon_segmentComp
-    Muon_sip3d
-    Muon_softMva
-    Muon_tkRelIso
-    Muon_tunepRelPt
-    Muon_mvaLowPt
-    Muon_mvaTTH
-    Muon_charge
-    Muon_jetIdx
-    Muon_nStations
-    Muon_nTrackerLayers
-    Muon_pdgId
-    Muon_tightCharge
-    Muon_fsrPhotonIdx
-    Muon_highPtId
-    Muon_highPurity
-    Muon_inTimeMuon
-    Muon_isGlobal
-    Muon_isPFcand
-    Muon_isStandalone
-    Muon_isTracker
-    Muon_jetNDauCharged
-    Muon_looseId
-    Muon_mediumId
-    Muon_mediumPromptId
-    Muon_miniIsoId
-    Muon_multiIsoId
-    Muon_mvaId
-    Muon_mvaLowPtId
-    Muon_pfIsoId
-    Muon_puppiIsoId
-    Muon_softId
-    Muon_softMvaId
-    Muon_tightId
-    Muon_tkIsoId
-    Muon_triggerIdLoose
-    PuppiMET_phi
-    PuppiMET_phiJERDown
-    PuppiMET_phiJERUp
-    PuppiMET_phiJESDown
-    PuppiMET_phiJESUp
-    PuppiMET_phiUnclusteredDown
-    PuppiMET_phiUnclusteredUp
-    PuppiMET_pt
-    PuppiMET_ptJERDown
-    PuppiMET_ptJERUp
-    PuppiMET_ptJESDown
-    PuppiMET_ptJESUp
-    PuppiMET_ptUnclusteredDown
-    PuppiMET_ptUnclusteredUp
-    PuppiMET_sumEt
-    RawMET_phi
-    RawMET_pt
-    RawMET_sumEt
-    RawPuppiMET_phi
-    RawPuppiMET_pt
-    RawPuppiMET_sumEt
-    nSoftActivityJet
-    SoftActivityJet_eta
-    SoftActivityJet_phi
-    SoftActivityJet_pt
-    SoftActivityJetHT
-    SoftActivityJetHT10
-    SoftActivityJetHT2
-    SoftActivityJetHT5
-    SoftActivityJetNjets10
-    SoftActivityJetNjets2
-    SoftActivityJetNjets5
-    nSubJet
-    SubJet_btagCSVV2
-    SubJet_btagDeepB
-    SubJet_eta
-    SubJet_mass
-    SubJet_n2b1
-    SubJet_n3b1
-    SubJet_phi
-    SubJet_pt
-    SubJet_rawFactor
-    SubJet_tau1
-    SubJet_tau2
-    SubJet_tau3
-    SubJet_tau4
-    TkMET_phi
-    TkMET_pt
-    TkMET_sumEt
-    Electron_cleanmask
-    Jet_cleanmask
-    Muon_cleanmask
-    L1_CastorHaloMuon
-    L1_CastorHaloMuon_BptxAND
-    L1_CastorHighJet_BptxAND
-    L1_CastorMediumJet_BptxAND
-    L1_DoubleJet12_ForwardBackward
-    L1_DoubleJet16_ForwardBackward
-    L1_DoubleJet30_Mj30j30_400_Mu10
-    L1_DoubleJet30_Mj30j30_400_Mu6
-    L1_DoubleJet8_ForwardBackward
-    L1_DoubleJetC100
-    L1_DoubleJetC112
-    L1_DoubleJetC120
-    L1_DoubleJetC40
-    L1_DoubleJetC50
-    L1_DoubleJetC60
-    L1_DoubleJetC60_ETM60
-    L1_DoubleJetC80
-    L1_DoubleJet_100_30_Mj30j30_620
-    L1_DoubleJet_90_30_Mj30j30_620
-    L1_ETM75_Jet60_dPhi_Min0p4
-    L1_Jet32_DoubleMu_10_0_dPhi_Jet_Mu0_Max0p4_dPhi_Mu_Mu_Min1p0
-    L1_Jet32_Mu0_EG10_dPhi_Jet_Mu_Max0p4_dPhi_Mu_EG_Min1p0
-    L1_Mu3_JetC120
-    L1_Mu3_JetC120_dEta_Max0p4_dPhi_Max0p4
-    L1_Mu3_JetC16
-    L1_Mu3_JetC16_dEta_Max0p4_dPhi_Max0p4
-    L1_Mu3_JetC60
-    L1_Mu3_JetC60_dEta_Max0p4_dPhi_Max0p4
-    L1_QuadJetC36_Tau52
-    L1_QuadJetC40
-    L1_QuadJetC50
-    L1_QuadJetC60
-    L1_SingleJet12
-    L1_SingleJet120
-    L1_SingleJet12_BptxAND
-    L1_SingleJet140
-    L1_SingleJet150
-    L1_SingleJet16
-    L1_SingleJet160
-    L1_SingleJet170
-    L1_SingleJet180
-    L1_SingleJet20
-    L1_SingleJet200
-    L1_SingleJet35
-    L1_SingleJet4
-    L1_SingleJet60
-    L1_SingleJet8
-    L1_SingleJet8_BptxAND
-    L1_SingleJet90
-    L1_SingleJetC20_NotBptxOR
-    L1_SingleJetC20_NotBptxOR_3BX
-    L1_SingleJetC40_NotBptxOR_3BX
-    L1_SingleJetC40_NotBptxOR_5BX
-    L1_TripleJet_84_68_48_VBF
-    L1_TripleJet_88_72_56_VBF
-    L1_TripleJet_92_76_64_VBF
-    Flag_BadPFMuonFilter
-    Flag_BadPFMuonDzFilter
-    Flag_BadPFMuonSummer16Filter
-    Flag_METFilters
-    Flag_BadPFMuonFilter_pRECO
-    Flag_BadPFMuonSummer16Filter_pRECO
-    Flag_METFilters_pRECO
-    HLT_AK8PFJet360_TrimMass30
-    HLT_AK8PFJet400_TrimMass30
-    HLT_AK8DiPFJet300_200_TrimMass30_BTagCSV_p20
-    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p087
-    HLT_AK8DiPFJet300_200_TrimMass30_BTagCSV_p087
-    HLT_AK8DiPFJet300_200_TrimMass30
-    HLT_AK8DiPFJet280_200_TrimMass30
-    HLT_AK8DiPFJet250_200_TrimMass30
-    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20
-    HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20
-    HLT_CaloJet500_NoJetID
-    HLT_Ele27_WPTight_Gsf_L1JetTauSeeded
-    HLT_Ele45_CaloIdVT_GsfTrkIdT_PFJet200_PFJet50
-    HLT_IsoMu16_eta2p1_MET30
-    HLT_IsoMu16_eta2p1_MET30_LooseIsoPFTau50_Trk30_eta2p1
-    HLT_JetE30_NoBPTX3BX
-    HLT_JetE30_NoBPTX
-    HLT_JetE50_NoBPTX3BX
-    HLT_JetE70_NoBPTX3BX
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET90
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET110
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120
-    HLT_Mu30_eta2p1_PFJet150_PFJet50
-    HLT_Mu40_eta2p1_PFJet200_PFJet50
-    HLT_Mu28NoFiltersNoVtx_DisplacedJet40_Loose
-    HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Tight
-    HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose
-    HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose
-    HLT_Mu28NoFiltersNoVtx_CentralCaloJet40
-    HLT_PFHT300_PFMET110
-    HLT_PFHT550_4JetPt50
-    HLT_PFHT650_4JetPt50
-    HLT_PFHT750_4JetPt70
-    HLT_PFHT750_4JetPt80
-    HLT_PFHT800_4JetPt50
-    HLT_PFHT850_4JetPt50
-    HLT_PFJet15_NoCaloMatched
-    HLT_PFJet25_NoCaloMatched
-    HLT_DiPFJet15_NoCaloMatched
-    HLT_DiPFJet25_NoCaloMatched
-    HLT_DiPFJet15_FBEta3_NoCaloMatched
-    HLT_DiPFJet25_FBEta3_NoCaloMatched
-    HLT_DiPFJetAve15_HFJEC
-    HLT_DiPFJetAve25_HFJEC
-    HLT_DiPFJetAve35_HFJEC
-    HLT_AK8PFJet40
-    HLT_AK8PFJet60
-    HLT_AK8PFJet80
-    HLT_AK8PFJet140
-    HLT_AK8PFJet200
-    HLT_AK8PFJet260
-    HLT_AK8PFJet320
-    HLT_AK8PFJet400
-    HLT_AK8PFJet450
-    HLT_AK8PFJet500
-    HLT_PFJet40
-    HLT_PFJet60
-    HLT_PFJet80
-    HLT_PFJet140
-    HLT_PFJet200
-    HLT_PFJet260
-    HLT_PFJet320
-    HLT_PFJet400
-    HLT_PFJet450
-    HLT_PFJet500
-    HLT_DiPFJetAve40
-    HLT_DiPFJetAve60
-    HLT_DiPFJetAve80
-    HLT_DiPFJetAve140
-    HLT_DiPFJetAve200
-    HLT_DiPFJetAve260
-    HLT_DiPFJetAve320
-    HLT_DiPFJetAve400
-    HLT_DiPFJetAve500
-    HLT_DiPFJetAve60_HFJEC
-    HLT_DiPFJetAve80_HFJEC
-    HLT_DiPFJetAve100_HFJEC
-    HLT_DiPFJetAve160_HFJEC
-    HLT_DiPFJetAve220_HFJEC
-    HLT_DiPFJetAve300_HFJEC
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu140
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu80
-    HLT_DiCentralPFJet170
-    HLT_SingleCentralPFJet170_CFMax0p1
-    HLT_DiCentralPFJet170_CFMax0p1
-    HLT_DiCentralPFJet330_CFMax0p5
-    HLT_DiCentralPFJet430
-    HLT_DiJetVBF_PassThrough
-    HLT_DiJetVBFMu_PassThrough
-    HLT_PFHT200_DiPFJetAve90_PFAlphaT0p63
-    HLT_PFHT250_DiPFJetAve90_PFAlphaT0p58
-    HLT_PFHT300_DiPFJetAve90_PFAlphaT0p54
-    HLT_PFHT350_DiPFJetAve90_PFAlphaT0p53
-    HLT_PFHT400_DiPFJetAve90_PFAlphaT0p52
-    HLT_MET60_IsoTrk35_Loose
-    HLT_MET75_IsoTrk50
-    HLT_MET90_IsoTrk50
-    HLT_PFMET170_NotCleaned
-    HLT_PFMET170_HBHECleaned
-    HLT_PFMET170_BeamHaloCleaned
-    HLT_PFMET170_HBHE_BeamHaloCleaned
-    HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned
-    HLT_PFMET110_PFMHT110_IDTight
-    HLT_PFMET120_PFMHT120_IDTight
-    HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067
-    HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight
-    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200
-    HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460
-    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240
-    HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500
-    HLT_QuadPFJet_VBF
-    HLT_L1_TripleJet_VBF
-    HLT_QuadJet45_TripleBTagCSV_p087
-    HLT_QuadJet45_DoubleBTagCSV_p087
-    HLT_DoubleJet90_Double30_TripleBTagCSV_p087
-    HLT_DoubleJet90_Double30_DoubleBTagCSV_p087
-    HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160
-    HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6
-    HLT_DoubleJetsC112_DoubleBTagCSV_p026_DoublePFJetsC172
-    HLT_DoubleJetsC112_DoubleBTagCSV_p014_DoublePFJetsC112MaxDeta1p6
-    HLT_DoubleJetsC100_SingleBTagCSV_p026
-    HLT_DoubleJetsC100_SingleBTagCSV_p014
-    HLT_DoubleJetsC100_SingleBTagCSV_p026_SinglePFJetC350
-    HLT_DoubleJetsC100_SingleBTagCSV_p014_SinglePFJetC350
-    HLT_Photon135_PFMET100
-    HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon75_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon90_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon120_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_BTagMu_DiJet20_Mu5
-    HLT_BTagMu_DiJet40_Mu5
-    HLT_BTagMu_DiJet70_Mu5
-    HLT_BTagMu_DiJet110_Mu5
-    HLT_BTagMu_DiJet170_Mu5
-    HLT_BTagMu_Jet300_Mu5
-    HLT_BTagMu_AK8Jet300_Mu5
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_L1JetTauSeeded
-    HLT_Mu6_PFHT200_PFMET100
-    HLT_PFHT650_WideJetMJJ900DEtaJJ1p5
-    HLT_PFHT650_WideJetMJJ950DEtaJJ1p5
-    HLT_Dimuon0_Jpsi_Muon
-    HLT_Dimuon0_Upsilon_Muon
-    HLT_QuadMuon0_Dimuon0_Jpsi
-    HLT_QuadMuon0_Dimuon0_Upsilon
-    HLT_Rsq0p02_MR400_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_Rsq0p02_MR450_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_Rsq0p02_MR500_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_Rsq0p02_MR550_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_VBF_DisplacedJet40_DisplacedTrack
-    HLT_VBF_DisplacedJet40_DisplacedTrack_2TrackIP2DSig5
-    HLT_VBF_DisplacedJet40_TightID_DisplacedTrack
-    HLT_VBF_DisplacedJet40_TightID_Hadronic
-    HLT_VBF_DisplacedJet40_VTightID_Hadronic
-    HLT_VBF_DisplacedJet40_VVTightID_Hadronic
-    HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack
-    HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack
-    HLT_PFMETNoMu110_PFMHTNoMu110_IDTight
-    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight
-    HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight
-    HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight
-    HLT_Mu10_CentralPFJet30_BTagCSV_p13
-    HLT_DoubleMu3_PFMET50
-    HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV_p13
-    HLT_Ele15_IsoVVVL_PFHT400_PFMET50
-    HLT_Mu8_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT300_PFMETNoMu60
-    HLT_Mu10_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT350_PFMETNoMu60
-    HLT_Mu15_IsoVVVL_PFHT400_PFMET50
-    HLT_Mu3_PFJet40
-    HLT_Ele8_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele12_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele17_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele23_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele50_CaloIdVT_GsfTrkIdT_PFJet165
-    HLT_PFHT400_SixJet30_DoubleBTagCSV_p056
-    HLT_PFHT450_SixJet40_BTagCSV_p056
-    HLT_PFHT400_SixJet30
-    HLT_PFHT450_SixJet40
-    HLT_MET200
-    HLT_AK4CaloJet30
-    HLT_AK4CaloJet40
-    HLT_AK4CaloJet50
-    HLT_AK4CaloJet80
-    HLT_AK4CaloJet100
-    HLT_AK4PFJet30
-    HLT_AK4PFJet50
-    HLT_AK4PFJet80
-    HLT_AK4PFJet100
-    HLT_MET250
-    HLT_MET300
-    HLT_MET600
-    HLT_MET700
-    HLT_PFMET300
-    HLT_PFMET400
-    HLT_PFMET500
-    HLT_PFMET600
-
-
-
-```python
-for b in events.keys():
-    if b.startswith("HLT_"):
-        print(b)
-
-```
-
-    HLT_AK8PFJet360_TrimMass30
-    HLT_AK8PFJet400_TrimMass30
-    HLT_AK8PFHT750_TrimMass50
-    HLT_AK8PFHT800_TrimMass50
-    HLT_AK8DiPFJet300_200_TrimMass30_BTagCSV_p20
-    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p087
-    HLT_AK8DiPFJet300_200_TrimMass30_BTagCSV_p087
-    HLT_AK8DiPFJet300_200_TrimMass30
-    HLT_AK8PFHT700_TrimR0p1PT0p03Mass50
-    HLT_AK8PFHT650_TrimR0p1PT0p03Mass50
-    HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20
-    HLT_AK8DiPFJet280_200_TrimMass30
-    HLT_AK8DiPFJet250_200_TrimMass30
-    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20
-    HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20
-    HLT_CaloJet500_NoJetID
-    HLT_Dimuon13_PsiPrime
-    HLT_Dimuon13_Upsilon
-    HLT_Dimuon20_Jpsi
-    HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf
-    HLT_DoubleEle33_CaloIdL
-    HLT_DoubleEle33_CaloIdL_MW
-    HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW
-    HLT_DoubleMediumCombinedIsoPFTau35_Trk1_eta2p1_Reg
-    HLT_DoubleTightCombinedIsoPFTau35_Trk1_eta2p1_Reg
-    HLT_DoubleMediumCombinedIsoPFTau40_Trk1_eta2p1_Reg
-    HLT_DoubleTightCombinedIsoPFTau40_Trk1_eta2p1_Reg
-    HLT_DoubleMediumCombinedIsoPFTau40_Trk1_eta2p1
-    HLT_DoubleTightCombinedIsoPFTau40_Trk1_eta2p1
-    HLT_DoubleEle37_Ele27_CaloIdL_GsfTrkIdVL
-    HLT_DoubleMu33NoFiltersNoVtx
-    HLT_DoubleMu38NoFiltersNoVtx
-    HLT_DoubleMu23NoFiltersNoVtxDisplaced
-    HLT_DoubleMu28NoFiltersNoVtxDisplaced
-    HLT_DoubleMu0
-    HLT_DoubleMu4_3_Bs
-    HLT_DoubleMu4_3_Jpsi_Displaced
-    HLT_DoubleMu4_JpsiTrk_Displaced
-    HLT_DoubleMu4_LowMassNonResonantTrk_Displaced
-    HLT_DoubleMu3_Trk_Tau3mu
-    HLT_DoubleMu4_PsiPrimeTrk_Displaced
-    HLT_Mu7p5_L2Mu2_Jpsi
-    HLT_Mu7p5_L2Mu2_Upsilon
-    HLT_Mu7p5_Track2_Jpsi
-    HLT_Mu7p5_Track3p5_Jpsi
-    HLT_Mu7p5_Track7_Jpsi
-    HLT_Mu7p5_Track2_Upsilon
-    HLT_Mu7p5_Track3p5_Upsilon
-    HLT_Mu7p5_Track7_Upsilon
-    HLT_Dimuon0er16_Jpsi_NoOS_NoVertexing
-    HLT_Dimuon6_Jpsi_NoVertexing
-    HLT_DoublePhoton60
-    HLT_DoublePhoton85
-    HLT_Ele20_eta2p1_WPLoose_Gsf_LooseIsoPFTau28
-    HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau29
-    HLT_Ele22_eta2p1_WPLoose_Gsf
-    HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau30
-    HLT_Ele25_WPTight_Gsf
-    HLT_Ele25_eta2p1_WPTight_Gsf
-    HLT_Ele27_WPLoose_Gsf_WHbbBoost
-    HLT_Ele27_WPTight_Gsf
-    HLT_Ele27_WPTight_Gsf_L1JetTauSeeded
-    HLT_Ele27_eta2p1_WPLoose_Gsf
-    HLT_Ele27_eta2p1_WPTight_Gsf
-    HLT_Ele30_WPTight_Gsf
-    HLT_Ele30_eta2p1_WPTight_Gsf
-    HLT_Ele32_WPTight_Gsf
-    HLT_Ele32_eta2p1_WPTight_Gsf
-    HLT_Ele36_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1
-    HLT_Ele45_CaloIdVT_GsfTrkIdT_PFJet200_PFJet50
-    HLT_Ele105_CaloIdVT_GsfTrkIdT
-    HLT_HT200
-    HLT_HT275
-    HLT_HT325
-    HLT_HT425
-    HLT_HT575
-    HLT_HT430to450
-    HLT_HT450to470
-    HLT_HT470to500
-    HLT_HT500to550
-    HLT_HT550to650
-    HLT_HT650
-    HLT_IsoMu16_eta2p1_MET30
-    HLT_IsoMu16_eta2p1_MET30_LooseIsoPFTau50_Trk30_eta2p1
-    HLT_DoubleIsoMu17_eta2p1_noDzCut
-    HLT_IsoMu19_eta2p1_LooseIsoPFTau20
-    HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1
-    HLT_IsoMu19_eta2p1_MediumIsoPFTau32_Trk1_eta2p1_Reg
-    HLT_IsoMu19_eta2p1_LooseCombinedIsoPFTau20
-    HLT_IsoMu19_eta2p1_MediumCombinedIsoPFTau32_Trk1_eta2p1_Reg
-    HLT_IsoMu19_eta2p1_TightCombinedIsoPFTau32_Trk1_eta2p1_Reg
-    HLT_IsoMu21_eta2p1_MediumCombinedIsoPFTau32_Trk1_eta2p1_Reg
-    HLT_IsoMu21_eta2p1_TightCombinedIsoPFTau32_Trk1_eta2p1_Reg
-    HLT_IsoMu20
-    HLT_IsoMu21_eta2p1_LooseIsoPFTau20_SingleL1
-    HLT_IsoMu21_eta2p1_LooseIsoPFTau50_Trk30_eta2p1_SingleL1
-    HLT_IsoMu21_eta2p1_MediumIsoPFTau32_Trk1_eta2p1_Reg
-    HLT_IsoMu22
-    HLT_IsoMu22_eta2p1
-    HLT_IsoMu24
-    HLT_IsoMu24_eta2p1
-    HLT_IsoMu27
-    HLT_IsoTkMu20
-    HLT_IsoTkMu22
-    HLT_IsoTkMu22_eta2p1
-    HLT_IsoTkMu24
-    HLT_IsoTkMu24_eta2p1
-    HLT_IsoTkMu27
-    HLT_JetE30_NoBPTX3BX
-    HLT_JetE30_NoBPTX
-    HLT_JetE50_NoBPTX3BX
-    HLT_JetE70_NoBPTX3BX
-    HLT_L1SingleMu18
-    HLT_L2Mu10
-    HLT_L2DoubleMu23_NoVertex
-    HLT_L2DoubleMu28_NoVertex_2Cha_Angle2p5_Mass10
-    HLT_L2DoubleMu38_NoVertex_2Cha_Angle2p5_Mass10
-    HLT_L2Mu10_NoVertex_NoBPTX3BX
-    HLT_L2Mu10_NoVertex_NoBPTX
-    HLT_L2Mu45_NoVertex_3Sta_NoBPTX3BX
-    HLT_L2Mu40_NoVertex_3Sta_NoBPTX3BX
-    HLT_LooseIsoPFTau50_Trk30_eta2p1
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET90
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET110
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120
-    HLT_PFTau120_eta2p1
-    HLT_PFTau140_eta2p1
-    HLT_VLooseIsoPFTau120_Trk50_eta2p1
-    HLT_VLooseIsoPFTau140_Trk50_eta2p1
-    HLT_Mu17_Mu8
-    HLT_Mu17_Mu8_DZ
-    HLT_Mu17_Mu8_SameSign
-    HLT_Mu17_Mu8_SameSign_DZ
-    HLT_Mu20_Mu10
-    HLT_Mu20_Mu10_DZ
-    HLT_Mu20_Mu10_SameSign
-    HLT_Mu20_Mu10_SameSign_DZ
-    HLT_Mu17_TkMu8_DZ
-    HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL
-    HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ
-    HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL
-    HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ
-    HLT_Mu25_TkMu0_dEta18_Onia
-    HLT_Mu27_TkMu8
-    HLT_Mu30_TkMu11
-    HLT_Mu30_eta2p1_PFJet150_PFJet50
-    HLT_Mu40_TkMu11
-    HLT_Mu40_eta2p1_PFJet200_PFJet50
-    HLT_Mu20
-    HLT_TkMu17
-    HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL
-    HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ
-    HLT_TkMu20
-    HLT_Mu24_eta2p1
-    HLT_TkMu24_eta2p1
-    HLT_Mu27
-    HLT_TkMu27
-    HLT_Mu45_eta2p1
-    HLT_Mu50
-    HLT_TkMu50
-    HLT_Mu38NoFiltersNoVtx_Photon38_CaloIdL
-    HLT_Mu42NoFiltersNoVtx_Photon42_CaloIdL
-    HLT_Mu28NoFiltersNoVtxDisplaced_Photon28_CaloIdL
-    HLT_Mu33NoFiltersNoVtxDisplaced_Photon33_CaloIdL
-    HLT_Mu23NoFiltersNoVtx_Photon23_CaloIdL
-    HLT_DoubleMu18NoFiltersNoVtx
-    HLT_Mu28NoFiltersNoVtx_DisplacedJet40_Loose
-    HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Tight
-    HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose
-    HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose
-    HLT_Mu28NoFiltersNoVtx_CentralCaloJet40
-    HLT_PFHT300_PFMET110
-    HLT_PFHT550_4JetPt50
-    HLT_PFHT650_4JetPt50
-    HLT_PFHT750_4JetPt70
-    HLT_PFHT750_4JetPt80
-    HLT_PFHT800_4JetPt50
-    HLT_PFHT850_4JetPt50
-    HLT_PFJet15_NoCaloMatched
-    HLT_PFJet25_NoCaloMatched
-    HLT_DiPFJet15_NoCaloMatched
-    HLT_DiPFJet25_NoCaloMatched
-    HLT_DiPFJet15_FBEta3_NoCaloMatched
-    HLT_DiPFJet25_FBEta3_NoCaloMatched
-    HLT_DiPFJetAve15_HFJEC
-    HLT_DiPFJetAve25_HFJEC
-    HLT_DiPFJetAve35_HFJEC
-    HLT_AK8PFJet40
-    HLT_AK8PFJet60
-    HLT_AK8PFJet80
-    HLT_AK8PFJet140
-    HLT_AK8PFJet200
-    HLT_AK8PFJet260
-    HLT_AK8PFJet320
-    HLT_AK8PFJet400
-    HLT_AK8PFJet450
-    HLT_AK8PFJet500
-    HLT_PFJet40
-    HLT_PFJet60
-    HLT_PFJet80
-    HLT_PFJet140
-    HLT_PFJet200
-    HLT_PFJet260
-    HLT_PFJet320
-    HLT_PFJet400
-    HLT_PFJet450
-    HLT_PFJet500
-    HLT_DiPFJetAve40
-    HLT_DiPFJetAve60
-    HLT_DiPFJetAve80
-    HLT_DiPFJetAve140
-    HLT_DiPFJetAve200
-    HLT_DiPFJetAve260
-    HLT_DiPFJetAve320
-    HLT_DiPFJetAve400
-    HLT_DiPFJetAve500
-    HLT_DiPFJetAve60_HFJEC
-    HLT_DiPFJetAve80_HFJEC
-    HLT_DiPFJetAve100_HFJEC
-    HLT_DiPFJetAve160_HFJEC
-    HLT_DiPFJetAve220_HFJEC
-    HLT_DiPFJetAve300_HFJEC
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu140
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu80
-    HLT_DiCentralPFJet170
-    HLT_SingleCentralPFJet170_CFMax0p1
-    HLT_DiCentralPFJet170_CFMax0p1
-    HLT_DiCentralPFJet330_CFMax0p5
-    HLT_DiCentralPFJet430
-    HLT_DiJetVBF_PassThrough
-    HLT_DiJetVBFMu_PassThrough
-    HLT_PFHT125
-    HLT_PFHT200
-    HLT_PFHT250
-    HLT_PFHT300
-    HLT_PFHT350
-    HLT_PFHT400
-    HLT_PFHT475
-    HLT_PFHT600
-    HLT_PFHT650
-    HLT_PFHT900
-    HLT_PFHT200_PFAlphaT0p51
-    HLT_PFHT200_DiPFJetAve90_PFAlphaT0p63
-    HLT_PFHT250_DiPFJetAve90_PFAlphaT0p58
-    HLT_PFHT300_DiPFJetAve90_PFAlphaT0p54
-    HLT_PFHT350_DiPFJetAve90_PFAlphaT0p53
-    HLT_PFHT400_DiPFJetAve90_PFAlphaT0p52
-    HLT_MET60_IsoTrk35_Loose
-    HLT_MET75_IsoTrk50
-    HLT_MET90_IsoTrk50
-    HLT_PFMET170_NotCleaned
-    HLT_PFMET170_HBHECleaned
-    HLT_PFMET170_BeamHaloCleaned
-    HLT_PFMET170_HBHE_BeamHaloCleaned
-    HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned
-    HLT_PFMET110_PFMHT110_IDTight
-    HLT_PFMET120_PFMHT120_IDTight
-    HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067
-    HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight
-    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200
-    HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460
-    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240
-    HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500
-    HLT_QuadPFJet_VBF
-    HLT_L1_TripleJet_VBF
-    HLT_QuadJet45_TripleBTagCSV_p087
-    HLT_QuadJet45_DoubleBTagCSV_p087
-    HLT_DoubleJet90_Double30_TripleBTagCSV_p087
-    HLT_DoubleJet90_Double30_DoubleBTagCSV_p087
-    HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160
-    HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6
-    HLT_DoubleJetsC112_DoubleBTagCSV_p026_DoublePFJetsC172
-    HLT_DoubleJetsC112_DoubleBTagCSV_p014_DoublePFJetsC112MaxDeta1p6
-    HLT_DoubleJetsC100_SingleBTagCSV_p026
-    HLT_DoubleJetsC100_SingleBTagCSV_p014
-    HLT_DoubleJetsC100_SingleBTagCSV_p026_SinglePFJetC350
-    HLT_DoubleJetsC100_SingleBTagCSV_p014_SinglePFJetC350
-    HLT_Photon135_PFMET100
-    HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_VBF
-    HLT_Photon250_NoHE
-    HLT_Photon300_NoHE
-    HLT_Photon26_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon16_AND_HE10_R9Id65_Eta2_Mass60
-    HLT_Photon36_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon22_AND_HE10_R9Id65_Eta2_Mass15
-    HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_VBF
-    HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_VBF
-    HLT_Photon75_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon75_R9Id90_HE10_Iso40_EBOnly_VBF
-    HLT_Photon90_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon90_R9Id90_HE10_Iso40_EBOnly_VBF
-    HLT_Photon120_R9Id90_HE10_Iso40_EBOnly_PFMET40
-    HLT_Photon120_R9Id90_HE10_Iso40_EBOnly_VBF
-    HLT_Mu8_TrkIsoVVL
-    HLT_Mu17_TrkIsoVVL
-    HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30
-    HLT_BTagMu_DiJet20_Mu5
-    HLT_BTagMu_DiJet40_Mu5
-    HLT_BTagMu_DiJet70_Mu5
-    HLT_BTagMu_DiJet110_Mu5
-    HLT_BTagMu_DiJet170_Mu5
-    HLT_BTagMu_Jet300_Mu5
-    HLT_BTagMu_AK8Jet300_Mu5
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_L1JetTauSeeded
-    HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
-    HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL
-    HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL
-    HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
-    HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL
-    HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
-    HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL
-    HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ
-    HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL
-    HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
-    HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL
-    HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL
-    HLT_Mu27_Ele37_CaloIdL_GsfTrkIdVL
-    HLT_Mu8_DiEle12_CaloIdL_TrackIdL
-    HLT_Mu12_Photon25_CaloIdL
-    HLT_Mu12_Photon25_CaloIdL_L1ISO
-    HLT_Mu12_Photon25_CaloIdL_L1OR
-    HLT_Mu17_Photon30_CaloIdL_L1ISO
-    HLT_Mu17_Photon35_CaloIdL_L1ISO
-    HLT_DiMu9_Ele9_CaloIdL_TrackIdL
-    HLT_TripleMu_5_3_3_DZ_Mass3p8
-    HLT_TripleMu_12_10_5
-    HLT_Mu6_PFHT200_PFMET100
-    HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
-    HLT_Ele12_CaloIdL_TrackIdL_IsoVL
-    HLT_Ele17_CaloIdL_GsfTrkIdVL
-    HLT_Ele17_CaloIdL_TrackIdL_IsoVL
-    HLT_Ele23_CaloIdL_TrackIdL_IsoVL
-    HLT_PFHT650_WideJetMJJ900DEtaJJ1p5
-    HLT_PFHT650_WideJetMJJ950DEtaJJ1p5
-    HLT_Photon22
-    HLT_Photon30
-    HLT_Photon36
-    HLT_Photon50
-    HLT_Photon75
-    HLT_Photon90
-    HLT_Photon120
-    HLT_Photon175
-    HLT_Photon165_HE10
-    HLT_Photon22_R9Id90_HE10_IsoM
-    HLT_Photon30_R9Id90_HE10_IsoM
-    HLT_Photon36_R9Id90_HE10_IsoM
-    HLT_Photon50_R9Id90_HE10_IsoM
-    HLT_Photon75_R9Id90_HE10_IsoM
-    HLT_Photon90_R9Id90_HE10_IsoM
-    HLT_Photon120_R9Id90_HE10_IsoM
-    HLT_Photon165_R9Id90_HE10_IsoM
-    HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90
-    HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelSeedMatch_Mass70
-    HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55
-    HLT_Diphoton30_18_Solid_R9Id_AND_IsoCaloId_AND_HE_R9Id_Mass55
-    HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55
-    HLT_Dimuon0_Jpsi_Muon
-    HLT_Dimuon0_Upsilon_Muon
-    HLT_QuadMuon0_Dimuon0_Jpsi
-    HLT_QuadMuon0_Dimuon0_Upsilon
-    HLT_Rsq0p25
-    HLT_Rsq0p30
-    HLT_RsqMR270_Rsq0p09_MR200
-    HLT_RsqMR270_Rsq0p09_MR200_4jet
-    HLT_Rsq0p02_MR400_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_Rsq0p02_MR450_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_Rsq0p02_MR500_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_Rsq0p02_MR550_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200
-    HLT_HT250_DisplacedDijet40_DisplacedTrack
-    HLT_HT350_DisplacedDijet40_DisplacedTrack
-    HLT_HT350_DisplacedDijet80_DisplacedTrack
-    HLT_HT350_DisplacedDijet80_Tight_DisplacedTrack
-    HLT_HT350_DisplacedDijet40_Inclusive
-    HLT_HT550_DisplacedDijet80_Inclusive
-    HLT_HT650_DisplacedDijet80_Inclusive
-    HLT_HT750_DisplacedDijet80_Inclusive
-    HLT_VBF_DisplacedJet40_DisplacedTrack
-    HLT_VBF_DisplacedJet40_DisplacedTrack_2TrackIP2DSig5
-    HLT_VBF_DisplacedJet40_TightID_DisplacedTrack
-    HLT_VBF_DisplacedJet40_TightID_Hadronic
-    HLT_VBF_DisplacedJet40_VTightID_Hadronic
-    HLT_VBF_DisplacedJet40_VVTightID_Hadronic
-    HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack
-    HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack
-    HLT_PFMETNoMu110_PFMHTNoMu110_IDTight
-    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight
-    HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight
-    HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight
-    HLT_Ele27_eta2p1_WPLoose_Gsf_HT200
-    HLT_DoubleMu8_Mass8_PFHT300
-    HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300
-    HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300
-    HLT_Mu10_CentralPFJet30_BTagCSV_p13
-    HLT_DoubleMu3_PFMET50
-    HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV_p13
-    HLT_Ele15_IsoVVVL_BTagCSV_p067_PFHT400
-    HLT_Ele15_IsoVVVL_PFHT600
-    HLT_Ele15_IsoVVVL_PFHT400_PFMET50
-    HLT_Ele15_IsoVVVL_PFHT400
-    HLT_Ele50_IsoVVVL_PFHT400
-    HLT_Mu8_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT300_PFMETNoMu60
-    HLT_Mu10_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT350_PFMETNoMu60
-    HLT_Mu15_IsoVVVL_BTagCSV_p067_PFHT400
-    HLT_Mu15_IsoVVVL_PFHT600
-    HLT_Mu15_IsoVVVL_PFHT400_PFMET50
-    HLT_Mu15_IsoVVVL_PFHT400
-    HLT_Mu50_IsoVVVL_PFHT400
-    HLT_Dimuon16_Jpsi
-    HLT_Dimuon8_PsiPrime_Barrel
-    HLT_Dimuon8_Upsilon_Barrel
-    HLT_Dimuon0_Phi_Barrel
-    HLT_TrkMu15_DoubleTrkMu5NoFiltersNoVtx
-    HLT_TrkMu17_DoubleTrkMu8NoFiltersNoVtx
-    HLT_Mu8
-    HLT_Mu17
-    HLT_Mu3_PFJet40
-    HLT_Ele8_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele12_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele17_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele23_CaloIdM_TrackIdM_PFJet30
-    HLT_Ele50_CaloIdVT_GsfTrkIdT_PFJet165
-    HLT_PFHT400_SixJet30_DoubleBTagCSV_p056
-    HLT_PFHT450_SixJet40_BTagCSV_p056
-    HLT_PFHT400_SixJet30
-    HLT_PFHT450_SixJet40
-    HLT_Ele115_CaloIdVT_GsfTrkIdT
-    HLT_Ele145_CaloIdVT_GsfTrkIdT
-    HLT_Ele200_CaloIdVT_GsfTrkIdT
-    HLT_Mu55
-    HLT_Photon42_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon25_AND_HE10_R9Id65_Eta2_Mass15
-    HLT_Photon90_CaloIdL_PFHT600
-    HLT_FullTracks_Multiplicity80
-    HLT_FullTracks_Multiplicity100
-    HLT_FullTracks_Multiplicity130
-    HLT_FullTracks_Multiplicity150
-    HLT_ECALHT800
-    HLT_DiSC30_18_EIso_AND_HE_Mass70
-    HLT_MET200
-    HLT_Ele27_HighEta_Ele20_Mass55
-    HLT_L1FatEvents
-    HLT_Physics
-    HLT_L1FatEvents_part0
-    HLT_L1FatEvents_part1
-    HLT_L1FatEvents_part2
-    HLT_L1FatEvents_part3
-    HLT_Random
-    HLT_ZeroBias
-    HLT_ZeroBias_part0
-    HLT_ZeroBias_part1
-    HLT_ZeroBias_part2
-    HLT_ZeroBias_part3
-    HLT_ZeroBias_part4
-    HLT_ZeroBias_part5
-    HLT_ZeroBias_part6
-    HLT_ZeroBias_part7
-    HLT_AK4CaloJet30
-    HLT_AK4CaloJet40
-    HLT_AK4CaloJet50
-    HLT_AK4CaloJet80
-    HLT_AK4CaloJet100
-    HLT_AK4PFJet30
-    HLT_AK4PFJet50
-    HLT_AK4PFJet80
-    HLT_AK4PFJet100
-    HLT_HISinglePhoton10
-    HLT_HISinglePhoton15
-    HLT_HISinglePhoton20
-    HLT_HISinglePhoton40
-    HLT_HISinglePhoton60
-    HLT_EcalCalibration
-    HLT_HcalCalibration
-    HLT_GlobalRunHPDNoise
-    HLT_L1BptxMinus
-    HLT_L1BptxPlus
-    HLT_L1NotBptxOR
-    HLT_L1MinimumBiasHF_OR_part0
-    HLT_L1MinimumBiasHF_OR_part1
-    HLT_L1MinimumBiasHF_OR_part2
-    HLT_L1MinimumBiasHF_OR_part3
-    HLT_L1MinimumBiasHF_OR_part4
-    HLT_L1MinimumBiasHF_OR_part5
-    HLT_L1MinimumBiasHF_OR_part6
-    HLT_L1MinimumBiasHF_OR_part7
-    HLT_L1MinimumBiasHF_OR_part8
-    HLT_L1MinimumBiasHF_OR_part9
-    HLT_L1MinimumBiasHF_AND
-    HLT_HcalNZS
-    HLT_HcalPhiSym
-    HLT_HcalIsolatedbunch
-    HLT_ZeroBias_FirstCollisionAfterAbortGap
-    HLT_ZeroBias_FirstCollisionAfterAbortGap_copy
-    HLT_ZeroBias_IsolatedBunches
-    HLT_ZeroBias_FirstCollisionInTrain
-    HLT_ZeroBias_FirstBXAfterTrain
-    HLT_Photon500
-    HLT_Photon600
-    HLT_Mu300
-    HLT_Mu350
-    HLT_MET250
-    HLT_MET300
-    HLT_MET600
-    HLT_MET700
-    HLT_PFMET300
-    HLT_PFMET400
-    HLT_PFMET500
-    HLT_PFMET600
-    HLT_Ele250_CaloIdVT_GsfTrkIdT
-    HLT_Ele300_CaloIdVT_GsfTrkIdT
-    HLT_HT2000
-    HLT_HT2500
-    HLT_IsoTrackHE
-    HLT_IsoTrackHB
 
 
 
@@ -1549,375 +504,6 @@ print(f"Total braches : {len(all_keys)}")
 
 
 ```python
-#from dpoa_workshop import pretty_print
-
-pretty_print(all_keys, fmt='35s', require='Muon')
-pretty_print(all_keys, fmt='35s', require='Electron')
-pretty_print(all_keys, fmt='35s', require='Jet')
-pretty_print(all_keys, fmt='35s', require='MET')
-
-```
-
-    Jet_nMuons                          L1PreFiringWeight_Muon_Nom          
-    L1PreFiringWeight_Muon_StatDn       L1PreFiringWeight_Muon_StatUp       
-    L1PreFiringWeight_Muon_SystDn       L1PreFiringWeight_Muon_SystUp       nMuon                               
-    Muon_dxy                            Muon_dxyErr                         
-    Muon_dxybs                          Muon_dz                             
-    Muon_dzErr                          Muon_eta                            
-    Muon_ip3d                           Muon_jetPtRelv2                     
-    Muon_jetRelIso                      Muon_mass                           
-    Muon_miniPFRelIso_all               Muon_miniPFRelIso_chg               
-    Muon_pfRelIso03_all                 Muon_pfRelIso03_chg                 
-    Muon_pfRelIso04_all                 Muon_phi                            Muon_pt                             
-    Muon_ptErr                          Muon_segmentComp                    
-    Muon_sip3d                          Muon_softMva                        
-    Muon_tkRelIso                       Muon_tunepRelPt                     
-    Muon_mvaLowPt                       Muon_mvaTTH                         
-    Muon_charge                         Muon_jetIdx                         
-    Muon_nStations                      Muon_nTrackerLayers                 
-    Muon_pdgId                          Muon_tightCharge                    
-    Muon_fsrPhotonIdx                   Muon_highPtId                       
-    Muon_highPurity                     Muon_inTimeMuon                     
-    Muon_isGlobal                       Muon_isPFcand                       
-    Muon_isStandalone                   Muon_isTracker                      
-    Muon_jetNDauCharged                 Muon_looseId                        
-    Muon_mediumId                       Muon_mediumPromptId                 
-    Muon_miniIsoId                      Muon_multiIsoId                     
-    Muon_mvaId                          Muon_mvaLowPtId                     
-    Muon_pfIsoId                        Muon_puppiIsoId                     
-    Muon_softId                         Muon_softMvaId                      
-    Muon_tightId                        Muon_tkIsoId                        
-    Muon_triggerIdLoose                 Muon_genPartIdx                     
-    Muon_genPartFlav                    Muon_cleanmask                      
-    Flag_BadPFMuonFilter                Flag_BadPFMuonDzFilter              
-    Flag_BadPFMuonSummer16Filter        HLT_Dimuon0_Jpsi_Muon               
-    HLT_Dimuon0_Upsilon_Muon            HLT_QuadMuon0_Dimuon0_Jpsi          
-    HLT_QuadMuon0_Dimuon0_Upsilon       
-    nElectron                           Electron_dEscaleDown                
-    Electron_dEscaleUp                  Electron_dEsigmaDown                
-    Electron_dEsigmaUp                  Electron_deltaEtaSC                 
-    Electron_dr03EcalRecHitSumEt        Electron_dr03HcalDepth1TowerSumEt   
-    Electron_dr03TkSumPt                Electron_dr03TkSumPtHEEP            
-    Electron_dxy                        Electron_dxyErr                     
-    Electron_dz                         Electron_dzErr                      
-    Electron_eCorr                      Electron_eInvMinusPInv              
-    Electron_energyErr                  Electron_eta                        
-    Electron_hoe                        Electron_ip3d                       
-    Electron_jetPtRelv2                 Electron_jetRelIso                  
-    Electron_mass                       Electron_miniPFRelIso_all           
-    Electron_miniPFRelIso_chg           Electron_mvaFall17V2Iso             
-    Electron_mvaFall17V2noIso           Electron_pfRelIso03_all             
-    Electron_pfRelIso03_chg             Electron_phi                        
-    Electron_pt                         Electron_r9                         
-    Electron_scEtOverPt                 Electron_sieie                      
-    Electron_sip3d                      Electron_mvaTTH                     
-    Electron_charge                     Electron_cutBased                   
-    Electron_jetIdx                     Electron_pdgId                      
-    Electron_photonIdx                  Electron_tightCharge                
-    Electron_vidNestedWPBitmap          Electron_vidNestedWPBitmapHEEP      
-    Electron_convVeto                   Electron_cutBased_HEEP              
-    Electron_isPFcand                   Electron_jetNDauCharged             
-    Electron_lostHits                   Electron_mvaFall17V2Iso_WP80        
-    Electron_mvaFall17V2Iso_WP90        Electron_mvaFall17V2Iso_WPL         
-    Electron_mvaFall17V2noIso_WP80      Electron_mvaFall17V2noIso_WP90      
-    Electron_mvaFall17V2noIso_WPL       Electron_seedGain                   
-    Jet_nElectrons                      nLowPtElectron                      
-    LowPtElectron_ID                    LowPtElectron_convVtxRadius         
-    LowPtElectron_deltaEtaSC            LowPtElectron_dxy                   
-    LowPtElectron_dxyErr                LowPtElectron_dz                    
-    LowPtElectron_dzErr                 LowPtElectron_eInvMinusPInv         
-    LowPtElectron_embeddedID            LowPtElectron_energyErr             
-    LowPtElectron_eta                   LowPtElectron_hoe                   
-    LowPtElectron_mass                  LowPtElectron_miniPFRelIso_all      
-    LowPtElectron_miniPFRelIso_chg      LowPtElectron_phi                   
-    LowPtElectron_pt                    LowPtElectron_ptbiased              
-    LowPtElectron_r9                    LowPtElectron_scEtOverPt            
-    LowPtElectron_sieie                 LowPtElectron_unbiased              
-    LowPtElectron_charge                LowPtElectron_convWP                
-    LowPtElectron_pdgId                 LowPtElectron_convVeto              
-    LowPtElectron_lostHits              Electron_genPartIdx                 
-    Electron_genPartFlav                LowPtElectron_genPartIdx            
-    LowPtElectron_genPartFlav           Electron_cleanmask                  
-    nCorrT1METJet                       CorrT1METJet_area                   
-    CorrT1METJet_eta                    CorrT1METJet_muonSubtrFactor        
-    CorrT1METJet_phi                    CorrT1METJet_rawPt                  nFatJet                             
-    FatJet_area                         FatJet_btagCSVV2                    
-    FatJet_btagDDBvLV2                  FatJet_btagDDCvBV2                  
-    FatJet_btagDDCvLV2                  FatJet_btagDeepB                    
-    FatJet_btagHbb                      FatJet_deepTagMD_H4qvsQCD           
-    FatJet_deepTagMD_HbbvsQCD           FatJet_deepTagMD_TvsQCD             
-    FatJet_deepTagMD_WvsQCD             FatJet_deepTagMD_ZHbbvsQCD          
-    FatJet_deepTagMD_ZHccvsQCD          FatJet_deepTagMD_ZbbvsQCD           
-    FatJet_deepTagMD_ZvsQCD             FatJet_deepTagMD_bbvsLight          
-    FatJet_deepTagMD_ccvsLight          FatJet_deepTag_H                    
-    FatJet_deepTag_QCD                  FatJet_deepTag_QCDothers            
-    FatJet_deepTag_TvsQCD               FatJet_deepTag_WvsQCD               
-    FatJet_deepTag_ZvsQCD               FatJet_eta                          
-    FatJet_mass                         FatJet_msoftdrop                    
-    FatJet_n2b1                         FatJet_n3b1                         
-    FatJet_particleNetMD_QCD            FatJet_particleNetMD_Xbb            
-    FatJet_particleNetMD_Xcc            FatJet_particleNetMD_Xqq            
-    FatJet_particleNet_H4qvsQCD         FatJet_particleNet_HbbvsQCD         
-    FatJet_particleNet_HccvsQCD         FatJet_particleNet_QCD              
-    FatJet_particleNet_TvsQCD           FatJet_particleNet_WvsQCD           
-    FatJet_particleNet_ZvsQCD           FatJet_particleNet_mass             
-    FatJet_phi                          FatJet_pt                           
-    FatJet_rawFactor                    FatJet_tau1                         
-    FatJet_tau2                         FatJet_tau3                         
-    FatJet_tau4                         FatJet_lsf3                         
-    FatJet_jetId                        FatJet_subJetIdx1                   
-    FatJet_subJetIdx2                   FatJet_electronIdx3SJ               
-    FatJet_muonIdx3SJ                   FatJet_nConstituents                
-    nGenJetAK8                          GenJetAK8_eta                       
-    GenJetAK8_mass                      GenJetAK8_phi                       
-    GenJetAK8_pt                        nGenJet                             
-    GenJet_eta                          GenJet_mass                         
-    GenJet_phi                          GenJet_pt                           
-    nSubGenJetAK8                       SubGenJetAK8_eta                    
-    SubGenJetAK8_mass                   SubGenJetAK8_phi                    
-    SubGenJetAK8_pt                     nJet                                Jet_area                            
-    Jet_btagCSVV2                       Jet_btagDeepB                       
-    Jet_btagDeepCvB                     Jet_btagDeepCvL                     
-    Jet_btagDeepFlavB                   Jet_btagDeepFlavCvB                 
-    Jet_btagDeepFlavCvL                 Jet_btagDeepFlavQG                  
-    Jet_chEmEF                          Jet_chFPV0EF                        
-    Jet_chHEF                           Jet_eta                             
-    Jet_hfsigmaEtaEta                   Jet_hfsigmaPhiPhi                   Jet_mass                            
-    Jet_muEF                            Jet_muonSubtrFactor                 
-    Jet_neEmEF                          Jet_neHEF                           Jet_phi                             
-    Jet_pt                              Jet_puIdDisc                        Jet_qgl                             
-    Jet_rawFactor                       Jet_bRegCorr                        
-    Jet_bRegRes                         Jet_cRegCorr                        
-    Jet_cRegRes                         Jet_electronIdx1                    
-    Jet_electronIdx2                    Jet_hfadjacentEtaStripsSize         
-    Jet_hfcentralEtaStripSize           Jet_jetId                           
-    Jet_muonIdx1                        Jet_muonIdx2                        
-    Jet_nElectrons                      Jet_nMuons                          Jet_puId                            
-    Jet_nConstituents                   nSoftActivityJet                    
-    SoftActivityJet_eta                 SoftActivityJet_phi                 
-    SoftActivityJet_pt                  SoftActivityJetHT                   
-    SoftActivityJetHT10                 SoftActivityJetHT2                  
-    SoftActivityJetHT5                  SoftActivityJetNjets10              
-    SoftActivityJetNjets2               SoftActivityJetNjets5               nSubJet                             
-    SubJet_btagCSVV2                    SubJet_btagDeepB                    
-    SubJet_eta                          SubJet_mass                         
-    SubJet_n2b1                         SubJet_n3b1                         
-    SubJet_phi                          SubJet_pt                           
-    SubJet_rawFactor                    SubJet_tau1                         
-    SubJet_tau2                         SubJet_tau3                         
-    SubJet_tau4                         FatJet_genJetAK8Idx                 
-    FatJet_hadronFlavour                FatJet_nBHadrons                    
-    FatJet_nCHadrons                    GenJetAK8_partonFlavour             
-    GenJetAK8_hadronFlavour             GenJet_partonFlavour                
-    GenJet_hadronFlavour                Jet_genJetIdx                       
-    Jet_hadronFlavour                   Jet_partonFlavour                   
-    Jet_cleanmask                       SubJet_hadronFlavour                
-    SubJet_nBHadrons                    SubJet_nCHadrons                    
-    L1_DoubleJet12_ForwardBackward      L1_DoubleJet16_ForwardBackward      
-    L1_DoubleJet8_ForwardBackward       L1_DoubleJetC100                    
-    L1_DoubleJetC112                    L1_DoubleJetC120                    
-    L1_DoubleJetC40                     L1_DoubleJetC50                     
-    L1_DoubleJetC60                     L1_DoubleJetC60_ETM60               
-    L1_DoubleJetC80                     L1_ETM75_Jet60_dPhi_Min0p4          
-    L1_Jet32_DoubleMu_10_0_dPhi_Jet_Mu0_Max0p4_dPhi_Mu_Mu_Min1p0 
-    L1_Jet32_Mu0_EG10_dPhi_Jet_Mu_Max0p4_dPhi_Mu_EG_Min1p0 L1_Mu3_JetC120                      
-    L1_Mu3_JetC120_dEta_Max0p4_dPhi_Max0p4 L1_Mu3_JetC16                       
-    L1_Mu3_JetC16_dEta_Max0p4_dPhi_Max0p4 L1_Mu3_JetC60                       
-    L1_Mu3_JetC60_dEta_Max0p4_dPhi_Max0p4 L1_QuadJetC36_Tau52                 
-    L1_QuadJetC40                       L1_QuadJetC50                       
-    L1_QuadJetC60                       L1_SingleJet120                     
-    L1_SingleJet12_BptxAND              L1_SingleJet140                     
-    L1_SingleJet150                     L1_SingleJet16                      
-    L1_SingleJet160                     L1_SingleJet170                     
-    L1_SingleJet180                     L1_SingleJet20                      
-    L1_SingleJet200                     L1_SingleJet35                      
-    L1_SingleJet60                      L1_SingleJet8_BptxAND               
-    L1_SingleJet90                      L1_SingleJetC20_NotBptxOR           
-    L1_SingleJetC20_NotBptxOR_3BX       L1_SingleJetC32_NotBptxOR           
-    L1_SingleJetC32_NotBptxOR_3BX       L1_SingleJetC36_NotBptxOR_3BX       
-    L1_TripleJet_84_68_48_VBF           L1_TripleJet_88_72_56_VBF           
-    L1_TripleJet_92_76_64_VBF           HLT_AK8PFJet360_TrimMass30          
-    HLT_AK8PFJet400_TrimMass30          HLT_AK8DiPFJet300_200_TrimMass30_BTagCSV_p20 
-    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p087 
-    HLT_AK8DiPFJet300_200_TrimMass30_BTagCSV_p087 HLT_AK8DiPFJet300_200_TrimMass30    
-    HLT_AK8DiPFJet280_200_TrimMass30    HLT_AK8DiPFJet250_200_TrimMass30    
-    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20 
-    HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20 HLT_CaloJet260                      
-    HLT_CaloJet500_NoJetID              HLT_Ele27_WPTight_Gsf_L1JetTauSeeded 
-    HLT_Ele35_CaloIdVT_GsfTrkIdT_PFJet150_PFJet50 
-    HLT_Ele45_WPLoose_Gsf_L1JetTauSeeded 
-    HLT_Ele45_CaloIdVT_GsfTrkIdT_PFJet200_PFJet50 HLT_JetE30_NoBPTX3BX                
-    HLT_JetE30_NoBPTX                   HLT_JetE50_NoBPTX3BX                
-    HLT_JetE70_NoBPTX3BX                HLT_Mu30_eta2p1_PFJet150_PFJet50    
-    HLT_Mu40_eta2p1_PFJet200_PFJet50    
-    HLT_Mu33NoFiltersNoVtxDisplaced_DisplacedJet50_Tight 
-    HLT_Mu33NoFiltersNoVtxDisplaced_DisplacedJet50_Loose 
-    HLT_Mu28NoFiltersNoVtx_DisplacedJet40_Loose 
-    HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Tight 
-    HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose 
-    HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose 
-    HLT_Mu28NoFiltersNoVtx_CentralCaloJet40 HLT_PFHT550_4JetPt50                
-    HLT_PFHT650_4JetPt50                HLT_PFHT750_4JetPt50                
-    HLT_PFHT750_4JetPt70                HLT_PFHT750_4JetPt80                
-    HLT_PFHT800_4JetPt50                HLT_PFHT850_4JetPt50                
-    HLT_PFJet15_NoCaloMatched           HLT_PFJet25_NoCaloMatched           
-    HLT_DiPFJet15_NoCaloMatched         HLT_DiPFJet25_NoCaloMatched         
-    HLT_DiPFJet15_FBEta3_NoCaloMatched  HLT_DiPFJet25_FBEta3_NoCaloMatched  
-    HLT_DiPFJetAve15_HFJEC              HLT_DiPFJetAve25_HFJEC              
-    HLT_DiPFJetAve35_HFJEC              HLT_AK8PFJet40                      
-    HLT_AK8PFJet60                      HLT_AK8PFJet80                      
-    HLT_AK8PFJet140                     HLT_AK8PFJet200                     
-    HLT_AK8PFJet260                     HLT_AK8PFJet320                     
-    HLT_AK8PFJet400                     HLT_AK8PFJet450                     
-    HLT_AK8PFJet500                     HLT_PFJet40                         
-    HLT_PFJet60                         HLT_PFJet80                         
-    HLT_PFJet140                        HLT_PFJet200                        
-    HLT_PFJet260                        HLT_PFJet320                        
-    HLT_PFJet400                        HLT_PFJet450                        
-    HLT_PFJet500                        HLT_DiPFJetAve40                    
-    HLT_DiPFJetAve60                    HLT_DiPFJetAve80                    
-    HLT_DiPFJetAve140                   HLT_DiPFJetAve200                   
-    HLT_DiPFJetAve260                   HLT_DiPFJetAve320                   
-    HLT_DiPFJetAve400                   HLT_DiPFJetAve500                   
-    HLT_DiPFJetAve60_HFJEC              HLT_DiPFJetAve80_HFJEC              
-    HLT_DiPFJetAve100_HFJEC             HLT_DiPFJetAve160_HFJEC             
-    HLT_DiPFJetAve220_HFJEC             HLT_DiPFJetAve300_HFJEC             
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu140 
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu80 HLT_DiCentralPFJet170               
-    HLT_SingleCentralPFJet170_CFMax0p1  HLT_DiCentralPFJet170_CFMax0p1      
-    HLT_DiCentralPFJet220_CFMax0p3      HLT_DiCentralPFJet330_CFMax0p5      
-    HLT_DiCentralPFJet430               HLT_PFHT200_DiPFJetAve90_PFAlphaT0p57 
-    HLT_PFHT200_DiPFJetAve90_PFAlphaT0p63 HLT_PFHT250_DiPFJetAve90_PFAlphaT0p55 
-    HLT_PFHT250_DiPFJetAve90_PFAlphaT0p58 HLT_PFHT300_DiPFJetAve90_PFAlphaT0p53 
-    HLT_PFHT300_DiPFJetAve90_PFAlphaT0p54 HLT_PFHT350_DiPFJetAve90_PFAlphaT0p52 
-    HLT_PFHT350_DiPFJetAve90_PFAlphaT0p53 HLT_PFHT400_DiPFJetAve90_PFAlphaT0p51 
-    HLT_PFHT400_DiPFJetAve90_PFAlphaT0p52 HLT_PFMET170_JetIdCleaned           
-    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200 HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460 
-    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240 HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500 
-    HLT_QuadPFJet_VBF                   HLT_L1_TripleJet_VBF                
-    HLT_QuadJet45_TripleBTagCSV_p087    HLT_QuadJet45_DoubleBTagCSV_p087    
-    HLT_DoubleJet90_Double30_TripleBTagCSV_p087 
-    HLT_DoubleJet90_Double30_DoubleBTagCSV_p087 
-    HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160 
-    HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6 
-    HLT_DoubleJetsC112_DoubleBTagCSV_p026_DoublePFJetsC172 
-    HLT_DoubleJetsC112_DoubleBTagCSV_p014_DoublePFJetsC112MaxDeta1p6 
-    HLT_DoubleJetsC100_SingleBTagCSV_p026 HLT_DoubleJetsC100_SingleBTagCSV_p014 
-    HLT_DoubleJetsC100_SingleBTagCSV_p026_SinglePFJetC350 
-    HLT_DoubleJetsC100_SingleBTagCSV_p014_SinglePFJetC350 
-    HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 
-    HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30 
-    HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 HLT_BTagMu_DiJet20_Mu5              
-    HLT_BTagMu_DiJet40_Mu5              HLT_BTagMu_DiJet70_Mu5              
-    HLT_BTagMu_DiJet110_Mu5             HLT_BTagMu_DiJet170_Mu5             
-    HLT_BTagMu_Jet300_Mu5               HLT_BTagMu_AK8Jet300_Mu5            
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_L1JetTauSeeded 
-    HLT_PFHT650_WideJetMJJ900DEtaJJ1p5  HLT_PFHT650_WideJetMJJ950DEtaJJ1p5  
-    HLT_Rsq0p02_MR300_TriPFJet80_60_40_BTagCSV_p063_p20_Mbb60_200 
-    HLT_Rsq0p02_MR400_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200 
-    HLT_Rsq0p02_MR450_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200 
-    HLT_Rsq0p02_MR500_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200 
-    HLT_Rsq0p02_MR550_TriPFJet80_60_40_DoubleBTagCSV_p063_Mbb60_200 
-    HLT_VBF_DisplacedJet40_DisplacedTrack 
-    HLT_VBF_DisplacedJet40_DisplacedTrack_2TrackIP2DSig5 
-    HLT_VBF_DisplacedJet40_TightID_DisplacedTrack HLT_VBF_DisplacedJet40_Hadronic     
-    HLT_VBF_DisplacedJet40_Hadronic_2PromptTrack 
-    HLT_VBF_DisplacedJet40_TightID_Hadronic HLT_VBF_DisplacedJet40_VTightID_Hadronic 
-    HLT_VBF_DisplacedJet40_VVTightID_Hadronic 
-    HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack 
-    HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack 
-    HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight 
-    HLT_Mu10_CentralPFJet30_BTagCSV_p13 
-    HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV_p13 
-    HLT_Mu8_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT300_PFMETNoMu60 
-    HLT_Mu10_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT350_PFMETNoMu60 HLT_Mu3_PFJet40                     
-    HLT_Ele8_CaloIdM_TrackIdM_PFJet30   HLT_Ele12_CaloIdM_TrackIdM_PFJet30  
-    HLT_Ele17_CaloIdM_TrackIdM_PFJet30  HLT_Ele23_CaloIdM_TrackIdM_PFJet30  
-    HLT_Ele50_CaloIdVT_GsfTrkIdT_PFJet140 HLT_Ele50_CaloIdVT_GsfTrkIdT_PFJet165 
-    HLT_PFHT400_SixJet30_DoubleBTagCSV_p056 HLT_PFHT450_SixJet40_BTagCSV_p056   
-    HLT_PFHT400_SixJet30                HLT_PFHT450_SixJet40                
-    HLT_AK4CaloJet30                    HLT_AK4CaloJet40                    
-    HLT_AK4CaloJet50                    HLT_AK4CaloJet80                    
-    HLT_AK4CaloJet100                   HLT_AK4PFJet30                      
-    HLT_AK4PFJet50                      HLT_AK4PFJet80                      
-    HLT_AK4PFJet100                     
-    CaloMET_phi                         CaloMET_pt                          
-    CaloMET_sumEt                       ChsMET_phi                          
-    ChsMET_pt                           ChsMET_sumEt                        
-    nCorrT1METJet                       CorrT1METJet_area                   
-    CorrT1METJet_eta                    CorrT1METJet_muonSubtrFactor        
-    CorrT1METJet_phi                    CorrT1METJet_rawPt                  
-    DeepMETResolutionTune_phi           DeepMETResolutionTune_pt            
-    DeepMETResponseTune_phi             DeepMETResponseTune_pt              
-    GenMET_phi                          GenMET_pt                           
-    MET_MetUnclustEnUpDeltaX            MET_MetUnclustEnUpDeltaY            
-    MET_covXX                           MET_covXY                           
-    MET_covYY                           MET_phi                             MET_pt                              
-    MET_significance                    MET_sumEt                           
-    MET_sumPtUnclustered                PuppiMET_phi                        
-    PuppiMET_phiJERDown                 PuppiMET_phiJERUp                   
-    PuppiMET_phiJESDown                 PuppiMET_phiJESUp                   
-    PuppiMET_phiUnclusteredDown         PuppiMET_phiUnclusteredUp           
-    PuppiMET_pt                         PuppiMET_ptJERDown                  
-    PuppiMET_ptJERUp                    PuppiMET_ptJESDown                  
-    PuppiMET_ptJESUp                    PuppiMET_ptUnclusteredDown          
-    PuppiMET_ptUnclusteredUp            PuppiMET_sumEt                      
-    RawMET_phi                          RawMET_pt                           
-    RawMET_sumEt                        RawPuppiMET_phi                     
-    RawPuppiMET_pt                      RawPuppiMET_sumEt                   
-    TkMET_phi                           TkMET_pt                            
-    TkMET_sumEt                         MET_fiducialGenPhi                  
-    MET_fiducialGenPt                   Flag_METFilters                     
-    HLT_HT250_CaloMET70                 HLT_Mu16_eta2p1_MET30               
-    HLT_IsoMu16_eta2p1_MET30            
-    HLT_IsoMu16_eta2p1_MET30_LooseIsoPFTau50_Trk30_eta2p1 
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80 HLT_LooseIsoPFTau50_Trk30_eta2p1_MET90 
-    HLT_LooseIsoPFTau50_Trk30_eta2p1_MET110 HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120 
-    HLT_PFHT300_PFMET100                HLT_PFHT300_PFMET110                
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu140 
-    HLT_DiPFJet40_DEta3p5_MJJ600_PFMETNoMu80 HLT_MET60_IsoTrk35_Loose            
-    HLT_MET75_IsoTrk50                  HLT_MET90_IsoTrk50                  
-    HLT_PFMET120_BTagCSV_p067           HLT_PFMET120_Mu5                    
-    HLT_PFMET170_NotCleaned             HLT_PFMET170_NoiseCleaned           
-    HLT_PFMET170_HBHECleaned            HLT_PFMET170_JetIdCleaned           
-    HLT_PFMET170_BeamHaloCleaned        HLT_PFMET170_HBHE_BeamHaloCleaned   
-    HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned HLT_PFMET90_PFMHT90_IDTight         
-    HLT_PFMET100_PFMHT100_IDTight       
-    HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned HLT_PFMET110_PFMHT110_IDTight       
-    HLT_PFMET120_PFMHT120_IDTight       
-    HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067 
-    HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight HLT_Photon135_PFMET100              
-    HLT_Photon22_R9Id90_HE10_Iso40_EBOnly_PFMET40 
-    HLT_Photon36_R9Id90_HE10_Iso40_EBOnly_PFMET40 
-    HLT_Photon50_R9Id90_HE10_Iso40_EBOnly_PFMET40 
-    HLT_Photon75_R9Id90_HE10_Iso40_EBOnly_PFMET40 
-    HLT_Photon90_R9Id90_HE10_Iso40_EBOnly_PFMET40 
-    HLT_Photon120_R9Id90_HE10_Iso40_EBOnly_PFMET40 HLT_Mu3er_PFHT140_PFMET125          
-    HLT_Mu6_PFHT200_PFMET80_BTagCSV_p067 HLT_Mu6_PFHT200_PFMET100            
-    HLT_Mu14er_PFMET100                 HLT_PFMETNoMu90_PFMHTNoMu90_IDTight 
-    HLT_PFMETNoMu100_PFMHTNoMu100_IDTight HLT_PFMETNoMu110_PFMHTNoMu110_IDTight 
-    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight 
-    HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight HLT_DoubleMu3_PFMET50               
-    HLT_Ele15_IsoVVVL_PFHT350_PFMET50   HLT_Ele15_IsoVVVL_PFHT400_PFMET50   
-    HLT_Mu8_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT300_PFMETNoMu60 
-    HLT_Mu10_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT350_PFMETNoMu60 
-    HLT_Mu15_IsoVVVL_PFHT350_PFMET50    HLT_Mu15_IsoVVVL_PFHT400_PFMET50    
-    HLT_MET100                          HLT_MET150                          
-    HLT_MET200                          HLT_MET250                          
-    HLT_MET300                          HLT_MET600                          
-    HLT_MET700                          HLT_PFMET300                        
-    HLT_PFMET400                        HLT_PFMET500                        
-    HLT_PFMET600                        
-
-
-
-```python
 if "genWeight" in events.keys():
     gw = events["genWeight"].array(entry_stop=100_000, library="np")
     print(f"genWeight: mean={gw.mean():.3f}, std={gw.std():.3f}, negativos={(gw<0).mean():.2%}")
@@ -1939,297 +525,9 @@ Right: N = sum(events.genWeight)
 
 If you just count them (len), you will be wrong by 0.84% (counting the negatives as positives instead of subtracting them).
 
-
-**“Now the goal is to explore the characteristic variables of these events and visualize them. We are not applying any cuts yet; this step is simply to inspect the raw distributions. For this, we will use the following:”**
-
-
-**Note:**
-
-Notice that we could reuse the dictionary built earlier (`fileset`) to automatically loop over all available datasets. However, for debugging and flexibility, a manual list of datasets was defined. At the beginning, only a few datasets were used for quick tests, and later this list was expanded to match the same datasets contained in the `fileset`. This approach allows easier control during development while keeping compatibility with the full processing workflow.
-
-
-
-
-```python
-#import uproot
-#import awkward as ak
-#import numpy as np
-#import matplotlib.pyplot as plt
-
-
-selected_datasets = [
-    'SingleMuon', 'SingleElectron', 
-    'ttbar-semileptonic', 't-channel-top', 'ttW', 
-    'WJets-HT400to600', 'DYJets-Zpt200', 
-    'WW', 'ZZ', 'Zvv'
-]
-
-variables = [
-    "Muon_pt", "Muon_eta",
-    "Jet_pt", "Jet_btagDeepFlavB", 
-    "MET_pt",
-    "nJet", "nMuon", "nElectron"
-]
-
-
-max_files = 1
-
-
-data = {} 
-
-
-for ds_name in selected_datasets:
-
-    #################################3
-    
-    if ds_name not in fileset:
-        print(f"Skipping {ds_name}: Not found in fileset")
-        continue
-     ####################################   
-
-    
-    file_list = fileset[ds_name]["files"][:max_files]
-    
-    print(f"Reading {ds_name}: {len(file_list)} files...")
-
-    # We need a temporary place to hold data chunks from multiple files
-    # Structure: temp_storage["Muon_pt"] = [ [array_file1], [array_file2] ]
-    temp_storage = {var: [] for var in variables}
-
-    # Loop over the selected files
-    for file_path in file_list:
-        try:
-            with uproot.open(f"{file_path}:Events") as f:
-                
-                # Read raw data
-                raw_data = f.arrays(variables, library="ak")
-                
-                for var in variables:
-                    # Flatten the data for this specific file
-                    flat_array = ak.to_numpy(ak.flatten(raw_data[var], axis=None))
-                    
-                    # Add to our temporary list
-                    temp_storage[var].append(flat_array)
-
-        except Exception as e:
-            print(f"  Error reading file in {ds_name}: {e}")
-
-    
-    data[ds_name] = {}
-    
-    for var in variables:
-        if len(temp_storage[var]) > 0:
-            # np.concatenate joins the list of arrays into one big array
-            data[ds_name][var] = np.concatenate(temp_storage[var])
-        else:
-            data[ds_name][var] = np.array([]) # Empty if something went wrong
-
-
-```
-
-    Reading SingleMuon: 1 files...
-    Reading SingleElectron: 1 files...
-    Reading ttbar-semileptonic: 1 files...
-    Reading t-channel-top: 1 files...
-    Reading ttW: 1 files...
-    Reading WJets-HT400to600: 1 files...
-    Reading DYJets-Zpt200: 1 files...
-    Reading WW: 1 files...
-    Reading ZZ: 1 files...
-    Reading Zvv: 1 files...
-
-
-
-```python
-plt.rcParams.update({'font.size': 12})
-
-for var in variables:
-    
-    plt.figure(figsize=(8, 6))
-    
-    # Loop through the data we just loaded
-    for ds_name in selected_datasets:
-        
-        # Check if we have data for this combination
-        if ds_name in data and var in data[ds_name]:
-            
-            values = data[ds_name][var]
-            
-            # Check if empty
-            if len(values) == 0: continue
-            
-
-            
-       ########################################################     
-            
-            
-            plt.hist(
-                values, 
-                bins=50, 
-                # Automatic range: cut off the top 1% outliers so plot looks good
-                range=(0, np.percentile(values, 99)), 
-                histtype='bar',   
-                linewidth=2,      
-                label=ds_name      # Name in legend
-            )
-            
-    plt.xlabel(var)
-    plt.ylabel("Events")
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
-```
-
-
-    
-![png](output_34_0.png)
-    
-
-
-
-    
-![png](output_34_1.png)
-    
-
-
-
-    
-![png](output_34_2.png)
-    
-
-
-
-    
-![png](output_34_3.png)
-    
-
-
-
-    
-![png](output_34_4.png)
-    
-
-
-
-    
-![png](output_34_5.png)
-    
-
-
-
-    
-![png](output_34_6.png)
-    
-
-
-
-    
-![png](output_34_7.png)
-    
-
-
-
-**“Because data and MC have very different event counts, we cannot compare their raw histograms directly. For now, we normalize each distribution so that its integral equals 1. This lets us compare the *shape* of the variables without worrying about absolute yields:”**
-
-```python
-# --- NORMALIZATION ---
-# We create weights so the sum of the histogram equals 1.
-# This allows us to compare SHAPES, not counts.
-weights = np.ones_like(vals) / len(vals)
-```
-
-Then copy the previous block and add this line, and in plt.his add weights
-
-
-
-```python
-
-
-plt.rcParams.update({'font.size': 12})
-
-for var in variables:
-    
-    plt.figure(figsize=(8, 6))
-    
-    for ds_name in selected_datasets:
-        
-        # Check for data
-        if ds_name in data and var in data[ds_name]:
-            
-            vals = data[ds_name][var]
-            if len(vals) == 0: continue
-            
-            # --- NORMALIZATION STEP ---
-            # Create an array of weights where every entry is (1 / total_events)
-            # When summed up by the histogram, the total area will be 1.0
-            weights = np.ones_like(vals) / len(vals)
-            
-            # --- PLOT ---
-            plt.hist(
-                vals, 
-                bins=50, 
-                range=(0, np.percentile(vals, 99)), 
-                weights=weights,   # APPLY WEIGHTS HERE
-                histtype='bar',   
-                linewidth=2,       
-                label=ds_name      
-            )
-            
-    # Labels
-    plt.xlabel(var)
-    plt.ylabel("Fraction of Events (Normalized)") # Changed label
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
-```
-
-
-    
-![png](output_36_0.png)
-    
-
-
-
-    
-![png](output_36_1.png)
-    
-
-
-
-    
-![png](output_36_2.png)
-    
-
-
-
-    
-![png](output_36_3.png)
-    
-
-
-
-    
-![png](output_36_4.png)
-    
-
-
-
-    
-![png](output_36_5.png)
-    
-
-
-
-    
-![png](output_36_6.png)
-    
-
-
-
-    
-![png](output_36_7.png)
-    
-
+---
+## "Having defined the dataset, we move to data processing. Since the reference analysis has already optimized the kinematic variables, we will adopt their final cuts directly. We will retrieve these specific thresholds from the summary tables and apply the necessary selection techniques to our data."
+---
 
 
 
@@ -2263,7 +561,6 @@ If you read the drafts
 
 #### **Table 10 — Baseline Selection (SL and AH)**
 
-#### **What does it contain?**
 
 The **minimum or baseline selection** that every event must satisfy **before being assigned to any region** (Signal or Control).
 
@@ -2275,8 +572,6 @@ It includes:
 * Event-cleaning criteria
 * **Additional-lepton veto**
 
-### **What is it for?**
-
 It acts as the **universal first filter** of the analysis.
 No event enters the SR or CR without passing this baseline.
 
@@ -2284,15 +579,12 @@ No event enters the SR or CR without passing this baseline.
 
 #### **Tables 11 and 12 — Expected Events After Optimized Cuts (SL and AH)**
 
-#### **What do they contain?**
-
 Tables showing:
 
 * Expected event yields for each **background**
 * Predictions for different **signal models**
 * Results after the baseline plus **optimized cuts**
 
-#### **What is it for?**
 
 These tables serve **only for internal validation** in the paper:
 
@@ -2310,7 +602,7 @@ display(Image(filename="Table_10.png"))
 
 
     
-![png](output_41_0.png)
+![png](output_35_0.png)
     
 
 
@@ -2325,8 +617,6 @@ display(Image(filename="Table_10.png"))
 4.Compute the physics variables used throughout the analysis: W transverse mass, jet multiplicities, b-tag multiplicity, minΔφ(jets,MET), forward-jet count, and mT(b). These variables are the basis for the SR/CR definitions and the later shape studies.
 
 5.Package all selected events and computed variables into NumPy arrays. This standardized structure makes it easy to plot distributions, apply further event selection, or feed the results into statistical tools.
-
-
 
 
 ```python
@@ -2377,9 +667,9 @@ def process_file_muon(filename, dataset="Unknown", IS_DATA=False):
             else:
                 gen_weight = ak.ones_like(met_pt)
 
-##############################################################################
+        ##############################################################################
         
-        # --- 2. SELECCIÓN BASELINE ---
+        ##### 2. SELECCIÓN BASELINE ###
 
         
         mu_tight_mask = (muons.pt > 30) & (abs(muons.eta) < 2.4) & (muons.tightId) & (muons.iso < 0.15)
@@ -2420,7 +710,7 @@ def process_file_muon(filename, dataset="Unknown", IS_DATA=False):
         
         has_2_jets = ak.num(central_jets) >= 2
 
-        .###################################33###############################3
+        ###################################33###############################3
         
         # --- 4. ################################################################3
         f_met = met_pt[has_2_jets]
@@ -2461,9 +751,8 @@ def process_file_muon(filename, dataset="Unknown", IS_DATA=False):
         has_b_np = ak.to_numpy(has_b)
         mt_b_np[~has_b_np] = -1.0 # Valor dummy
 
-        ###############################################################################
 
-######## 5 . #############################################################################
+        ######## 5 . #############################################################################
 
         return {
             "dataset": dataset,
@@ -2486,54 +775,32 @@ def process_file_muon(filename, dataset="Unknown", IS_DATA=False):
         return None
 ```
 
-BLOCK 1 — Dataset list (Muon Channel only)
 
-This block defines the list of datasets that will be processed with the muon selection logic.
+This section details the three-stage pipeline designed to ingest raw ROOT files and convert them into manageable Parquet datasets for the **Single-Muon Channel**.
 
-SingleMuon is data.
+#### 🔹 BLOCK 1: Dataset Configuration
+Defines the scope of the analysis for the muon channel.
 
-Everything else is MC background.
-This allows the orchestrator to automatically detect whether generator weights exist.
+* **Classification:** It strictly separates the input streams into:
+    * **Data:** `SingleMuon` (Real experimental data).
+    * **Monte Carlo (MC):** All other datasets ($t\bar{t}$, $W$+Jets, etc.).
+* **Utility:** This separation allows the downstream logic to automatically determine if **Generator Weights** (required for MC normalization) should be extracted or ignored.
 
-BLOCK 2 — Orchestrator function
+#### 🔹 BLOCK 2: The Orchestrator Function
+ Acts as the high-level **Manager Layer**. It abstracts the file I/O and parallelization logic from the physics analysis.
+ It does *not* perform physics calculations. Its role is strictly operational: **Loop $\rightarrow$ Collect $\rightarrow$ Assemble $\rightarrow$ Save**.
+* **Workflow Steps:**
+    1.  **Validation:** Verifies the dataset exists in the global `fileset` registry.
+    2.  **Differentiation:** Sets the `is_data` flag based on the dataset name.
+    3.  **Iteration:** Loops through the first `n_files` of the requested dataset.
+    4.  **Delegation:** Calls the physics kernel (`process_file_muon`) to extract observables from each file.
+    5.  **Aggregation:** Concatenates partial results into a unified `pandas.DataFrame`.
+    6.  **Persistence:** Serializes the final DataFrame into a binary **Parquet** file in the `output_raw/` directory.
 
-This function:
-
-Determines whether the dataset is Data or MC.
-
-Checks that the dataset exists in the global fileset.
-
-Loops over the first n_files files of the dataset.
-
-For each file:
-
-Calls process_file_muon() (the physics function you wrote earlier).
-
-Converts the returned dict into a pandas.DataFrame.
-
-Merges all partial DataFrames.
-
-Saves the result to a Parquet file under output_raw/.
-
-Returns the full DataFrame.
-
-This function does not perform physics.
-Its job is to:
-
---loop
-
---collect
-
---assemble
-
---save
-
-
-It is the “manager” layer.
-
-BLOCK 3 — Execution loop
-
-This simply iterates over all muon-channel datasets and processes each one with a chosen number of input ROOT files per dataset.
+#### 🔹 BLOCK 3: Execution Loop
+ Triggers the batch processing.
+* **Function:** Iterates through the list defined in Block 1.
+* **Control:** It calls the orchestrator for each dataset, enforcing a limit on the number of input files (`N_FILES`) to control the sample size during testing or production runs.
 
 
 ```python
@@ -2549,18 +816,20 @@ vector.register_awkward()
 # BLOCK 1 — DATASET LIST (Muon Channel Only)
 
 
-datasets_muon_channel = [
-    'SingleMuon',           # DATA
+datasets_muon_channel = [          # DATA
     'ttbar-semileptonic',   # Main background
     'ttW', 'WW', 'ZZ', 'Zvv',
     'DYJets-Zpt200',
     't-channel-top',
-    'WJets-HT400to600'
+    'WJets-HT400to600',
+      'WJets-HT100to200',
+    'WJets-HT200to400',
+    't-channel-antitop',
+    'WJets-HT70to100' 
 ]
 
 
 # BLOCK 2 — ORCHESTRATOR FUNCTION (Muon Analysis Logic)
-
 def process_dataset_muon_raw(dataset, n_files=5):
     """
     High-level orchestrator:
@@ -2616,7 +885,6 @@ def process_dataset_muon_raw(dataset, n_files=5):
     return full_df
 
 
-# BLOCK 3 — EXECUTION LOOP
 
 
 N_FILES = 10  # Increase to 20+ for proper statistics
@@ -2647,6 +915,81 @@ for ds in datasets_muon_channel:
      Saved: output_raw/t-channel-top_raw.parquet with 6811 events.
      Processing RAW WJets-HT400to600 (Is Data: False)...
      Saved: output_raw/WJets-HT400to600_raw.parquet with 49574 events.
+
+
+**Note:**
+
+Notice that we could reuse the dictionary built earlier (`fileset`) to automatically loop over all available datasets. However, for debugging and flexibility, a manual list of datasets was defined. At the beginning, only a few datasets were used for quick tests, and later this list was expanded to match the same datasets contained in the `fileset`. This approach allows easier control during development while keeping compatibility with the full processing workflow.
+
+
+
+
+```python
+#import pandas as pd
+#import os
+#import awkward as ak
+#import uproot
+#import numpy as np
+#import vector
+
+vector.register_awkward()
+
+
+datasets_muon_channel = [
+    'SingleMuon',
+]
+
+
+
+def process_dataset_muon_raw(dataset, n_files=5):
+    
+    is_data = "SingleMuon" in dataset
+
+    print(f" Processing RAW {dataset} (Is Data: {is_data})...")
+
+    if dataset not in fileset:
+        print(f" {dataset} not found in fileset. Skipping.")
+        return None
+
+    files = fileset[dataset]["files"][:n_files]
+    dfs = []
+
+    for f in files:
+        try:
+            data_dict = process_file_muon(f, dataset=dataset, IS_DATA=is_data)
+
+            df = pd.DataFrame(data_dict)
+            dfs.append(df)
+
+        except Exception as e:
+            print(f" Error in file {f}: {e}")
+
+    if len(dfs) == 0:
+        print(f" No valid events produced for {dataset}")
+        return None
+
+    full_df = pd.concat(dfs, ignore_index=True)
+    os.makedirs("output_raw", exist_ok=True)
+    output_path = f"output_raw/{dataset}_raw.parquet"
+
+    full_df.to_parquet(output_path, index=False)
+    print(f" Saved: {output_path} with {len(full_df)} events.")
+
+    return full_df
+    
+
+N_FILES = 20  # Increase to 20+ for proper statistics
+
+print(f"=== STARTING MUON PROCESSING ({N_FILES} files per dataset) ===")
+
+for ds in datasets_muon_channel:
+    process_dataset_muon_raw(ds, n_files=N_FILES)
+
+```
+
+    === STARTING MUON PROCESSING (20 files per dataset) ===
+     Processing RAW SingleMuon (Is Data: True)...
+     Saved: output_raw/SingleMuon_raw.parquet with 25932 events.
 
 
 
@@ -2711,29 +1054,28 @@ This block reads that information *efficiently* from the `Runs` tree in each fil
 
 
 ```python
-#import uproot
-#import numpy as np
-
+# Ensure this number is IDENTICAL to the one used in your processing script
+N_FILES_MC = 10 
 
 sum_weights_map = {}
 
-
-print(f"{'Dataset':<30} | {'SumW (Runs)':<20}")
-print("-" * 60)
+print(f"{'Dataset':<30} | {'SumW (Subset)':<20} | {'Files Read'}")
+print("-" * 70)
 
 for dataset_name, info in fileset.items():
     
-    # Identify data (data has no generator weights)
-    is_data = any(x in dataset_name for x in ["SingleMuon", "SingleElectron", "MET", "EGamma"])
-    
-    if is_data:
+    # Skip Real Data (They do not contain GenWeights)
+    if "SingleMuon" in dataset_name or "SingleElectron" in dataset_name or "met" in dataset_name:
         sum_weights_map[dataset_name] = 1.0
-        print(f"{dataset_name:<30} | {'1.0 (DATA)':<20}")
         continue
         
     total_sum_w = 0.0
-    file_list = info["files"]
     
+    # --- KEY STEP: SLICE THE FILE LIST ---
+    # We select only the first N_FILES_MC, matching the processor logic
+    file_list = info["files"][:N_FILES_MC] 
+    
+    # Read only those specific files
     for filename in file_list:
         try:
             with uproot.open(f"{filename}:Runs") as runs:
@@ -2744,28 +1086,24 @@ for dataset_name, info in fileset.items():
             print(f" Error reading {filename}: {e}")
 
     sum_weights_map[dataset_name] = total_sum_w
-    print(f"{dataset_name:<30} | {total_sum_w:.2e}")
-
-print("\n Normalization metadata loaded.")
-
+    print(f"{dataset_name:<30} | {total_sum_w:.2e}           | {len(file_list)}")
+    
 ```
 
-    Dataset                        | SumW (Runs)         
-    ------------------------------------------------------------
-    met                            | 0.00e+00
-    SingleMuon                     | 1.0 (DATA)          
-    SingleElectron                 | 1.0 (DATA)          
-    ttbar-semileptonic             | 4.35e+10
-    ttbar-hadronic                 | 3.36e+10
-    t-channel-top                  | 2.30e+09
-    ttW                            | 1.11e+06
-    WJets-HT400to600               | 2.12e+06
-    DYJets-Zpt200                  | 7.51e+03
-    WW                             | 1.58e+07
-    ZZ                             | 1.15e+06
-    Zvv                            | 6.47e+04
-    
-     Normalization metadata loaded.
+    Dataset                        | SumW (Subset)        | Files Read
+    ----------------------------------------------------------------------
+    ttbar-semileptonic             | 3.72e+09           | 10
+    t-channel-top                  | 9.05e+08           | 10
+    t-channel-antitop              | 6.51e+08           | 10
+    ttW                            | 1.05e+06           | 10
+    WJets-HT400to600               | 1.99e+06           | 10
+    WJets-HT100to200               | 1.00e+07           | 10
+    WJets-HT200to400               | 3.96e+06           | 10
+    WJets-HT70to100                | 9.42e+06           | 10
+    DYJets-Zpt200                  | 7.51e+03           | 10
+    WW                             | 7.56e+06           | 10
+    ZZ                             | 8.50e+05           | 10
+    Zvv                            | 4.30e+04           | 10
 
 
 
@@ -2782,9 +1120,9 @@ This block assigns:
 
 This is where you get the numerator of the weight formula:
 
-[
+$$
 \sigma \cdot L
-]
+$$
 
 ### **How it connects to normalization**
 
@@ -2802,7 +1140,8 @@ You now have:
 ```python
 import pandas as pd
 
-LUM = 2590.0  # pb^-1
+#LUM = 3990.0  # pb^-1
+LUM = (20/82)*8900.0 #(Luminosidad Oficial Run 2016 G: ~7540 pb^-1)  # pb^-1  == 2170.73
 
 DATA_SL = {"SingleMuon", "SingleElectron"}
 
@@ -2864,27 +1203,24 @@ for ds in datasets_general_check:
 
     Dataset                   | Xsec [pb]  | SumGenWeights   | Scale Factor
     ----------------------------------------------------------------------
-    met                       | None       | 0.00e+00        | ERROR (SumW=0)
+    met                       | None       | 1.00e+00        | ERROR (Xsec=None)
     SingleMuon                | -          | -               | 1.00        
     SingleElectron            | -          | -               | 1.00        
-    ttbar-semileptonic        | 364.35     | 4.35e+10        | 2.17e-05    
-    ttbar-hadronic            | 377.96     | 3.36e+10        | 2.91e-05    
-    t-channel-top             | 136.02     | 2.30e+09        | 1.53e-04    
-    ttW                       | 0.20       | 1.11e+06        | 4.75e-04    
-    WJets-HT400to600          | 48.91      | 2.12e+06        | 5.99e-02    
-    DYJets-Zpt200             | 1.27       | 7.51e+03        | 4.38e-01    
-    WW                        | 118.70     | 1.58e+07        | 1.94e-02    
-    ZZ                        | 16.60      | 1.15e+06        | 3.74e-02    
-    Zvv                       | 77.30      | 6.47e+04        | 3.09e+00    
+    ttbar-semileptonic        | 364.35     | 3.72e+09        | 2.13e-04    
+    t-channel-top             | 136.02     | 9.05e+08        | 3.26e-04    
+    t-channel-antitop         | 80.95      | 6.51e+08        | 2.70e-04    
+    ttW                       | 0.20       | 1.05e+06        | 4.21e-04    
+    WJets-HT400to600          | 48.91      | 1.99e+06        | 5.34e-02    
+    WJets-HT100to200          | 1345.00    | 1.00e+07        | 2.91e-01    
+    WJets-HT200to400          | 359.70     | 3.96e+06        | 1.97e-01    
+    WJets-HT70to100           | 1372.00    | 9.42e+06        | 3.16e-01    
+    DYJets-Zpt200             | 1.27       | 7.51e+03        | 3.67e-01    
+    WW                        | 118.70     | 7.56e+06        | 3.41e-02    
+    ZZ                        | 16.60      | 8.50e+05        | 4.24e-02    
+    Zvv                       | 77.30      | 4.30e+04        | 3.90e+00    
 
 
-Inventory: We define exactly which datasets we want to mix.
-
-Loop & Load: We iterate through the list, read the processed Parquet files (which are much faster than ROOT files), and load them into RAM.
-
-Normalization: We apply the physics weights immediately so every dataframe in all_dfs is ready to be plotted.
-
-Visualization: We trigger the plots right at the end.
+#### Regarding the luminosity definition, we employ a fractional approach calculated as `LUM = (20/82) * 8900.0`(perdiod H) .This method posits that processing 20 out of 82 files accounts for roughly  of the data. While strictly an estimate—given that individual ROOT files in CMS datasets vary in event content and processing a fixed number of files does not yield a precise linear fraction of the total luminosity—it aligns sufficiently with the observed yields, representing approximately  of the Run 2016 dataset. We intentionally maintain this minimalist strategy to serve as a guide for reproducibility; it allows the analysis to be run efficiently on personal computers for educational purposes, preserving the correct physics structure without the significant overhead of processing the full multi-terabyte dataset.
 
 
 
@@ -2920,7 +1256,6 @@ def plot_grouped_stack(var_name, x_label, x_range, channel_data="SingleMuon",
     grouped_counts = {}
     grouped_info   = {}
     
-    # 2. AGRUPAR MC
     for name, df in all_dfs.items():
 
         # Ignore DATA here
@@ -2937,8 +1272,9 @@ def plot_grouped_stack(var_name, x_label, x_range, channel_data="SingleMuon",
         else:
             grouped_counts[group_key] += counts
             grouped_info[group_key]["yield"] += np.sum(counts)
+            
 
-    # 3. ORDENAR GRUPOS (por yield)
+    # 3. ORDER GROUPS (by performance)
     active_groups = list(grouped_info.keys())
     active_groups.sort(key=lambda g: grouped_info[g]["yield"])  # small → top in stack
     
@@ -2964,7 +1300,6 @@ def plot_grouped_stack(var_name, x_label, x_range, channel_data="SingleMuon",
     # 5. PLOT
     fig, ax = plt.subplots(figsize=(10, 8))
     
-    # --- MC STACK -----
     if len(mc_counts) > 0:
         hep.histplot(
             mc_counts,
@@ -2992,13 +1327,12 @@ def plot_grouped_stack(var_name, x_label, x_range, channel_data="SingleMuon",
     )
 
     # --- CMS Style -----
-    hep.cms.label("Preliminary", data=True, lumi=2.6, year=2016, ax=ax)
+    hep.cms.label("Preliminary", data=True, lumi=3.4, year=2016, ax=ax)
 
-    # Leyenda ordenada para que DATA quede arriba
+
+    #########################################################################################
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(reversed(handles), reversed(labels), fontsize=16, ncol=2, loc="upper right")
-    
-    # Ejes
+    ax.legend(handles[::-1], labels[::-1], fontsize=16, ncol=2, loc="upper right")    
     ax.set_xlabel(x_label, fontsize=24)
     ax.set_ylabel("Events", fontsize=24)
     ax.set_xlim(x_range)
@@ -3009,6 +1343,7 @@ def plot_grouped_stack(var_name, x_label, x_range, channel_data="SingleMuon",
     else:
         ax.set_ylim(0, max(np.max(data_counts), np.max(total_mc)) * 1.5)
 
+    #######################################################################################
     plt.tight_layout()
     plt.show()
 
@@ -3028,9 +1363,16 @@ datasets_muon_channel = [
     'ttbar-semileptonic',   # Top
     'ttW', 'WW', 'ZZ', 'Zvv', 'DYJets-Zpt200',
     't-channel-top',
-    'WJets-HT400to600'      # WJets binned (GOOD)
+    't-channel-antitop',
+    'WJets-HT400to600',
+    'WJets-HT100to200',
+    'WJets-HT200to400',
+    'WJets-HT70to100'
+
+    # WJets binned (GOOD)
 ]
 
+LUM = 3400.0 ## The one that fits best is also consistent with the percentage of data used in that period.
 for dataset in datasets_muon_channel:
     
     # Muon channel uses '_raw.parquet' (no electron prefix)
@@ -3068,10 +1410,8 @@ muon_dfs_clean = loaded_dfs
 # Update all_dfs globally
 all_dfs = muon_dfs_clean
 
-
-# -------------------------------------------
-# ---          CLEAN PLOTS               ---
-# -------------------------------------------
+########################################################################
+#########################################################################
 
 if len(muon_dfs_clean) > 0:
     mi_canal = "SingleMuon"
@@ -3094,76 +1434,38 @@ else:
      Loaded: Zvv
      Loaded: DYJets-Zpt200
      Loaded: t-channel-top
+     Loaded: t-channel-antitop
      Loaded: WJets-HT400to600
+     Loaded: WJets-HT100to200
+     Loaded: WJets-HT200to400
+     Loaded: WJets-HT70to100
 
 
 
     
-![png](output_61_1.png)
-    
-
-
-
-    
-![png](output_61_2.png)
+![png](output_56_1.png)
     
 
 
 
     
-![png](output_61_3.png)
+![png](output_56_2.png)
     
 
 
 
     
-![png](output_61_4.png)
-    
-
-
-
-```python
-muon_dfs_clean = loaded_dfs
-all_dfs = muon_dfs_clean
-
-# ----- remover WJets -----
-if "WJets-HT400to600" in muon_dfs_clean:
-    muon_dfs_clean.pop("WJets-HT400to600")
-
-# ----- graficar -----
-if len(muon_dfs_clean) > 0:
-    mi_canal = "SingleMuon"
-    
-    plot_grouped_stack("mT_W", r"$m_T^W$ [GeV]", (0, 200), mi_canal, log_scale=False)
-    plot_grouped_stack("met", r"$p_T^{miss}$ [GeV]", (150, 500), mi_canal, log_scale=True)
-    plot_grouped_stack("nJet", r"$N_{jets}$", (2, 10), mi_canal, n_bins=8, log_scale=True)
-    plot_grouped_stack("nBTag", r"$N_{b-tags}$", (0, 5), mi_canal, n_bins=5, log_scale=True)
-
-```
-
-
-    
-![png](output_62_0.png)
+![png](output_56_3.png)
     
 
 
 
     
-![png](output_62_1.png)
+![png](output_56_4.png)
     
 
 
-
-    
-![png](output_62_2.png)
-    
-
-
-
-    
-![png](output_62_3.png)
-    
-
+Fix : If we look at the Transverse Mass ($m_T$) plot, there is a distinct peak in the Data at 80 GeV. This corresponds exactly to the W boson resonance ($M_W \approx 80.4$ GeV).The Cause: This resonance peak is dominated by "bulk" events with lower hadronic activity (Low $H_T$). However, we are currently only using the WJets-HT400to600 dataset, which represents the high-energy tail.The Consequence: By missing the HT-100to200 and HT-200to400 datasets, we are effectively cutting out the events that populate this resonance. This explains why the Simulation peak is drastically smaller than the Data peak.
 
 ## Electron
 
@@ -3309,14 +1611,15 @@ and with the same idea as the muon one
 #import os
 
 
-datasets_electron_channel = [
-    'SingleElectron',        # DATA
+datasets_electron_channel = [       # DATA
     'ttbar-semileptonic',    # Main Background
     'ttW',
     'WW', 'ZZ', 'Zvv',
     'DYJets-Zpt200',         # Drell–Yan (important for Z→ee)
     't-channel-top',
-    'WJets-HT400to600'       # W+Jets
+    'WJets-HT400to600',
+     't-channel-antitop',
+    'WJets-HT70to100' # W+Jets
 ]
 
 def process_dataset_electron_raw(dataset, n_files=5):
@@ -3397,6 +1700,77 @@ for ds in datasets_electron_channel:
 
 
 ```python
+
+
+#import pandas as pd
+#imp
+
+datasets_electron_channel = [
+  'SingleElectron',    
+]
+
+def process_dataset_electron_raw(dataset, n_files=5):
+    # Explicit detection for data
+    is_data = "SingleElectron" in dataset
+    
+    print(f" Processing RAW Electron {dataset} (Is Data: {is_data})...")
+
+    if dataset not in fileset:
+        print(f"{dataset} not found in fileset. Skipping.")
+        return None
+
+    files = fileset[dataset]["files"][:n_files]
+    dfs = []
+    
+    for f in files:
+        try:
+            # Call the electron-level physics processing function
+            # (Make sure 'process_electron' is defined earlier)
+            data_dict = process_electron(f, dataset=dataset, IS_DATA=is_data)
+            
+            df = pd.DataFrame(data_dict)
+            dfs.append(df)
+        
+        except Exception as e:
+            # Report individual file errors without stopping the loop
+            print(f" Error in file {f}: {e}")
+
+    if len(dfs) == 0:
+        print(f"No valid events were produced for {dataset}")
+        return None
+
+    full_df = pd.concat(dfs, ignore_index=True)
+    
+    # Save output
+    os.makedirs("output_raw", exist_ok=True)
+
+    # NOTE: we use '_electron_raw' to avoid overlapping with muon outputs
+    output_path = f"output_raw/{dataset}_electron_raw.parquet"
+    
+    full_df.to_parquet(output_path, index=False)
+    print(f"Saved: {output_path} with {len(full_df)} events.")
+    
+    return full_df
+
+
+# --- 3. MASS EXECUTION ---
+# Use n_files=10 or more for reasonable statistics
+N_FILES = 20
+
+print(f"=== STARTING ELECTRON PROCESSING ({N_FILES} files per dataset) ===")
+
+for ds in datasets_electron_channel:
+    process_dataset_electron_raw(ds, n_files=N_FILES)
+
+```
+
+    === STARTING ELECTRON PROCESSING (20 files per dataset) ===
+     Processing RAW Electron SingleElectron (Is Data: True)...
+    Saved: output_raw/SingleElectron_electron_raw.parquet with 20948 events.
+
+
+
+```python
 def load_all_electrons_cleaned():
     loaded_dfs = {}
     
@@ -3404,8 +1778,15 @@ def load_all_electrons_cleaned():
         'SingleElectron', 'ttbar-semileptonic',
         'ttW', 'WW', 'ZZ', 'Zvv', 'DYJets-Zpt200',
         't-channel-top',
+        't-channel-antitop',
         'WJets-HT400to600',
+        'WJets-HT100to200',
+        'WJets-HT200to400',
+        'WJets-HT70to100'
     ]
+
+    LUM = 3400.0
+
 
     for dataset in datasets_electron_channel:
         path = f"output_raw/{dataset}_electron_raw.parquet"
@@ -3437,7 +1818,7 @@ def load_all_electrons_cleaned():
 ele_dfs_clean = load_all_electrons_cleaned()
 
 if len(ele_dfs_clean) > 0:
-    print("\n Generating CLEAN plots for SingleElectron...")
+    print("\n plots ")
 
     all_dfs = ele_dfs_clean   # THIS CAUSES plot_grouped_stack TO USE ELECTRONS
 
@@ -3463,32 +1844,36 @@ else:
      Cargado: Zvv
      Cargado: DYJets-Zpt200
      Cargado: t-channel-top
+     Cargado: t-channel-antitop
      Cargado: WJets-HT400to600
+     Cargado: WJets-HT100to200
+     Cargado: WJets-HT200to400
+     Cargado: WJets-HT70to100
     
-     Generating CLEAN plots for SingleElectron...
-
-
-
-    
-![png](output_68_1.png)
-    
+     plots 
 
 
 
     
-![png](output_68_2.png)
+![png](output_64_1.png)
     
 
 
 
     
-![png](output_68_3.png)
+![png](output_64_2.png)
     
 
 
 
     
-![png](output_68_4.png)
+![png](output_64_3.png)
+    
+
+
+
+    
+![png](output_64_4.png)
     
 
 
@@ -3506,10 +1891,9 @@ Each SR is classified according to:
 * Presence of **forward jets**
 * Values of **MET**, **MT**, **HT**, etc.
 
-### **What is it for?**
+It defines the regions where **dark matter signals** are searched for. These regions are fed directly into the **final statistical fit**.
 
-It defines the regions where **dark matter signals** are searched for.
-These regions are fed directly into the **final statistical fit**.
+We categorize these regions to distinguish the signal from specific backgrounds (e.g., high -tag bins suppress +jets while enhancing -like topologies). If Dark Matter exists, we expect to observe a **statistical excess of events** in the high- tails compared to the Standard Model prediction.
 
 
 ```python
@@ -3520,7 +1904,7 @@ display(Image(filename="Table_13.png"))
 
 
     
-![png](output_71_0.png)
+![png](output_67_0.png)
     
 
 
@@ -3548,8 +1932,11 @@ def load_data(channel="muon"):
     datasets_to_load = [
         'SingleMuon' if channel == 'muon' else 'SingleElectron',
         'ttbar-semileptonic', 'ttW', 'WW', 'ZZ', 'Zvv', 
-        'DYJets-Zpt200', 't-channel-top', 'WJets-HT400to600'
+        'DYJets-Zpt200', 't-channel-top','t-channel-antitop','WJets-HT400to600','WJets-HT100to200','WJets-HT70to100','WJets-HT200to400'
     ]
+
+
+    LUM = 3400.0
     
     suffix = "_raw.parquet" if channel == "muon" else "_electron_raw.parquet"
 
@@ -3590,7 +1977,6 @@ def signal_regions(df):
     
     if df is None or len(df) == 0: return {}
     
-    # --- CORTES SUAVES ---
     pass_common = (
         (df["met"] > 160) &
         (df["min_dphi"] > 0.5) 
@@ -3599,7 +1985,7 @@ def signal_regions(df):
     df_sr = df[pass_common]
     if len(df_sr) == 0: return {}
 
-    # Definición de las 3 Regiones (Categorías)
+# Definition of the 3 Regions (Categories)   
     mask_1b_0f = (df_sr["nBTag"] == 1) & (df_sr["nForwardJets"] == 0)
     mask_1b_1f = (df_sr["nBTag"] == 1) & (df_sr["nForwardJets"] >= 1)
     mask_2b = (df_sr["nBTag"] >= 2) 
@@ -3635,7 +2021,6 @@ def plot_region_stack(dfs_dict, region_name, var_name, x_label, x_range, channel
     
     bins = np.linspace(x_range[0], x_range[1], n_bins + 1)
     
-    # Preparar Datos para Stack
     grouped_counts = {}
     grouped_info = {}
     
@@ -3652,7 +2037,8 @@ def plot_region_stack(dfs_dict, region_name, var_name, x_label, x_range, channel
             grouped_counts[g_key] += counts
             grouped_info[g_key]["yield"] += np.sum(counts)
 
-    # Ordenar Stack
+
+    # Sort stack
     active_groups = sorted(grouped_info.keys(), key=lambda k: grouped_info[k]["yield"])
     
     mc_counts = []
@@ -3666,13 +2052,13 @@ def plot_region_stack(dfs_dict, region_name, var_name, x_label, x_range, channel
         mc_labels.append(grouped_info[g]["label"])
         total_mc += grouped_counts[g]
 
-    # Datos
+    # Data
     df_data = dfs_dict.get(channel_label)
     data_counts = np.zeros(n_bins)
     if df_data is not None:
         data_counts, _ = np.histogram(df_data[var_name], bins=bins)
 
-    # Graficar
+    
     fig, ax = plt.subplots(figsize=(10, 8))
     
     if len(mc_counts) > 0:
@@ -3682,15 +2068,12 @@ def plot_region_stack(dfs_dict, region_name, var_name, x_label, x_range, channel
     hep.histplot(data_counts, bins=bins, histtype="errorbar", color="black",
                  label=f"{channel_label} (Data)", yerr=True, marker='o', markersize=5, ax=ax)
 
-    # Decoración
-    hep.cms.label("Preliminary", data=True, lumi=35.9, year=2016, ax=ax)
+    hep.cms.label("Preliminary", data=True, lumi=3.4, year=2016, ax=ax)
     
-    # Leyenda Limpia
     handles, labels = ax.get_legend_handles_labels()
     by_label = OrderedDict(zip(labels[::-1], handles[::-1]))
     ax.legend(by_label.values(), by_label.keys(), fontsize=15, ncol=2, loc='upper right')
     
-    # Etiqueta Interna
     ax.text(0.05, 0.93, f"{region_name}", transform=ax.transAxes, 
             fontsize=20, fontweight='bold', va='top')
     
@@ -3743,37 +2126,37 @@ else:
 
 
     
-![png](output_79_0.png)
+![png](output_75_0.png)
     
 
 
 
     
-![png](output_79_1.png)
+![png](output_75_1.png)
     
 
 
 
     
-![png](output_79_2.png)
+![png](output_75_2.png)
     
 
 
 
     
-![png](output_79_3.png)
+![png](output_75_3.png)
     
 
 
 
     
-![png](output_79_4.png)
+![png](output_75_4.png)
     
 
 
 
     
-![png](output_79_5.png)
+![png](output_75_5.png)
     
 
 
@@ -3813,7 +2196,7 @@ display(Image(filename="Table_14.png"))
 
 
     
-![png](output_82_0.png)
+![png](output_78_0.png)
     
 
 
@@ -3911,7 +2294,7 @@ def plot_cr_stack(dfs_dict, region_label, var_name, x_label, x_range, data_label
     hep.histplot(data_counts, bins=bins, histtype="errorbar", color="black",
                  label=f"{data_label} (Data)", yerr=True, marker='o', markersize=5, ax=ax)
 
-    hep.cms.label("Preliminary", data=True, lumi=35.9, year=2016, ax=ax)
+    hep.cms.label("Preliminary", data=True, lumi=3.4, year=2016, ax=ax)
 
     ax.text(0.05, 0.93, region_label, transform=ax.transAxes,
             fontsize=20, fontweight='bold', va='top', ha='left')
@@ -3979,12 +2362,12 @@ run_SL("electron")
 
 
     
-![png](output_86_0.png)
+![png](output_82_0.png)
     
 
 
 
     
-![png](output_86_1.png)
+![png](output_82_1.png)
     
 
