@@ -103,6 +103,18 @@ Events must fire at least one of the following MET-based triggers:
 
 ## Step-by-Step Analysis
 
+### Step 0 (Optional): Download the Jupyter Notebook
+
+If you prefer running the workflow in notebook format, you can download the All-Hadronic notebook directly:
+
+- [Download `All_Hadronic.ipynb`](./All_Hadronic.ipynb)
+
+You can also download it from the terminal:
+
+```bash
+curl -L -o All_Hadronic.ipynb "https://raw.githubusercontent.com/CMS-EPN/search-for-dark-matter-docs/main/docs/All_Hadronic/All_Hadronic.ipynb"
+```
+
 ### Step 1: Create the Analysis Script
 
 Create a file named `ah_optimization_analysis.py` with the following complete code:
