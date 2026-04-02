@@ -2,7 +2,7 @@
 
 ## Title / Objective:
 Reproducible Analysis of CMS Open Data: Search for Dark Matter in Association with Top Quarks
-(Based on the CMS publication: "Search for dark matter produced in association with a single top quark or a top quark pair in proton–proton collisions at ($\sqrt s = 13 \TeV$").
+(Based on the CMS publication: “Search for dark matter produced in association with a single top quark or a top quark pair in proton–proton collisions at ($\sqrt s = 13 \TeV$”).
 
 # Physics Motivation
 
@@ -56,6 +56,7 @@ by B.V
 
 We import all the libraries that we are going to use.
 
+
 ```python
 
 %load_ext autoreload
@@ -81,10 +82,9 @@ vector.register_awkward()
 
 ```
 
-```
-The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-```
+    The autoreload extension is already loaded. To reload it, use:
+      %reload_ext autoreload
+
 
 We will use the **dpoa_workshop_utilities** module to help you access the datasets. The functions it contains are:
 
@@ -94,6 +94,7 @@ The `nanoaod_filenames` is a dictionary with the urls to the file indexes of the
 The `pretty_print(fields, fmt='40s', require=None, ignore=None)` function allows you to print subsets of keys based on strings that you require or ignore. It will also format that output based on how many characters you want in a column (you are limited to 80 characters per line).
 
 The `build_lumi_mask(lumifile, tree, verbose=False)` function helps you mask (select) the data that's collected from collisions.
+
 
 ```python
 
@@ -107,14 +108,24 @@ from dpoa_workshop import (
     build_lumi_mask
 )
 #-------------------------------------------
+
 ```
 
-In the drafts related to the papers, the datasets used from 2016 are listed along with their run periods and corresponding luminosities. However, one must be careful with these values, because not all periods are available and the data format differs from the one originally used, as previously noted.
+In the drafts related to the papers, the datasets used from 2016 are listed along with their run periods and corresponding luminosities. However, one must be careful with these values, because not all periods are available and the data format differs from the one originally used, as previously noted.”
 
-![png](output_10_0.png)
+from IPython.display import Image, display
 
-![png](output_11_0.png)
+display(Image(filename="dataset_2016.png"))
 
+    
+
+    
+
+display(Image(filename="MC_data.png"))
+
+    
+
+    
 # Building the Ntuple File Index
 
 CMS Open Data provides **file index text files** (`file_index.txt`) for each dataset.  
@@ -131,6 +142,7 @@ The objective is to collect file paths from multiple URLs, organize them by data
 - We loop over all entries in `nanoaod_filenames` (the dictionary we built earlier) and collect the full list of ROOT files per dataset.  
 - The result is stored in a new dictionary `ntuples`, which maps *dataset -- list of ROOT file paths*.  
 - Finally, we save this as a JSON file (`ntuples.json`) for later reuse
+
 
 ```python
 
@@ -167,71 +179,70 @@ with open("ntuples.json", "w") as f:
 
 print("-" * 50)
 print("ntuples.json creado. Keys:", list(ntuples.keys()))
-```
 
 ```
-Dataset                        | Part  | Files
---------------------------------------------------
-met                            | 0     | 7
-met                            | 1     | 4
-met                            | 2     | 21
-SingleMuon                     | 0     | 1
-SingleMuon                     | 1     | 1
-SingleMuon                     | 2     | 40
-SingleMuon                     | 3     | 8
-SingleMuon                     | 4     | 32
-SingleElectron                 | 0     | 6
-SingleElectron                 | 1     | 20
-SingleElectron                 | 2     | 11
-SingleElectron                 | 3     | 43
-ttbar-semileptonic             | 0     | 41
-ttbar-semileptonic             | 1     | 26
-ttbar-semileptonic             | 2     | 23
-ttbar-semileptonic             | 3     | 21
-ttbar-semileptonic             | 4     | 27
-t-channel-top                  | 0     | 4
-t-channel-top                  | 1     | 4
-t-channel-top                  | 2     | 5
-t-channel-top                  | 3     | 11
-t-channel-top                  | 4     | 1
-t-channel-antitop              | 0     | 13
-ttW                            | 0     | 4
-ttW                            | 1     | 4
-ttW                            | 2     | 1
-ttW                            | 3     | 3
-WJets-HT400to600               | 0     | 3
-WJets-HT400to600               | 1     | 1
-WJets-HT400to600               | 2     | 2
-WJets-HT400to600               | 3     | 2
-WJets-HT400to600               | 4     | 3
-WJets-HT100to200               | 0     | 3
-WJets-HT100to200               | 1     | 5
-WJets-HT100to200               | 2     | 3
-WJets-HT100to200               | 3     | 3
-WJets-HT100to200               | 4     | 6
-WJets-HT200to400               | 0     | 9
-WJets-HT200to400               | 1     | 14
-WJets-HT200to400               | 2     | 20
-WJets-HT200to400               | 3     | 8
-WJets-HT200to400               | 4     | 9
-WJets-HT70to100                | 0     | 4
-WJets-HT70to100                | 1     | 3
-WJets-HT70to100                | 2     | 2
-WJets-HT70to100                | 3     | 3
-WJets-HT70to100                | 4     | 7
-DYJets-Zpt200                  | 0     | 10
-WW                             | 0     | 10
-WW                             | 1     | 16
-WW                             | 2     | 12
-WW                             | 3     | 3
-ZZ                             | 0     | 3
-ZZ                             | 1     | 6
-ZZ                             | 2     | 5
-ZZ                             | 3     | 3
-Zvv                            | 0     | 14
---------------------------------------------------
-ntuples.json creado. Keys: ['met', 'SingleMuon', 'SingleElectron', 'ttbar-semileptonic', 't-channel-top', 't-channel-antitop', 'ttW', 'WJets-HT400to600', 'WJets-HT100to200', 'WJets-HT200to400', 'WJets-HT70to100', 'DYJets-Zpt200', 'WW', 'ZZ', 'Zvv']
-```
+
+    Dataset                        | Part  | Files
+    --------------------------------------------------
+    met                            | 0     | 7
+    met                            | 1     | 4
+    met                            | 2     | 21
+    SingleMuon                     | 0     | 1
+    SingleMuon                     | 1     | 1
+    SingleMuon                     | 2     | 40
+    SingleMuon                     | 3     | 8
+    SingleMuon                     | 4     | 32
+    SingleElectron                 | 0     | 6
+    SingleElectron                 | 1     | 20
+    SingleElectron                 | 2     | 11
+    SingleElectron                 | 3     | 43
+    ttbar-semileptonic             | 0     | 41
+    ttbar-semileptonic             | 1     | 26
+    ttbar-semileptonic             | 2     | 23
+    ttbar-semileptonic             | 3     | 21
+    ttbar-semileptonic             | 4     | 27
+    t-channel-top                  | 0     | 4
+    t-channel-top                  | 1     | 4
+    t-channel-top                  | 2     | 5
+    t-channel-top                  | 3     | 11
+    t-channel-top                  | 4     | 1
+    t-channel-antitop              | 0     | 13
+    ttW                            | 0     | 4
+    ttW                            | 1     | 4
+    ttW                            | 2     | 1
+    ttW                            | 3     | 3
+    WJets-HT400to600               | 0     | 3
+    WJets-HT400to600               | 1     | 1
+    WJets-HT400to600               | 2     | 2
+    WJets-HT400to600               | 3     | 2
+    WJets-HT400to600               | 4     | 3
+    WJets-HT100to200               | 0     | 3
+    WJets-HT100to200               | 1     | 5
+    WJets-HT100to200               | 2     | 3
+    WJets-HT100to200               | 3     | 3
+    WJets-HT100to200               | 4     | 6
+    WJets-HT200to400               | 0     | 9
+    WJets-HT200to400               | 1     | 14
+    WJets-HT200to400               | 2     | 20
+    WJets-HT200to400               | 3     | 8
+    WJets-HT200to400               | 4     | 9
+    WJets-HT70to100                | 0     | 4
+    WJets-HT70to100                | 1     | 3
+    WJets-HT70to100                | 2     | 2
+    WJets-HT70to100                | 3     | 3
+    WJets-HT70to100                | 4     | 7
+    DYJets-Zpt200                  | 0     | 10
+    WW                             | 0     | 10
+    WW                             | 1     | 16
+    WW                             | 2     | 12
+    WW                             | 3     | 3
+    ZZ                             | 0     | 3
+    ZZ                             | 1     | 6
+    ZZ                             | 2     | 5
+    ZZ                             | 3     | 3
+    Zvv                            | 0     | 14
+    --------------------------------------------------
+    ntuples.json creado. Keys: ['met', 'SingleMuon', 'SingleElectron', 'ttbar-semileptonic', 't-channel-top', 't-channel-antitop', 'ttW', 'WJets-HT400to600', 'WJets-HT100to200', 'WJets-HT200to400', 'WJets-HT70to100', 'DYJets-Zpt200', 'WW', 'ZZ', 'Zvv']
 
 
 Since `ntuples.json` concatenates all files into a single flat list per dataset, the distinction between source URLs (which often represent different periods like **Run2016G** vs **Run2016H**) is lost in the final file.
@@ -243,41 +254,40 @@ By logging the number of files in each part (`len(paths)`), we establish a **pos
 
 And we will download important files like the luminosity file.
 
+
 ```python
 
 !wget https://opendata.cern.ch/record/14220/files/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt
 
-```
 
 ```
---2026-03-19 21:10:59--  https://opendata.cern.ch/record/14220/files/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt
-Resolving opendata.cern.ch (opendata.cern.ch)... 137.138.6.31, 2001:1458:201:8b::100:1c8
-Connecting to opendata.cern.ch (opendata.cern.ch)|137.138.6.31|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 11686 (11K) [text/plain]
-Saving to: 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt.3'
 
-Cert_271036-284044_ 100%[===================>]  11.41K  --.-KB/s    in 0.001s  
+    --2026-03-19 21:10:59--  https://opendata.cern.ch/record/14220/files/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt
+    Resolving opendata.cern.ch (opendata.cern.ch)... 137.138.6.31, 2001:1458:201:8b::100:1c8
+    Connecting to opendata.cern.ch (opendata.cern.ch)|137.138.6.31|:443... connected.
+    HTTP request sent, awaiting response... 200 OK
+    Length: 11686 (11K) [text/plain]
+    Saving to: ‘Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt.3’
+    
+    Cert_271036-284044_ 100%[===================>]  11.41K  --.-KB/s    in 0.001s  
+    
+    2026-03-19 21:10:59 (15.3 MB/s) - ‘Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt.3’ saved [11686/11686]
+    
 
-2026-03-19 21:10:59 (15.3 MB/s) - 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt.3' saved [11686/11686]
-```
-
-```
     --2025-11-05 20:43:37--  https://opendata.cern.ch/record/14220/files/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt
     Resolving opendata.cern.ch (opendata.cern.ch)... 137.138.6.31, 2001:1458:201:8b::100:1c8
     Connecting to opendata.cern.ch (opendata.cern.ch)|137.138.6.31|:443... connected.
     HTTP request sent, awaiting response... 200 OK
     Length: 11686 (11K) [text/plain]
-    Saving to: 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt'
+    Saving to: ‘Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt’
     
     Cert_271036-284044_ 100%[===================>]  11.41K  --.-KB/s    in 0.001s  
     
-    2025-11-05 20:43:38 (10.2 MB/s) - 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt' saved [11686/11686]
+    2025-11-05 20:43:38 (10.2 MB/s) - ‘Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt’ saved [11686/11686]
     
 
 
 Complete dictionary, in case it's possible to add all the events but it hasn't been found or verified yet...
-```
 
 ```python
 
@@ -316,9 +326,11 @@ XSEC2_PB = {
     "ZZ": 16.6,   
     "WZ": 47.13  
 }
+
 ```
 
 until while these datasets are being used
+
 
 ```python
 
@@ -343,11 +355,13 @@ XSEC_PB = {
     "Zvv":                77.3,     
 }
 
+
 ```
 
 ---
 
 This function builds the fileset used by the analysis. It reads the JSON inventory of ntuples, identifies which samples are data or MC, applies an optional file limit for fast debugging, and attaches minimal metadata such as the cross section and number of files. The output is a clean, ready-to-use dictionary that tells the processor exactly which datasets to run over and how they should be treated.
+
 
 ```python
 
@@ -413,9 +427,11 @@ def construct_fileset(ntuples_json="ntuples.json", limit=None, verbose=True):
             print(f"{process_name:30} {proc_type:>6} {len(files_to_use):>10} {xsec_str:>12}")
     
     return fileset
+
 ```
 
 This line initializes the full list of datasets for the analysis. It loads all ntuples defined in *ntuples.json* (since `limit=None`) and prints a summary of the samples. The resulting `fileset` becomes the central input that tells the processor which data and MC files to process.
+
 
 ```python
 
@@ -424,30 +440,28 @@ fileset = construct_fileset(
     limit=None,      
     verbose=True
 )
-```
 
 ```
 
-Name                             Type    N Files    XSEC [pb]
------------------------------------------------------------------
-met                              DATA         32            -
-SingleMuon                       DATA         82            -
-SingleElectron                   DATA         80            -
-ttbar-semileptonic                 MC        138       364.35
-t-channel-top                      MC         25       136.02
-t-channel-antitop                  MC         13        80.95
-ttW                                MC         12         0.20
-WJets-HT400to600                   MC         11        48.91
-WJets-HT100to200                   MC         20      1345.00
-WJets-HT200to400                   MC         60       359.70
-WJets-HT70to100                    MC         19      1372.00
-DYJets-Zpt200                      MC         10         1.27
-WW                                 MC         41       118.70
-ZZ                                 MC         17        16.60
-Zvv                                MC         14        77.30
-```
+    
+    Name                             Type    N Files    XSEC [pb]
+    -----------------------------------------------------------------
+    met                              DATA         32            -
+    SingleMuon                       DATA         82            -
+    SingleElectron                   DATA         80            -
+    ttbar-semileptonic                 MC        138       364.35
+    t-channel-top                      MC         25       136.02
+    t-channel-antitop                  MC         13        80.95
+    ttW                                MC         12         0.20
+    WJets-HT400to600                   MC         11        48.91
+    WJets-HT100to200                   MC         20      1345.00
+    WJets-HT200to400                   MC         60       359.70
+    WJets-HT70to100                    MC         19      1372.00
+    DYJets-Zpt200                      MC         10         1.27
+    WW                                 MC         41       118.70
+    ZZ                                 MC         17        16.60
+    Zvv                                MC         14        77.30
 
-```
     
     Name                             Type    N Files    XSEC [pb]
     -----------------------------------------------------------------
@@ -469,7 +483,38 @@ Zvv                                MC         14        77.30
 
 
 We are about to treat the data as a "black box" in the processing loop. But we need to verify the inputs first. We use uproot, which is a Python library that allows us to read CERN ROOT files directly, without needing C++.
+
+```python
+
+dataset = "met" ##just for training
+
+for i, fpath in enumerate(fileset[dataset]["files"][:10]):
+    print(f"{i+1:2d}. {fpath}")
+
+
 ```
+
+     1. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/16D21B45-0388-FF40-8872-B398D762F652.root
+     2. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/2F8F8158-EA07-8941-A37E-667E096ADD52.root
+     3. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/50BD6B95-B1F7-2B47-832F-4DE7F49D0D5C.root
+     4. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/5F1C5DD5-A4DD-4D46-A97D-6A5B987FA8A9.root
+     5. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/D30D02C2-C90F-2C4F-9541-D07EC52F79C9.root
+     6. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/DFE14C99-E541-7845-8492-714D4F657B15.root
+     7. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/E9959B82-5EBA-9E40-87F1-59632DBDF570.root
+     8. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/280000/1C037D8D-2092-2448-81A4-BE32B05BFB45.root
+     9. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/280000/3CAC8B62-13F2-184C-B88E-01BD3BBE812C.root
+    10. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MET/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/280000/C6108E30-026E-EB4D-8326-88A49C5E277B.root
+
+     1. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/120000/61FC1E38-F75C-6B44-AD19-A9894155874E.root
+     2. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/1210000/576759DA-4A35-534B-B926-2A9E4A5A7268.root
+     3. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/0107961B-4308-F845-8F96-E14622BBA484.root
+     4. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/0DEE1709-0416-F24B-ACB2-C68997CB6465.root
+     5. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/1C08614E-0C0E-6044-966A-CAF630CAEF8F.root
+     6. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/1D87B4FB-E31C-9F43-AC21-C32469DE9FC6.root
+     7. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/1EB443F2-1230-8042-B8AE-FD50329CA59B.root
+     8. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/2045F967-9F0A-7C46-9946-787B27D56E88.root
+     9. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/236A04EE-C105-D947-8A2E-F8CC6731644F.root
+    10. root://eospublic.cern.ch//eos/opendata/cms/Run2016H/SingleMuon/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/370BE877-DA24-DB41-A875-07A86EAB6852.root
 
 ```python
 
@@ -488,19 +533,16 @@ print("# events:", events.num_entries)
 all_keys = events.keys()
 print(f"Total braches : {len(all_keys)}")
 
-```
 
 ```
-Open: root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/08FCB2ED-176B-064B-85AB-37B898773B98.root
-# events: 1233000
-Total braches : 1504
-```
 
-```
     Open: root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/08FCB2ED-176B-064B-85AB-37B898773B98.root
     # events: 1233000
     Total braches : 1504
-```
+
+    Open: root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/08FCB2ED-176B-064B-85AB-37B898773B98.root
+    # events: 1233000
+    Total braches : 1504
 
 ```python
 
@@ -510,11 +552,11 @@ if "genWeight" in events.keys():
 else:
     print("There is no genWeight")
 
-```
 
 ```
-genWeight: mean=300.828, std=39.097, negativos=0.42%
-```
+
+    genWeight: mean=300.828, std=39.097, negativos=0.42%
+
 
     genWeight: mean=300.828, std=39.097, negativos=0.42%
 
@@ -532,7 +574,6 @@ If you just count them (len), you will be wrong by 0.84% (counting the negatives
 ---
 ## "Having defined the dataset, we move to data processing. Since the reference analysis has already optimized the kinematic variables, we will adopt their final cuts directly. We will retrieve these specific thresholds from the summary tables and apply the necessary selection techniques to our data."
 ---
-
 
 
 **The workflow proceeds in three main steps:**
@@ -595,23 +636,26 @@ These tables serve **only for internal validation** in the paper:
 * Checking consistency between simulated backgrounds and signals
 * Showing how many events remain under different signal hypotheses
 
-![png](output_35_0.png)
+from IPython.display import Image, display
+
+display(Image(filename="Table_10.png"))
+
+    
+
+    
 
 
 ### Single Muon
 
-1."Load all physics objects (muons, electrons, jets, MET) from the ROOT file and package them as 4-vectors. This prepares the event for the physics selections that follow."
+1.“Load all physics objects (muons, electrons, jets, MET) from the ROOT file and package them as 4-vectors. This prepares the event for the physics selections that follow.”
 
-2."Apply the baseline selection: require exactly one tight muon, veto additional leptons, and apply the minimal MET requirement. This defines the core single-lepton topology before any SR or CR classification."
+2.“Apply the baseline selection: require exactly one tight muon, veto additional leptons, and apply the minimal MET requirement. This defines the core single-lepton topology before any SR or CR classification.”
 
-3."Clean all jets (quality, pT, ΔR from the muon) and classify them as central or forward. Retain only events with at least two central jets, as required by the topology used in the analysis."
+3.“Clean all jets (quality, pT, ΔR from the muon) and classify them as central or forward. Retain only events with at least two central jets, as required by the topology used in the analysis.”
 
 4.Compute the physics variables used throughout the analysis: W transverse mass, jet multiplicities, b-tag multiplicity, minΔφ(jets,MET), forward-jet count, and mT(b). These variables are the basis for the SR/CR definitions and the later shape studies.
 
 5.Package all selected events and computed variables into NumPy arrays. This standardized structure makes it easy to plot distributions, apply further event selection, or feed the results into statistical tools.
-
-```python
-
 #import awkward as ak
 #import uproot
 #import numpy as np
@@ -777,7 +821,12 @@ def process_file_muon(filename, dataset="Unknown", IS_DATA=False):
     except Exception as e:
         print(f"Error procesando {filename}: {e}")
         return None
+
+
+```python
+
 ```
+
 
 ```python
 def process_file_0lep(filename, dataset="Unknown", IS_DATA=False):
@@ -892,14 +941,15 @@ def process_file_0lep(filename, dataset="Unknown", IS_DATA=False):
         return None
 ```
 
+
 ```python
 #f = 'root://eospublic.cern.ch//eos/opendata/cms/mc/RunIISummer20UL16NanoAODv9/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v1/120000/08FCB2ED-176B-064B-85AB-37B898773B98.root'
 ```
 
+
 ```python
 #process_file_muon(f,'ttbar-semileptonic',IS_DATA=False)
 ```
-
 This section details the three-stage pipeline designed to ingest raw ROOT files and convert them into manageable Parquet datasets for the **Single-Muon Channel**.
 
 #### 🔹 BLOCK 1: Dataset Configuration
@@ -1009,8 +1059,6 @@ def process_dataset_0lep_raw(dataset, n_files=5):
     return full_df
 
 
-
-
 N_FILES = 10  # Increase to 20+ for proper statistics
 
 print(f"=== STARTING MUON PROCESSING ({N_FILES} files per dataset) ===")
@@ -1018,37 +1066,35 @@ print(f"=== STARTING MUON PROCESSING ({N_FILES} files per dataset) ===")
 for ds in datasets_AH_channel:
     process_dataset_0lep_raw(ds, n_files=N_FILES)
 
-```
 
 ```
-=== STARTING MUON PROCESSING (10 files per dataset) ===
- Processing RAW ttbar-semileptonic (Is Data: False)...
- Saved: output_raw/ttbar-semileptonic_raw.parquet with 57187 events.
- Processing RAW ttW (Is Data: False)...
- Saved: output_raw/ttW_raw.parquet with 49243 events.
- Processing RAW WW (Is Data: False)...
- Saved: output_raw/WW_raw.parquet with 3461 events.
- Processing RAW ZZ (Is Data: False)...
- Saved: output_raw/ZZ_raw.parquet with 1207 events.
- Processing RAW Zvv (Is Data: False)...
- Saved: output_raw/Zvv_raw.parquet with 29 events.
- Processing RAW DYJets-Zpt200 (Is Data: False)...
- Saved: output_raw/DYJets-Zpt200_raw.parquet with 1300 events.
- Processing RAW t-channel-top (Is Data: False)...
- Saved: output_raw/t-channel-top_raw.parquet with 3005 events.
- Processing RAW WJets-HT400to600 (Is Data: False)...
- Saved: output_raw/WJets-HT400to600_raw.parquet with 37809 events.
- Processing RAW WJets-HT100to200 (Is Data: False)...
- Saved: output_raw/WJets-HT100to200_raw.parquet with 68 events.
- Processing RAW WJets-HT200to400 (Is Data: False)...
- Saved: output_raw/WJets-HT200to400_raw.parquet with 9017 events.
- Processing RAW t-channel-antitop (Is Data: False)...
- Saved: output_raw/t-channel-antitop_raw.parquet with 2520 events.
- Processing RAW WJets-HT70to100 (Is Data: False)...
- Saved: output_raw/WJets-HT70to100_raw.parquet with 6 events.
-```
 
-```
+    === STARTING MUON PROCESSING (10 files per dataset) ===
+     Processing RAW ttbar-semileptonic (Is Data: False)...
+     Saved: output_raw/ttbar-semileptonic_raw.parquet with 57187 events.
+     Processing RAW ttW (Is Data: False)...
+     Saved: output_raw/ttW_raw.parquet with 49243 events.
+     Processing RAW WW (Is Data: False)...
+     Saved: output_raw/WW_raw.parquet with 3461 events.
+     Processing RAW ZZ (Is Data: False)...
+     Saved: output_raw/ZZ_raw.parquet with 1207 events.
+     Processing RAW Zvv (Is Data: False)...
+     Saved: output_raw/Zvv_raw.parquet with 29 events.
+     Processing RAW DYJets-Zpt200 (Is Data: False)...
+     Saved: output_raw/DYJets-Zpt200_raw.parquet with 1300 events.
+     Processing RAW t-channel-top (Is Data: False)...
+     Saved: output_raw/t-channel-top_raw.parquet with 3005 events.
+     Processing RAW WJets-HT400to600 (Is Data: False)...
+     Saved: output_raw/WJets-HT400to600_raw.parquet with 37809 events.
+     Processing RAW WJets-HT100to200 (Is Data: False)...
+     Saved: output_raw/WJets-HT100to200_raw.parquet with 68 events.
+     Processing RAW WJets-HT200to400 (Is Data: False)...
+     Saved: output_raw/WJets-HT200to400_raw.parquet with 9017 events.
+     Processing RAW t-channel-antitop (Is Data: False)...
+     Saved: output_raw/t-channel-antitop_raw.parquet with 2520 events.
+     Processing RAW WJets-HT70to100 (Is Data: False)...
+     Saved: output_raw/WJets-HT70to100_raw.parquet with 6 events.
+
     === STARTING MUON PROCESSING (10 files per dataset) ===
      Processing RAW SingleMuon (Is Data: True)...
      Saved: output_raw/SingleMuon_raw.parquet with 10832 events.
@@ -1073,7 +1119,6 @@ for ds in datasets_AH_channel:
 **Note:**
 
 Notice that we could reuse the dictionary built earlier (`fileset`) to automatically loop over all available datasets. However, for debugging and flexibility, a manual list of datasets was defined. At the beginning, only a few datasets were used for quick tests, and later this list was expanded to match the same datasets contained in the `fileset`. This approach allows easier control during development while keeping compatibility with the full processing workflow.
-```
 
 ```python
 
@@ -1090,7 +1135,6 @@ vector.register_awkward()
 datasets_AH_channel = [
     'met',
 ]
-
 
 
 def process_dataset_0lep_raw(dataset, n_files=5):
@@ -1137,20 +1181,16 @@ print(f"=== STARTING AH PROCESSING ({N_FILES} files per dataset) ===")
 for ds in datasets_AH_channel:
     process_dataset_0lep_raw(ds, n_files=N_FILES)
 
-```
 
 ```
-=== STARTING AH PROCESSING (10 files per dataset) ===
- Processing RAW met (Is Data: True)...
- Saved: output_raw/met_raw.parquet with 56203 events.
-```
 
-```
+    === STARTING AH PROCESSING (10 files per dataset) ===
+     Processing RAW met (Is Data: True)...
+     Saved: output_raw/met_raw.parquet with 56203 events.
+
     === STARTING MUON PROCESSING (20 files per dataset) ===
      Processing RAW SingleMuon (Is Data: True)...
      Saved: output_raw/SingleMuon_raw.parquet with 25932 events.
-
-
 
 
 # — Why Normalization Is Needed
@@ -1178,8 +1218,6 @@ Without this conceptual block, the following code would feel unmotivated.
 ---
 
 
-
-
 # Extracting Total Generated Weights (`sumGenWeights`)
 
 ### **Explanation**
@@ -1192,11 +1230,7 @@ $$
 
 we need the denominator:
 **the number of generated events**, usually stored as **sum of generated event weights**:
-```
-
-```
 Runs/genEventSumw
-```
 
 This block reads that information *efficiently* from the `Runs` tree in each file.
 
@@ -1205,6 +1239,7 @@ This block reads that information *efficiently* from the `Runs` tree in each fil
 * Provides **N_gen ≡ sumGenWeights**
 * Without it, normalization would be impossible
 * For **data**, you correctly set the weight to **1** (data is never scaled)
+
 
 ```python
 
@@ -1242,26 +1277,9 @@ for dataset_name, info in fileset.items():
     sum_weights_map[dataset_name] = total_sum_w
     print(f"{dataset_name:<30} | {total_sum_w:.2e}           | {len(file_list)}")
     
-```
 
 ```
-Dataset                        | SumW (Subset)        | Files Read
-----------------------------------------------------------------------
-ttbar-semileptonic             | 3.72e+09           | 10
-t-channel-top                  | 9.05e+08           | 10
-t-channel-antitop              | 6.51e+08           | 10
-ttW                            | 1.05e+06           | 10
-WJets-HT400to600               | 1.99e+06           | 10
-WJets-HT100to200               | 1.00e+07           | 10
-WJets-HT200to400               | 3.96e+06           | 10
-WJets-HT70to100                | 9.42e+06           | 10
-DYJets-Zpt200                  | 7.51e+03           | 10
-WW                             | 7.56e+06           | 10
-ZZ                             | 8.50e+05           | 10
-Zvv                            | 4.30e+04           | 10
-```
 
-```
     Dataset                        | SumW (Subset)        | Files Read
     ----------------------------------------------------------------------
     ttbar-semileptonic             | 3.72e+09           | 10
@@ -1277,6 +1295,20 @@ Zvv                            | 4.30e+04           | 10
     ZZ                             | 8.50e+05           | 10
     Zvv                            | 4.30e+04           | 10
 
+    Dataset                        | SumW (Subset)        | Files Read
+    ----------------------------------------------------------------------
+    ttbar-semileptonic             | 3.72e+09           | 10
+    t-channel-top                  | 9.05e+08           | 10
+    t-channel-antitop              | 6.51e+08           | 10
+    ttW                            | 1.05e+06           | 10
+    WJets-HT400to600               | 1.99e+06           | 10
+    WJets-HT100to200               | 1.00e+07           | 10
+    WJets-HT200to400               | 3.96e+06           | 10
+    WJets-HT70to100                | 9.42e+06           | 10
+    DYJets-Zpt200                  | 7.51e+03           | 10
+    WW                             | 7.56e+06           | 10
+    ZZ                             | 8.50e+05           | 10
+    Zvv                            | 4.30e+04           | 10
 
 
 # Defining the Physics Metadata (Cross Sections + Classification)
@@ -1305,7 +1337,6 @@ You now have:
 * **N_gen** (from previous block)
 
 → Everything needed to compute **per-event scale factors**.
-```
 
 ```python
 
@@ -1370,29 +1401,27 @@ for ds in datasets_general_check:
         reason = "SumW=0" if sum_w == 0 else "Xsec=None"
         print(f"{ds:<25} | {str(xsec):<10} | {sum_w:<15.2e} | ERROR ({reason})")
 
-```
 
 ```
-Dataset                   | Xsec [pb]  | SumGenWeights   | Scale Factor
-----------------------------------------------------------------------
-met                       | -          | -               | 1.00        
-SingleMuon                | None       | 1.00e+00        | ERROR (Xsec=None)
-SingleElectron            | None       | 1.00e+00        | ERROR (Xsec=None)
-ttbar-semileptonic        | 364.35     | 3.72e+09        | 2.13e-04    
-t-channel-top             | 136.02     | 9.05e+08        | 3.26e-04    
-t-channel-antitop         | 80.95      | 6.51e+08        | 2.70e-04    
-ttW                       | 0.20       | 1.05e+06        | 4.21e-04    
-WJets-HT400to600          | 48.91      | 1.99e+06        | 5.34e-02    
-WJets-HT100to200          | 1345.00    | 1.00e+07        | 2.91e-01    
-WJets-HT200to400          | 359.70     | 3.96e+06        | 1.97e-01    
-WJets-HT70to100           | 1372.00    | 9.42e+06        | 3.16e-01    
-DYJets-Zpt200             | 1.27       | 7.51e+03        | 3.67e-01    
-WW                        | 118.70     | 7.56e+06        | 3.41e-02    
-ZZ                        | 16.60      | 8.50e+05        | 4.24e-02    
-Zvv                       | 77.30      | 4.30e+04        | 3.90e+00    
-```
 
-```
+    Dataset                   | Xsec [pb]  | SumGenWeights   | Scale Factor
+    ----------------------------------------------------------------------
+    met                       | -          | -               | 1.00        
+    SingleMuon                | None       | 1.00e+00        | ERROR (Xsec=None)
+    SingleElectron            | None       | 1.00e+00        | ERROR (Xsec=None)
+    ttbar-semileptonic        | 364.35     | 3.72e+09        | 2.13e-04    
+    t-channel-top             | 136.02     | 9.05e+08        | 3.26e-04    
+    t-channel-antitop         | 80.95      | 6.51e+08        | 2.70e-04    
+    ttW                       | 0.20       | 1.05e+06        | 4.21e-04    
+    WJets-HT400to600          | 48.91      | 1.99e+06        | 5.34e-02    
+    WJets-HT100to200          | 1345.00    | 1.00e+07        | 2.91e-01    
+    WJets-HT200to400          | 359.70     | 3.96e+06        | 1.97e-01    
+    WJets-HT70to100           | 1372.00    | 9.42e+06        | 3.16e-01    
+    DYJets-Zpt200             | 1.27       | 7.51e+03        | 3.67e-01    
+    WW                        | 118.70     | 7.56e+06        | 3.41e-02    
+    ZZ                        | 16.60      | 8.50e+05        | 4.24e-02    
+    Zvv                       | 77.30      | 4.30e+04        | 3.90e+00    
+
     Dataset                   | Xsec [pb]  | SumGenWeights   | Scale Factor
     ----------------------------------------------------------------------
     met                       | None       | 1.00e+00        | ERROR (Xsec=None)
@@ -1415,21 +1444,19 @@ Zvv                       | 77.30      | 4.30e+04        | 3.90e+00
 #### Regarding the luminosity definition, we employ a fractional approach calculated as `LUM = (20/82) * 8900.0`(perdiod H) .This method posits that processing 20 out of 82 files accounts for roughly  of the data. While strictly an estimate—given that individual ROOT files in CMS datasets vary in event content and processing a fixed number of files does not yield a precise linear fraction of the total luminosity—it aligns sufficiently with the observed yields, representing approximately  of the Run 2016 dataset. We intentionally maintain this minimalist strategy to serve as a guide for reproducibility; it allows the analysis to be run efficiently on personal computers for educational purposes, preserving the correct physics structure without the significant overhead of processing the full multi-terabyte dataset.
 
 
-
 To produce publication-quality plots—like those found in CMS analyses—we need a function that:
 
 1. **Builds histograms for each MC process**, applying the final per-event normalization weight.
 2. **Groups MC samples by physics category** (tt̄, W+jets, Single Top, Diboson, etc.).
 3. **Stacks the MC contributions** in the correct order (smallest on top) so that the final shape reflects the Standard Model expectation.
 4. **Overlays the real DATA** histogram with error bars.
-5. **Applies CMS styling**, including the "Preliminary" tag and integrated luminosity.
+5. **Applies CMS styling**, including the “Preliminary” tag and integrated luminosity.
 6. Ensures the plot is clean, readable, and suitable for analysis notes or a professional report.
 
 This function does exactly that.
 By defining it once, we ensure that **every observable (pT, eta, MET, jets, etc.)** is plotted consistently and in the same professional format used in CMS.
 
 ---
-```
 
 ```python
 
@@ -1538,10 +1565,12 @@ def plot_grouped_stack(var_name, x_label, x_range, channel_data="met",
     plt.tight_layout()
     plt.show()
 
+
 ```
 
 This block loads every muon-channel dataset from the previously generated _raw.parquet files, applies the correct normalization (data vs. Monte Carlo), assigns a final per-event weight, and stores everything inside a unified dictionary (all_dfs).
 Once all datasets are normalized, we can safely call plot_grouped_stack to generate stacked MC vs. Data plots that follow a professional CMS-style presentation.
+
 
 ```python
 
@@ -1615,25 +1644,38 @@ if len(olep_dfs_clean) > 0:
 else:
     print(" No data loaded. Check if the _raw.parquet files exist.")
 
-```
 
 ```
- Loaded: met
- Loaded: ttbar-semileptonic
- Loaded: ttW
- Loaded: WW
- Loaded: ZZ
- Loaded: Zvv
- Loaded: DYJets-Zpt200
- Loaded: t-channel-top
- Loaded: t-channel-antitop
- Loaded: WJets-HT400to600
- Loaded: WJets-HT100to200
- Loaded: WJets-HT200to400
- Loaded: WJets-HT70to100
-```
 
-```
+     Loaded: met
+     Loaded: ttbar-semileptonic
+     Loaded: ttW
+     Loaded: WW
+     Loaded: ZZ
+     Loaded: Zvv
+     Loaded: DYJets-Zpt200
+     Loaded: t-channel-top
+     Loaded: t-channel-antitop
+     Loaded: WJets-HT400to600
+     Loaded: WJets-HT100to200
+     Loaded: WJets-HT200to400
+     Loaded: WJets-HT70to100
+
+
+    
+![png](All_Hadronic_converted_48_1.png)
+    
+
+
+    
+![png](All_Hadronic_converted_48_2.png)
+    
+
+
+    
+![png](All_Hadronic_converted_48_3.png)
+    
+
      Loaded: SingleMuon
      Loaded: ttbar-semileptonic
      Loaded: ttW
@@ -1650,25 +1692,22 @@ else:
 
 
     
-![png](output_56_1.png)
-    
-
-
 
     
-![png](output_56_2.png)
-    
-
 
 
     
-![png](output_56_3.png)
+
+    
+
+
+    
+
     
 
 
-
     
-![png](output_56_4.png)
+
     
 
 
@@ -1677,16 +1716,11 @@ Fix : If we look at the Transverse Mass ($m_T$) plot, there is a distinct peak i
 ## Electron
 
 To adapt the muon channel for the electron channel, we switch the signal object from `Muon` to `Electron` and adjust the kinematic cuts: pseudorapidity is restricted to **$|\eta| < 2.1$** (instead of 2.4), and a **"Gap Veto"** is implemented to exclude electrons in the barrel-endcap transition region ($1.4442 < |\eta| < 1.566$). Furthermore, the identification criteria change from specific `tightId` and isolation cuts to the standard **`cutBased == 4`** (Tight ID), and **Jet Cleaning** is re-evaluated by requiring $\Delta R > 0.4$ with respect to the selected electron rather than the muon.
-```
-
-```python
-
 #import awkward as ak
 #import uproot
 #import numpy as np
 #import vector
 #vector.register_awkward()
-
 
 
 def process_electron(filename, dataset="Unknown", IS_DATA=False):
@@ -1809,11 +1843,8 @@ def process_electron(filename, dataset="Unknown", IS_DATA=False):
             "mT_b": mt_b_np
         }
 
-```
 
 and with the same idea as the muon one
-
-```python
 
 #import pandas as pd
 #import os
@@ -1883,9 +1914,6 @@ print(f"=== STARTING ELECTRON PROCESSING ({N_FILES} files per dataset) ===")
 for ds in datasets_electron_channel:
     process_dataset_electron_raw(ds, n_files=N_FILES)
 
-```
-
-```
     === STARTING ELECTRON PROCESSING (10 files per dataset) ===
      Processing RAW Electron SingleElectron (Is Data: True)...
     Saved: output_raw/SingleElectron_electron_raw.parquet with 10757 events.
@@ -1905,9 +1933,6 @@ for ds in datasets_electron_channel:
     Saved: output_raw/t-channel-top_electron_raw.parquet with 4238 events.
      Processing RAW Electron WJets-HT400to600 (Is Data: False)...
     Saved: output_raw/WJets-HT400to600_electron_raw.parquet with 35219 events.
-```
-
-```python
 
 
 #import pandas as pd
@@ -1970,16 +1995,9 @@ print(f"=== STARTING ELECTRON PROCESSING ({N_FILES} files per dataset) ===")
 for ds in datasets_electron_channel:
     process_dataset_electron_raw(ds, n_files=N_FILES)
 
-```
-
-```
     === STARTING ELECTRON PROCESSING (20 files per dataset) ===
      Processing RAW Electron SingleElectron (Is Data: True)...
     Saved: output_raw/SingleElectron_electron_raw.parquet with 20948 events.
-```
-
-```python
-
 def load_all_electrons_cleaned():
     loaded_dfs = {}
     
@@ -2043,9 +2061,6 @@ else:
     print(" No electron data was uploaded.")
 
 
-```
-
-```
      Cargado: SingleElectron
      Cargado: ttbar-semileptonic
      Cargado: ttW
@@ -2063,27 +2078,23 @@ else:
      plots 
 
 
-
-    
-![png](output_64_1.png)
     
 
-
-
-    
-![png](output_64_2.png)
     
 
 
-
-    
-![png](output_64_3.png)
     
 
+    
 
 
     
-![png](output_64_4.png)
+
+    
+
+
+    
+
     
 
 
@@ -2104,14 +2115,18 @@ Each SR is classified according to:
 It defines the regions where **dark matter signals** are searched for. These regions are fed directly into the **final statistical fit**.
 
 We categorize these regions to distinguish the signal from specific backgrounds (e.g., high -tag bins suppress +jets while enhancing -like topologies). If Dark Matter exists, we expect to observe a **statistical excess of events** in the high- tails compared to the Standard Model prediction.
-```
 
-![png](output_67_0.png)
+display(Image(filename="Table_13.png"))
+
+    
+
+    
 
 
 Now we move to the **signal region**. We use the events that were already filtered by the baseline selection and then apply the additional cuts described in **Table 13**. To do this, we first need to load the preprocessed datasets stored as **parquet** files, so the following function was created.
 
 This function loads only the datasets needed for the analysis channel (muon or electron)
+
 
 ### Issues
 
@@ -2163,7 +2178,9 @@ def load_data(channel="met"):
             
     return loaded_dfs
 
+
 ```
+
 
 ```python
 
@@ -2191,8 +2208,8 @@ def signal_regions(df):
         "SR_2b":    df_sr[mask_2b]
     }
 
-```
 
+```
 Once `plot_grouped_stack` was defined, the same base code was reused to create `plot_region_stack`. The logic of the stacked histogram is the same, but extra features were added to handle analysis regions. In particular, a region label is drawn on the plot and the display is adapted to show results specific to a selected region. This keeps the core behavior unchanged while adding more flexibility for regional visualization.
 
 
@@ -2279,7 +2296,9 @@ def plot_region_stack(dfs_dict, region_name, var_name, x_label, x_range, channel
     plt.tight_layout()
     plt.show()
 
+
 ```
+
 
 ```python
 
@@ -2300,7 +2319,9 @@ def run_analysis_for_channel(channel_mode):
     plot_region_stack(regions_db["SR_1b_1f"], r"SR 1b $\geq$1f", "met", r"$p_T^{miss}$ [GeV]", (250, 600), d_label)
     plot_region_stack(regions_db["SR_1b_0f"], "SR 1b 0f", "met", r"$p_T^{miss}$ [GeV]", (250, 600), d_label)
 
+
 ```
+
 
 ```python
 
@@ -2313,46 +2334,66 @@ if 'sum_weights_map' in globals():
 else:
     print(" Error.")
 
-```
 
 ```
-    
-![png](output_75_0.png)
-    
 
-
-
-    
-![png](output_75_1.png)
-    
-
+    /cvmfs/sft.cern.ch/lcg/views/LCG_109_swan/x86_64-el9-gcc13-opt/lib/python3.13/site-packages/mplhep/utils.py:652: RuntimeWarning: All sumw are zero!  Cannot compute meaningful error bars
+      return np.abs(method_fcn(self.values(), variances) - self.values())
 
 
     
-![png](output_75_2.png)
+![png](All_Hadronic_converted_65_1.png)
     
 
 
-
-    
-![png](output_75_3.png)
-    
-
+    /cvmfs/sft.cern.ch/lcg/views/LCG_109_swan/x86_64-el9-gcc13-opt/lib/python3.13/site-packages/mplhep/utils.py:652: RuntimeWarning: All sumw are zero!  Cannot compute meaningful error bars
+      return np.abs(method_fcn(self.values(), variances) - self.values())
 
 
     
-![png](output_75_4.png)
+![png](All_Hadronic_converted_65_3.png)
     
 
 
+    /cvmfs/sft.cern.ch/lcg/views/LCG_109_swan/x86_64-el9-gcc13-opt/lib/python3.13/site-packages/mplhep/utils.py:652: RuntimeWarning: All sumw are zero!  Cannot compute meaningful error bars
+      return np.abs(method_fcn(self.values(), variances) - self.values())
+
 
     
-![png](output_75_5.png)
+![png](All_Hadronic_converted_65_5.png)
+    
+
+    
+
+    
+
+
+    
+![png](All_Hadronic_converted_65_1.png)
+    
+
+
+    
+
+    
+
+
+    
+![png](All_Hadronic_converted_65_3.png)
+    
+
+
+    
+
+    
+
+
+    
+![png](All_Hadronic_converted_65_5.png)
     
 
 
 ### Control Region
-
 
 
 ## **Table 14 — Control Region Definitions (SL and AH)**
@@ -2375,9 +2416,12 @@ These regions serve to:
 * **Reduce systematic uncertainties**
 
 They are essential for **controlling the dominant backgrounds** before extracting the signal in the Signal Regions (SRs).
-```
 
-![png](output_78_0.png)
+display(Image(filename="Table_14.png"))
+
+    
+
+    
 
 ```python
 
@@ -2404,6 +2448,7 @@ def filter_cr_wlnu(df):
 
     return {"CR_Wlnu": df_cr}
 
+
 ```
 
 Once `plot_region_stack` was defined, the same base structure was reused to create `plot_cr_stack`. The core stacked histogram logic stays the same, but additional lines were added or modified to specialize the plot for Control Regions.
@@ -2418,6 +2463,7 @@ The main changes are:
 * The default axis ranges and binning were tuned for control-region kinematics.
 
 All histogram stacking, coloring, grouping, and legend logic remains the same as in the previous functions.
+
 
 ```python
 
@@ -2492,8 +2538,8 @@ def plot_cr_stack(dfs_dict, region_label, var_name, x_label, x_range, data_label
     plt.show()
 
 
-
 ```
+
 
 ```python
 
@@ -2535,16 +2581,35 @@ def run_SL(channel_mode):
 # --- RUN ---
 run_SL("muon")
 run_SL("electron")
-```
 
 ```
+
+    /cvmfs/sft.cern.ch/lcg/views/LCG_109_swan/x86_64-el9-gcc13-opt/lib/python3.13/site-packages/mplhep/utils.py:652: RuntimeWarning: All sumw are zero!  Cannot compute meaningful error bars
+      return np.abs(method_fcn(self.values(), variances) - self.values())
+
+
     
-![png](output_82_0.png)
+![png](All_Hadronic_converted_72_1.png)
     
 
 
+    /cvmfs/sft.cern.ch/lcg/views/LCG_109_swan/x86_64-el9-gcc13-opt/lib/python3.13/site-packages/mplhep/utils.py:652: RuntimeWarning: All sumw are zero!  Cannot compute meaningful error bars
+      return np.abs(method_fcn(self.values(), variances) - self.values())
+
 
     
-![png](output_82_1.png)
+![png](All_Hadronic_converted_72_3.png)
     
+
+    
+
+    
+
+
+    
+
+    
+
+```python
+
 ```
