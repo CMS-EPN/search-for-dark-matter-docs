@@ -1,8 +1,10 @@
-site_name: Search for dark matter 
-site_description: Search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV
+site_name: Search for dark matter
+site_description: Reproducible CMS Open Data analysis — search for dark matter produced in association with a single top quark or a top quark pair in proton-proton collisions at √s = 13 TeV
 site_url: https://cms-epn.github.io/search-for-dark-matter-docs
-repo_url: https://github.com/CMS-EPN/search-for-dark-matter-docs
-repo_name: search-for-dark-matter-docs
+repo_url: https://github.com/CMS-EPN/search-for-dark-matter
+repo_name: CMS-EPN/search-for-dark-matter
+edit_uri: ""
+
 theme:
   name: material
   font:
@@ -10,14 +12,23 @@ theme:
     code: Red Hat Mono
   icon:
     logo: material/atom
+    repo: fontawesome/brands/github
   features:
     - navigation.footer
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - search.highlight
+    - search.suggest
+    - content.code.copy
   palette:
-    # Dark Mode
+    # Dark Mode
     - scheme: slate
       toggle:
         icon: material/weather-sunny
-        name: Dark mode
+        name: Switch to light mode
       primary: red
       accent: blue grey
 
@@ -25,16 +36,71 @@ theme:
     - scheme: default
       toggle:
         icon: material/weather-night
-        name: Light mode
+        name: Switch to dark mode
       accent: deep orange
 
+plugins:
+  - search
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+# Earlier exports kept in the repository but not published as pages.
+exclude_docs: |
+  *.bak
+  *.zip
+
 markdown_extensions:
+  - abbr
+  - admonition
   - attr_list
+  - def_list
   - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.arithmatex:
       generic: true
 
+extra_css:
+  - stylesheets/extra.css
+
+# polyfill.io was removed: the domain was taken over in 2024 and served
+# malicious JavaScript. MathJax 3 does not need it on any current browser.
 extra_javascript:
   - javascripts/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Run the analysis: getting-started/index.md
+      - Troubleshooting: getting-started/troubleshooting.md
+      - Repository and pipeline: getting-started/architecture.md
+  - Results:
+      - results/index.md
+      - All-hadronic channel: results/all-hadronic.md
+      - Single-lepton channel: results/single-lepton.md
+      - Paper vs. before vs. corrected: results/paper-comparison.md
+  - Changes (runbook):
+      - changes/index.md
+      - Computational (COMP): changes/computational.md
+      - Physics (PHYS): changes/physics.md
+      - Plotting (PLOT): changes/plots.md
+      - Convergence log: changes/convergence.md
+      - Open questions: changes/open-questions.md
+  - Original analysis:
+      - original/index.md
+      - Single lepton (upstream): Single_Lepton/Analisis_muon_final_version.md
+      - All hadronic (upstream): All_Hadronic/AH analisis si.md

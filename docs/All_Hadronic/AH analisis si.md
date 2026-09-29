@@ -806,18 +806,18 @@ else:
 The following plots show stacked MC vs. Data distributions after the AH baseline selection:
 
 **Missing Transverse Momentum ($p_T^{miss}$):**
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_0871491fa310310fdb92e226a00efd37.png)
+![](upload_0871491fa310310fdb92e226a00efd37.png)
 
 
 
 **Jet Multiplicity ($N_{jets}$):**
 
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_3d271a5a71ed3969f4eec8d12be14ca2.png)
+![](upload_3d271a5a71ed3969f4eec8d12be14ca2.png)
 
 
 **b-tag Multiplicity ($N_{b\text{-tags}}$):**
 
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_a8ae80912050229a02bb6292b161560d.png)
+![](upload_a8ae80912050229a02bb6292b161560d.png)
 
 
 > **Note on WJets:** The $m_T$ distribution shows a distinct peak in Data at ~80 GeV corresponding to the W boson resonance. This arises because the HT-100to200 and HT-200to400 WJets datasets populate the resonance region. Using only HT-400to600 would cut out these low-energy events.
@@ -1006,12 +1006,12 @@ else:
 
 **Signal Region SR 2b — $p_T^{miss}$:**
 
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_1f43d61e689f7633e1a912fe4d333f3a.png)
+![](upload_1f43d61e689f7633e1a912fe4d333f3a.png)
 
 
 **Signal Region SR 1b ≥1f — $p_T^{miss}$:**
 
-![](https://cernbox-codimd.web.cern.ch/uploads/upload_a8e46e0a068bae8962667539488e4c83.png)
+![](upload_a8e46e0a068bae8962667539488e4c83.png)
 
 
 **Signal Region SR 1b 0f — $p_T^{miss}$:**

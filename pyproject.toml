@@ -1,7 +1,7 @@
 [project]
 name = "search-for-dark-matter-docs"
 version = "0.1.0"
-description = "Add your description here"
+description = "Documentation site for the CMS Open Data dark matter + top quarks reproduction"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = ["mkdocs-material>=9.6.21", "pymdown-extensions>=10.11.2"]

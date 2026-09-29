@@ -1,0 +1,27 @@
+/* Plot grids: two figures side by side on wide screens, stacked on phones. */
+.plot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.plot-grid figure {
+  margin: 0;
+}
+/* Blank lines between figures become empty <p> grid items; drop them. */
+.plot-grid > p:empty {
+  display: none;
+}
+.plot-grid img,
+.md-typeset figure img {
+  background: #fff; /* matplotlib PNGs are transparent-free white; keep them legible in dark mode */
+  border-radius: 0.2rem;
+}
+.md-typeset figure figcaption {
+  font-size: 0.75rem;
+  max-width: none;
+}
+/* Numbers read better right-aligned and tabular. */
+.md-typeset table:not([class]) td {
+  font-variant-numeric: tabular-nums;
+}
